@@ -1,0 +1,80 @@
+{
+ "id": "./app.html",
+ "name": "The RVA Engine",
+ "short_name": "RVA Engine",
+ "description": "Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.",
+ "lang": "en",
+ "dir": "ltr",
+ "start_url": "./app.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#0B0A0E",
+ "theme_color": "#0B0A0E",
+ "categories": [
+  "lifestyle",
+  "travel",
+  "entertainment"
+ ],
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/maskable-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icons/maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "screenshots": [
+  {
+   "src": "img/shot-home.webp",
+   "sizes": "780x1688",
+   "type": "image/webp",
+   "form_factor": "narrow",
+   "label": "City sky"
+  },
+  {
+   "src": "img/shot-swipe.webp",
+   "sizes": "780x1688",
+   "type": "image/webp",
+   "form_factor": "narrow",
+   "label": "Swipe deck"
+  },
+  {
+   "src": "img/shot-map.webp",
+   "sizes": "780x1688",
+   "type": "image/webp",
+   "form_factor": "narrow",
+   "label": "3D City Board"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "City Board",
+   "url": "./app.html#map",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  }
+ ]
+}
