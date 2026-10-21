@@ -17,6 +17,3 @@
 
 /vendor/*
   Cache-Control: public, max-age=31536000, immutable
-
-/downloads/*
-  Content-Disposition: attachment

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-UMQcQqMlF7wqwucn3LZqGWV2+lOW+dpx+4LGU/wyX20=' 'sha256-/fIuL0hB9Fnsl9EL0joKo5fRei+GdE2X5/0Slkfk/zs=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-oRLcOAhGAwwAWX3CwPwJjwXQR7ZUo84Rp1THXrfeWwA=' 'sha256-UL9zqz0S/lNaU8mDf+m7QJ3/AFSgSyOkZhfWHfLQ2eo=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>The RVA Engine</title>
 <meta name="description" content="Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.">
 <meta name="theme-color" content="#0B0A0E">
@@ -211,6 +211,7 @@ textarea.field{resize:vertical;min-height:72px}
 /* white heart: 3.06:1 on #2EA85A, 4.72:1 on #1E8449 (was 2.36:1 on #3FBF6E) */
 .act.yes{background:linear-gradient(180deg,#2EA85A,var(--green-dk));color:#fff;border:2px solid var(--green)}
 .act:disabled{opacity:0.4}
+.act.rewind{width:44px;height:44px;font-size:20px;font-weight:900;background:linear-gradient(180deg,var(--choc-3),var(--choc));color:var(--bronze-lt);border:2px solid var(--bronze-dk);box-shadow:0 3px 0 rgba(0,0,0,0.4)}
 .ev-card.gold .ev-art{background:radial-gradient(circle at 50% 50%,#5C3A1A,#261710 70%);font-size:60px}
 .ev-card.gold .ev-name{color:var(--bronze-lt);font-size:var(--fs-m)}
 .ev-meta.sub{margin-top:6px;color:var(--bronze-lt);font-weight:700}
@@ -407,6 +408,32 @@ input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-eve
   .actions>*+*{margin-left:var(--sp-4)}
 }
 
+/* ---------- LANE B: flick spring, taste pill, search, shared plan ---------- */
+:root{--spring:cubic-bezier(.34,1.56,.64,1);--spring-dur:420ms}   /* ui.js swaps in a CSS linear() spring where supported */
+.tile.active{transition:background 0.15s,border-color 0.15s,box-shadow 0.15s,transform var(--spring-dur) var(--spring)}
+.dock-btn.active{transform:translateY(-2px);transition:transform var(--spring-dur) var(--spring),box-shadow 0.06s,color 0.2s,background 0.2s}
+.dock-btn.active:active{transform:translateY(2px);transition-duration:0.06s}
+.sector{transition:transform var(--spring-dur) var(--spring),filter 0.3s,opacity 0.3s,box-shadow 0.3s}   /* 2D board: focused hood pops */
+.map-label .ml-ic{display:inline-block;transition:transform var(--spring-dur) var(--spring)}   /* 3D board pin: the label itself is positioned by transform */
+.map-label.sel .ml-ic,.map-label:active .ml-ic{transform:scale(1.25)}
+.ev-art .rank{right:auto;max-width:calc(100% - 2 * var(--sp-3));white-space:normal;text-align:left;font-size:var(--fs-2xs);line-height:1.25}
+.ev-art .rank.explore{background:rgba(26,15,10,0.85);color:var(--bronze-lt)}
+.search{position:relative;display:flex;align-items:center;margin:0 0 var(--sp-2)}
+#feedSearch{padding:var(--sp-2) var(--gut-r) 0 var(--gut-l);background:var(--black)}
+.search-ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;line-height:1;pointer-events:none;margin-top:3px}
+.search-ic img{width:18px;height:18px}
+.field.search-in{padding-left:38px;padding-right:50px;-webkit-appearance:none;appearance:none;font-size:16px}
+.field.search-in::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+.search-x{position:absolute;right:2px;top:50%;transform:translateY(-50%);margin-top:3px;width:var(--tap);height:var(--tap);border-radius:10px;background:transparent;border:0;color:var(--dim);font-size:15px}
+.search-x:focus-visible{outline:2px solid var(--bronze-lt);outline-offset:-4px}
+.search-x[hidden]{display:none}
+.search-count{color:var(--dim)}
+.shared-list{margin:var(--sp-2) 0;padding-left:22px;line-height:1.5}
+.shared-list li{margin:3px 0;overflow-wrap:anywhere}
+.shared-list li img{width:18px;height:18px;vertical-align:-3px}
+.shared-acts{gap:var(--sp-2);flex-wrap:wrap}
+.shared-acts .btn{flex:1 1 140px;width:auto}
+
 /* ---------- MOTION ---------- */
 body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition-duration:0.01ms!important}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition-duration:0.01ms!important;scroll-behavior:auto!important}}
@@ -445,7 +472,7 @@ body.calm .ev-art img.i3d{animation:none}
 @keyframes rvaIn{to{opacity:1}}
 .rva-chip{position:fixed;left:50%;transform:translateX(-50%);width:max-content;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:9998;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px);padding:8px 8px 8px 14px;border-radius:14px;background:linear-gradient(180deg,#3A2418,#261710);border:1.5px solid #CD7F32;color:#F5EFE6;font:700 14px/1.3 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.6)}
 .rva-chip button{min-height:44px;padding:0 14px;border:0;border-radius:10px;background:linear-gradient(180deg,#E8A968,#CD7F32);color:#0B0A0E;font:800 14px/1 inherit;cursor:pointer}
-.rva-chip button.x{background:none;color:#C4B5A0;padding:0 10px;font-size:18px}
+.rva-chip button.x{background:none;color:#C4B5A0;padding:0 10px;min-width:44px;font-size:18px}
 .rva-nojs{max-width:420px;margin:18vh auto 0;padding:24px;border:1.5px solid #8B5A2B;border-radius:18px;background:#261710;color:#F5EFE6;font:16px/1.5 system-ui,sans-serif;text-align:center}
 .rva-nojs b{color:#E8A968}
 @media (prefers-reduced-motion:reduce){#rvaBoot{animation-duration:.01s}}
@@ -467,6 +494,7 @@ body.calm .ev-art img.i3d{animation:none}
       <div class="tiles" id="filterRow" role="group" aria-label="Filter events by type"></div>
       <div class="deck" id="deck"></div>
       <div class="actions">
+        <button type="button" class="act rewind" data-act="rewind" aria-label="Undo last swipe" title="Undo (Ctrl+Z)" disabled>↶</button>
         <button type="button" class="act no" data-act="swipe" data-arg="no" aria-label="Not for me">✕</button>
         <button type="button" class="act maybe" data-act="swipe" data-arg="maybe" aria-label="Maybe">?</button>
         <button type="button" class="act yes" data-act="swipe" data-arg="yes" aria-label="I'll be there">♥</button>
@@ -526,7 +554,7 @@ body.calm .ev-art img.i3d{animation:none}
 const RVA = (function(){
   'use strict';
   const KEY='rva-engine-v2';   // storage key stays the same for existing users; the schema version lives in S.v
-  const SCHEMA=3;
+  const SCHEMA=4;   // v4: event ids are content-derived strings (SN4); photos may be IndexedDB refs (SN10)
   const TZ='America/New_York';
   const LAT=37.5407, LNG=-77.4360;
 
@@ -536,6 +564,7 @@ const RVA = (function(){
     screen:'home', feedTab:'food', lifeTab:'watch', filter:'All',
     saved:[],            // [{id, type:'yes'|'maybe'}]
     tagScores:{},
+    taste:{f:{},s:{},n:0,x:{}},   // SN16 on-device taste model (lane B, src/js/taste.js)
     plan:[null,null,null,null],
     access:{sensory:false,crowd:false,terrain:false,seating:false},
     watchUserVote:{}, watchPosts:[],
@@ -552,7 +581,7 @@ const RVA = (function(){
   const store=(()=>{try{const ls=window.localStorage,k='__rva_probe';ls.setItem(k,'1');ls.removeItem(k);return ls;}catch(e){return null;}})();
   let storeState=store?'ok':'off';   // 'ok' | 'partial' (some photos only in this session) | 'off'
   const T={busy:false, flashIdx:0, focusSector:null, resetArmed:false, spinNext:false, transitTimer:null,
-    recovered:false, storeWarned:false, unsavedPhotos:new Set(), watchType:0, deckGen:0};
+    recovered:false, storeWarned:false, unsavedPhotos:new Set(), watchType:0, deckGen:0, dragging:false, saveSeq:0};
   /* ---------- UTILITIES ---------- */
   function vibrate(ms=15){if(!S.settings.haptics)return;try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
   let toastTimer=null;
@@ -561,6 +590,7 @@ const RVA = (function(){
     t.innerHTML=ic(msg);t.classList.add('show');
     clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),ms||2100);
   }
+  function hideToast(){clearTimeout(toastTimer);const t=document.getElementById('toast');if(t)t.classList.remove('show');}
   /* Screen-reader-only announcements that are not toasts (deck changes). */
   function announce(msg){
     let r=document.getElementById('srLive');
@@ -581,6 +611,7 @@ const RVA = (function(){
     const keep={};el.querySelectorAll('textarea[id],input[id]:not([type=file]):not([type=range])').forEach(f=>{if(f.value&&!f.readOnly)keep[f.id]=f.value;});
     el.innerHTML=html;
     for(const id in keep){const f=document.getElementById(id);if(f&&el.contains(f)&&!f.value){f.value=keep[id];f.dispatchEvent(new Event('input',{bubbles:true}));}}
+    fillPhotoSrc(el);
     const I=window.RVA_I3D;if(I)I.fill(el);
   }
 
@@ -669,30 +700,51 @@ const RVA = (function(){
     const idx=Math.floor(elong/45+0.5)%8;
     const names=['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'];
     const icons=['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
-    return {name:names[idx], icon:icons[idx], illum, sign:SIGNS[Math.floor(lon/30)%12], lon, elong};
+    return {name:names[idx], icon:icons[idx], illum, frac:(1+Math.cos(rad*i))/2, waxing:elong<180, sign:SIGNS[Math.floor(lon/30)%12], lon, elong};
   }
+  /* Moon-phase shading, shared by the Richmond Sky card disc and the 3D moon texture (SN14).
+     Viewer looks down -z at a unit sphere; the sun direction comes from the illuminated fraction k (cos of the phase
+     angle = 1-2k) and lies to the right (+x) while waxing, as seen from the northern hemisphere. Returns 0..1 light. */
+  function moonLight(nx,ny,nz,k,waxing){const c=1-2*k,s=Math.sqrt(Math.max(0,1-c*c))*(waxing?1:-1);
+    const d=nx*s-nz*c,t=Math.max(0,Math.min(1,(d+0.07)/0.14));return t*t*(3-2*t);}
+  // Fixed "maria" so the face reads as the Moon at a few dozen pixels: [x,y,r] on the visible disc.
+  const MOON_SPOTS=[[0.32,0.28,0.2],[-0.3,0.34,0.15],[0.18,-0.38,0.17],[-0.38,-0.18,0.12],[-0.05,0.02,0.1]];
+  function moonAlbedo(x,y){let a=1;for(const [mx,my,mr] of MOON_SPOTS){const q=((x-mx)*(x-mx)+(y-my)*(y-my))/(mr*mr);if(q<1)a-=0.13*(1-q*q);}return a;}
+  // Cream lit side, dim blue earthshine on the dark side (sRGB components).
+  function moonRGB(l,a){const L=[243,234,214],D=[46,50,82];return [0,1,2].map(j=>Math.round((D[j]+(L[j]-D[j])*l)*(0.55+0.45*a)));}
+  /* Front-facing disc as a PNG data URL. Redrawn at most once per local day (the card re-renders often). */
+  const moonDiscC={key:'',url:''};
+  function moonDiscURL(m,px){px=px||80;const day=new Date().toDateString(),key=day+'|'+px;if(moonDiscC.key===key)return moonDiscC.url;
+    let url='';try{const c=document.createElement('canvas');c.width=c.height=px;const x=c.getContext('2d'),img=x.createImageData(px,px),d=img.data,R=px/2;
+      for(let j=0;j<px;j++)for(let i=0;i<px;i++){const u=(i+0.5-R)/R,v=(R-j-0.5)/R,r2=u*u+v*v;if(r2>=1.04)continue;const r=Math.sqrt(r2),cov=Math.max(0,Math.min(1,(1-r)*R+0.5));if(cov<=0)continue;
+        const nz=Math.sqrt(Math.max(0,1-Math.min(1,r2))),col=moonRGB(moonLight(u,v,nz,m.frac,m.waxing),moonAlbedo(u,v)),o=(j*px+i)*4;d[o]=col[0];d[o+1]=col[1];d[o+2]=col[2];d[o+3]=Math.round(255*cov);}
+      x.putImageData(img,0,0);url=c.toDataURL('image/png');}catch(e){url='';}
+    moonDiscC.key=key;moonDiscC.url=url;return url;}
   const fmtTime=d=>d.toLocaleTimeString('en-US',{timeZone:TZ,hour:'numeric',minute:'2-digit'});
 
   /* ---------- DATA (SAMPLE unless noted) ---------- */
   const EVENTS = [
-    {id:1,art:'🎬',name:'Byrd Theatre — Midnight Cult Classic',meta:'Carytown · Sat 11:30 PM',tags:['Film','Cult','Late Night'],cat:'Arts',area:'The Fan',sensory:'high',crowd:'med',terrain:'paved',seating:true},
-    {id:2,art:'🎭',name:'Touring Broadway at the Altria',meta:'Monroe Park · Fri 8:00 PM',tags:['Theater','Live','Dress Up'],cat:'Arts',area:'Downtown',sensory:'med',crowd:'high',terrain:'paved',seating:true},
-    {id:3,art:'🍺',name:"Scott's Addition Brew Crawl",meta:"Scott's Addition · Sat 6 PM · Free entry",tags:['Beer','Social','21+'],cat:'Food',area:"Scott's Addition",sensory:'high',crowd:'high',terrain:'paved',seating:true},
-    {id:4,art:'🏞️',name:'Belle Isle Sunset Walk',meta:'James River · Sunset · Free',tags:['Outdoors','Low Crowd','River'],cat:'Outdoors',area:'Manchester',sensory:'low',crowd:'low',terrain:'paved',seating:false},
-    {id:5,art:'🪦',name:'Hollywood Cemetery Walking Tour',meta:'Oregon Hill · Sun 10 AM',tags:['History','Quiet','Guided'],cat:'Arts',area:'Downtown',sensory:'low',crowd:'low',terrain:'cobble',seating:false},
-    {id:6,art:'🎪',name:"Brown's Island Festival",meta:'Downtown · Sat all day',tags:['Festival','Music','High Crowd'],cat:'Music',area:'Downtown',sensory:'high',crowd:'high',terrain:'paved',seating:false},
-    {id:7,art:'🎵',name:'Live Rock at The National',meta:'Broad St · Thu 8 PM',tags:['Music','Standing','21+'],cat:'Music',area:'Downtown',sensory:'high',crowd:'high',terrain:'paved',seating:false},
-    {id:8,art:'💕',name:'Carytown Date Stroll',meta:'Carytown · Fri 7 PM · Varies',tags:['Romance','Food','Quiet Booth'],cat:'Food',area:'The Fan',sensory:'low',crowd:'med',terrain:'paved',seating:true},
-    {id:9,art:'🥾',name:'Buttermilk Trail Sunrise Hike',meta:'James River Park · Sat 7 AM · Free',tags:['Hike','Nature','Hard'],cat:'Outdoors',area:'Manchester',sensory:'low',crowd:'low',terrain:'rugged',seating:false},
-    {id:10,art:'🎨',name:'First Fridays Art Walk',meta:'Broad St Arts District · Fri 6 PM · Free',tags:['Art','Galleries','Social'],cat:'Arts',area:'Downtown',sensory:'med',crowd:'high',terrain:'paved',seating:false},
-    {id:11,art:'🏀',name:'Pickup Basketball at Byrd Park',meta:'Byrd Park · Evenings · Free',tags:['Sports','Casual','Outdoor'],cat:'Outdoors',area:'The Fan',sensory:'med',crowd:'med',terrain:'paved',seating:false},
-    {id:12,art:'🍝',name:"Dinner at Edo's Squid",meta:'The Fan · Tue 7 PM',tags:['Food','Date Night','Italian'],cat:'Food',area:'The Fan',sensory:'med',crowd:'med',terrain:'paved',seating:true},
-    {id:13,art:'🖼️',name:'VMFA Late Gallery Hours',meta:'Museum District · Thu evening',tags:['Art','Quiet','Museum'],cat:'Arts',area:'Museum District',sensory:'low',crowd:'low',terrain:'paved',seating:true},
-    {id:14,art:'🌇',name:'Libby Hill Sunset',meta:'Church Hill · Sunset · Free',tags:['Outdoors','Romance','Views'],cat:'Outdoors',area:'Church Hill',sensory:'low',crowd:'low',terrain:'cobble',seating:true},
-    {id:15,art:'🍸',name:'Shockoe Bottom Night Out',meta:'Shockoe · Sat 10 PM',tags:['Nightlife','Dance','21+'],cat:'Music',area:'Shockoe Bottom',sensory:'high',crowd:'high',terrain:'paved',seating:false},
-    {id:16,art:'🎾',name:'Battery Park Tennis Drop-In',meta:'Northside · Sun AM · Free',tags:['Sports','Outdoor','Casual'],cat:'Outdoors',area:'Northside',sensory:'low',crowd:'low',terrain:'paved',seating:true},
+    {id:'e_7xjjy2rshl',n:1,art:'🎬',name:'Byrd Theatre — Midnight Cult Classic',meta:'Carytown · Sat 11:30 PM',tags:['Film','Cult','Late Night'],cat:'Arts',area:'The Fan',sensory:'high',crowd:'med',terrain:'paved',seating:true},
+    {id:'e_3zuiz3uyz4',n:2,art:'🎭',name:'Touring Broadway at the Altria',meta:'Monroe Park · Fri 8:00 PM',tags:['Theater','Live','Dress Up'],cat:'Arts',area:'Downtown',sensory:'med',crowd:'high',terrain:'paved',seating:true},
+    {id:'e_fbqcg7qmgi',n:3,art:'🍺',name:"Scott's Addition Brew Crawl",meta:"Scott's Addition · Sat 6 PM · Free entry",tags:['Beer','Social','21+'],cat:'Food',area:"Scott's Addition",sensory:'high',crowd:'high',terrain:'paved',seating:true},
+    {id:'e_xggipzznpo',n:4,art:'🏞️',name:'Belle Isle Sunset Walk',meta:'James River · Sunset · Free',tags:['Outdoors','Low Crowd','River'],cat:'Outdoors',area:'Manchester',sensory:'low',crowd:'low',terrain:'paved',seating:false},
+    {id:'e_o5rghvvp7g',n:5,art:'🪦',name:'Hollywood Cemetery Walking Tour',meta:'Oregon Hill · Sun 10 AM',tags:['History','Quiet','Guided'],cat:'Arts',area:'Downtown',sensory:'low',crowd:'low',terrain:'cobble',seating:false},
+    {id:'e_6sdnrhatge',n:6,art:'🎪',name:"Brown's Island Festival",meta:'Downtown · Sat all day',tags:['Festival','Music','High Crowd'],cat:'Music',area:'Downtown',sensory:'high',crowd:'high',terrain:'paved',seating:false},
+    {id:'e_x7vqbgnp6y',n:7,art:'🎵',name:'Live Rock at The National',meta:'Broad St · Thu 8 PM',tags:['Music','Standing','21+'],cat:'Music',area:'Downtown',sensory:'high',crowd:'high',terrain:'paved',seating:false},
+    {id:'e_ojapb4yabb',n:8,art:'💕',name:'Carytown Date Stroll',meta:'Carytown · Fri 7 PM · Varies',tags:['Romance','Food','Quiet Booth'],cat:'Food',area:'The Fan',sensory:'low',crowd:'med',terrain:'paved',seating:true},
+    {id:'e_pauqnem4qb',n:9,art:'🥾',name:'Buttermilk Trail Sunrise Hike',meta:'James River Park · Sat 7 AM · Free',tags:['Hike','Nature','Hard'],cat:'Outdoors',area:'Manchester',sensory:'low',crowd:'low',terrain:'rugged',seating:false},
+    {id:'e_bdhqfefhsc',n:10,art:'🎨',name:'First Fridays Art Walk',meta:'Broad St Arts District · Fri 6 PM · Free',tags:['Art','Galleries','Social'],cat:'Arts',area:'Downtown',sensory:'med',crowd:'high',terrain:'paved',seating:false},
+    {id:'e_hgflcbppau',n:11,art:'🏀',name:'Pickup Basketball at Byrd Park',meta:'Byrd Park · Evenings · Free',tags:['Sports','Casual','Outdoor'],cat:'Outdoors',area:'The Fan',sensory:'med',crowd:'med',terrain:'paved',seating:false},
+    {id:'e_oot7drjyvz',n:12,art:'🍝',name:"Dinner at Edo's Squid",meta:'The Fan · Tue 7 PM',tags:['Food','Date Night','Italian'],cat:'Food',area:'The Fan',sensory:'med',crowd:'med',terrain:'paved',seating:true},
+    {id:'e_tlbhuhk3ch',n:13,art:'🖼️',name:'VMFA Late Gallery Hours',meta:'Museum District · Thu evening',tags:['Art','Quiet','Museum'],cat:'Arts',area:'Museum District',sensory:'low',crowd:'low',terrain:'paved',seating:true},
+    {id:'e_22p3qvqcyj',n:14,art:'🌇',name:'Libby Hill Sunset',meta:'Church Hill · Sunset · Free',tags:['Outdoors','Romance','Views'],cat:'Outdoors',area:'Church Hill',sensory:'low',crowd:'low',terrain:'cobble',seating:true},
+    {id:'e_6nqk4a3ytr',n:15,art:'🍸',name:'Shockoe Bottom Night Out',meta:'Shockoe · Sat 10 PM',tags:['Nightlife','Dance','21+'],cat:'Music',area:'Shockoe Bottom',sensory:'high',crowd:'high',terrain:'paved',seating:false},
+    {id:'e_smexro4suk',n:16,art:'🎾',name:'Battery Park Tennis Drop-In',meta:'Northside · Sun AM · Free',tags:['Sports','Outdoor','Casual'],cat:'Outdoors',area:'Northside',sensory:'low',crowd:'low',terrain:'paved',seating:true},
   ];
   const EV=id=>EVENTS.find(e=>e.id===id);
+  /* SN4: saves made before v4 hold the old integer ids (kept on each event as n); map them to the stable ids. */
+  const EV_BY_N={};EVENTS.forEach(e=>{EV_BY_N[e.n]=e.id;});
+  const evId=x=>typeof x==='number'?EV_BY_N[x]:x;
   const GOLDEN={golden:true,id:'golden',name:'👑 THE RVA EDITORIAL EXCLUSIVE',sub:'THE PERFECT DATE NIGHT: UNTOLD STORIES OF THE FAN',body:'Three months trailing underground chefs, hidden courtyard gardens, and unspoken historical spots. Real culture belongs on heavyweight paper.',price:'Issue #1 · $12.99'};
 
   const SECTORS=[
@@ -803,17 +855,30 @@ const RVA = (function(){
     {route:'Local route — Church Hill',headway:30,stops:[{name:'Main & 25th',off:4},{name:'Broad & 25th',off:11},{name:'Jefferson & Marshall',off:17}]},
   ];
   const PLAN_BASE=[
-    {em:'🌅',name:'Sunrise Hike',meta:'Buttermilk · 7 AM'},
-    {em:'☕',name:'Coffee in Carytown',meta:'Carytown · 9 AM'},
-    {em:'🏛️',name:'VMFA',meta:'Museum District · 11 AM'},
-    {em:'🍜',name:'Lunch in The Fan',meta:'The Fan · 1 PM'},
-    {em:'🖼️',name:'Art Walk',meta:'Broad St · 6 PM'},
-    {em:'🎭',name:'Show at the Altria',meta:'Monroe Park · 8 PM'},
-    {em:'🎬',name:'Byrd Late Movie',meta:'Carytown · 11 PM'},
-    {em:'🍸',name:'Cocktails Downtown',meta:'Shockoe · 9:30 PM'},
+    {k:'sunrise-hike',em:'🌅',name:'Sunrise Hike',meta:'Buttermilk · 7 AM'},
+    {k:'coffee-carytown',em:'☕',name:'Coffee in Carytown',meta:'Carytown · 9 AM'},
+    {k:'vmfa',em:'🏛️',name:'VMFA',meta:'Museum District · 11 AM'},
+    {k:'lunch-fan',em:'🍜',name:'Lunch in The Fan',meta:'The Fan · 1 PM'},
+    {k:'art-walk',em:'🖼️',name:'Art Walk',meta:'Broad St · 6 PM'},
+    {k:'altria-show',em:'🎭',name:'Show at the Altria',meta:'Monroe Park · 8 PM'},
+    {k:'byrd-late-movie',em:'🎬',name:'Byrd Late Movie',meta:'Carytown · 11 PM'},
+    {k:'cocktails-downtown',em:'🍸',name:'Cocktails Downtown',meta:'Shockoe · 9:30 PM'},
   ];
+  /* SN5: every plan stop has a stable key: an event id (SN4) or a PLAN_BASE key. Share links carry only keys. */
+  function planItem(key){
+    if(typeof key!=='string')return null;
+    const e=/^e_[a-z2-7]{10}$/.test(key)&&EV(key);
+    if(e)return {em:e.art,name:e.name,meta:e.meta.split(' · ').slice(0,2).join(' · ')};
+    const b=PLAN_BASE.find(x=>x.k===key);
+    return b?{em:b.em,name:b.name,meta:b.meta}:null;
+  }
+  function planKeyOf(slot){
+    if(!slot||typeof slot.name!=='string')return null;
+    const e=EVENTS.find(x=>x.name===slot.name);if(e)return e.id;
+    const b=PLAN_BASE.find(x=>x.name===slot.name);return b?b.k:null;
+  }
   function planOptions(){
-    const mine=S.saved.map(s=>EV(s.id)).filter(Boolean).map(e=>({em:e.art,name:e.name,meta:e.meta.split(' · ').slice(0,2).join(' · '),mine:true}));
+    const mine=S.saved.map(s=>EV(s.id)).filter(Boolean).map(e=>Object.assign(planItem(e.id),{mine:true}));
     const names=new Set(mine.map(m=>m.name));
     return mine.concat(PLAN_BASE.filter(p=>!names.has(p.name)));
   }
@@ -823,8 +888,13 @@ const RVA = (function(){
      to defaults one field at a time, so an old or damaged save never blank-screens the app. */
   const isObj=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
   const txt=(x,max)=>typeof x==='string'?x.slice(0,max):null;
+  /* An icon field must be one emoji (plan slots, posts): anything else from a link or a file becomes the pin. */
+  const EMOJI_RE=(()=>{try{return new RegExp('^(?:[\\p{Extended_Pictographic}\\p{Regional_Indicator}][\\p{Emoji_Modifier}\\uFE0F\\u20E3]*\\u200D?)+$','u');}catch(e){return null;}})();
+  const emOK=x=>typeof x==='string'&&x.length>0&&x.length<=16&&(EMOJI_RE?EMOJI_RE.test(x):!/[<>&"'\w\s]/.test(x));
+  const emoji=(x,fb)=>emOK(x)?x:fb;
   const num=(x,lo,hi)=>typeof x==='number'&&isFinite(x)?Math.max(lo,Math.min(hi,x)):null;
   const PHOTO_RE=/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/]+=*$/;
+  const PHOTO_ID_RE=/^(sha256-[0-9a-f]{64}|r-[a-z0-9]{6,24})-\d{1,9}$/;   // SN10 IndexedDB ref: content hash (or random) + bytes
   function boolMap(o){const r={};if(isObj(o))Object.keys(o).forEach(k=>{if(o[k]===true&&k.length<40)r[k]=true;});return r;}
   function voteMap(o){const r={};if(isObj(o))Object.keys(o).forEach(k=>{if((o[k]===1||o[k]===-1)&&k.length<40)r[k]=o[k];});return r;}
   function posts(a,f){return Array.isArray(a)?a.filter(p=>isObj(p)&&typeof p.id==='string'&&/^u[a-z0-9]{1,30}$/i.test(p.id)).map(f).filter(Boolean).slice(0,200):[];}
@@ -841,16 +911,21 @@ const RVA = (function(){
     ['screen','feedTab','lifeTab','filter'].forEach(k=>{const v=txt(raw[k],40);if(v)s[k]=v;});
     s.preorder=raw.preorder===true;s.waitlist=raw.waitlist===true;
     ['settings','access'].forEach(g=>{if(isObj(raw[g]))Object.keys(s[g]).forEach(k=>{if(typeof raw[g][k]==='boolean')s[g][k]=raw[g][k];});});
-    if(Array.isArray(raw.saved)){const seen=new Set();s.saved=raw.saved.filter(x=>isObj(x)&&EV(x.id)&&(x.type==='yes'||x.type==='maybe')&&!seen.has(x.id)&&seen.add(x.id)).map(x=>({id:x.id,type:x.type}));}
+    if(Array.isArray(raw.saved)){const seen=new Set();s.saved=raw.saved.map(x=>isObj(x)?{id:evId(x.id),type:x.type}:null).filter(x=>x&&EV(x.id)&&(x.type==='yes'||x.type==='maybe')&&!seen.has(x.id)&&seen.add(x.id));}
     if(isObj(raw.tagScores))Object.keys(raw.tagScores).forEach(k=>{const v=num(raw.tagScores[k],-999,999);if(v!==null&&k.length<40)s.tagScores[k]=v;});
-    if(Array.isArray(raw.plan))s.plan=[0,1,2,3].map(i=>{const p=raw.plan[i];return isObj(p)&&txt(p.name,120)?{em:txt(p.em,16)||'📍',name:txt(p.name,120),meta:txt(p.meta,120)||''}:null;});
+    // SN16: taste weights clamped to +/-4, <=200 short keys per map; old saves are seeded from tagScores.
+    const wmap=(o,lo,hi)=>{const r={};if(isObj(o))Object.keys(o).filter(k=>k.length<40&&k!=='__proto__').map(k=>[k,num(o[k],lo,hi)]).filter(x=>x[1]).sort((a,b)=>Math.abs(b[1])-Math.abs(a[1])).slice(0,200).forEach(x=>r[x[0]]=x[1]);return r;};
+    if(isObj(raw.taste))s.taste={f:wmap(raw.taste.f,-4,4),s:wmap(raw.taste.s,-4,4),n:Math.floor(num(raw.taste.n,0,1e9)||0),x:wmap(raw.taste.x,0,1e6)};
+    else s.taste.s=wmap(Object.keys(s.tagScores).reduce((o,k)=>(o['t:'+k]=s.tagScores[k]/4,o),{}),-4,4);
+    if(Array.isArray(raw.plan))s.plan=[0,1,2,3].map(i=>{const p=raw.plan[i];return isObj(p)&&txt(p.name,120)?{em:emoji(p.em,'📍'),name:txt(p.name,120),meta:txt(p.meta,120)||''}:null;});
     s.watchUserVote=voteMap(raw.watchUserVote);s.banterUserVote=voteMap(raw.banterUserVote);
     s.watchPosts=posts(raw.watchPosts,p=>txt(p.text,200)&&{id:p.id,type:WATCH_TYPES.includes(p.type)?p.type:WATCH_TYPES[0],text:txt(p.text,200),votes:num(p.votes,-99,9999)||0,dist:txt(p.dist,30)||'Near you'});
     s.banterPosts=posts(raw.banterPosts,p=>txt(p.text,140)&&{id:p.id,em:'🗣️',text:txt(p.text,140),votes:num(p.votes,-99,9999)||0});
     s.datePosts=posts(raw.datePosts,p=>txt(p.title,60)&&{id:p.id,em:'💌',title:txt(p.title,60),vibe:txt(p.vibe,80)||'',highlight:txt(p.highlight,80)||''});
     if(isObj(raw.hallRatings))Object.keys(raw.hallRatings).forEach(k=>{const r=raw.hallRatings[k];if(HALLOWEEN[k]&&Number.isInteger(r)&&r>=1&&r<=10)s.hallRatings[k]=r;});
     ['dateHearts','handshakes','joins','interested'].forEach(k=>s[k]=boolMap(raw[k]));
-    if(isObj(raw.photos))PHOTO_KINDS.forEach(k=>{const a=raw.photos[k];if(Array.isArray(a))s.photos[k]=a.filter(p=>isObj(p)&&typeof p.src==='string'&&PHOTO_RE.test(p.src)).slice(0,6).map(p=>({src:p.src,day:txt(p.day,20)||'',t:num(p.t,0,9e15)||0}));});
+    if(isObj(raw.photos))PHOTO_KINDS.forEach(k=>{const a=raw.photos[k];if(Array.isArray(a))s.photos[k]=a.filter(p=>isObj(p)&&(typeof p.src==='string'&&PHOTO_RE.test(p.src)||typeof p.id==='string'&&PHOTO_ID_RE.test(p.id))).slice(0,6)
+      .map(p=>Object.assign(typeof p.src==='string'&&PHOTO_RE.test(p.src)?{src:p.src}:{id:p.id},{day:txt(p.day,20)||'',t:num(p.t,0,9e15)||0}));});
     return s;
   }
   function load(){
@@ -871,7 +946,7 @@ const RVA = (function(){
   /* Save everything. On quota errors, leave out the newest photos one at a time until the rest fits, so photos
      saved earlier are never wiped (JS-5). Returns 'ok' | 'partial' | 'off'. */
   function save(){
-    T.unsavedPhotos.clear();
+    T.unsavedPhotos.clear();T.saveSeq++;
     if(!store){storeState='off';storageNotice();return storeState;}
     try{store.setItem(KEY,JSON.stringify(S));storeState='ok';return storeState;}
     catch(e){
@@ -886,6 +961,237 @@ const RVA = (function(){
     }
   }
   const S=load();
+
+  /* ---------- PHOTO STORE (SN10): IndexedDB blobs keyed by SHA-256, shown through object URLs ----------
+     S.photos[kind] holds {id,day,t} refs; the JPEG bytes live in IndexedDB, so a swipe no longer re-serializes
+     every photo and a few photos no longer fill the ~5 MB localStorage quota. When IndexedDB or blob: images are
+     unavailable (private mode, the desktop build's CSP, very old browsers), photos stay data: URLs exactly as before.
+     Fresh code; the content-addressed idea comes from SimpleBlobTable (MIT) and wikibinator id256 (idea only). */
+  const PURL=new Map();          // photo id -> object URL for this session
+  const PBLOB=new Map();         // photo id -> Blob this tab has loaded (lets undo put back a blob another tab deleted)
+  let photoMode='data';          // 'data' until IndexedDB and blob: images are both proven to work
+  function bufOf(b){
+    if(b.arrayBuffer)return b.arrayBuffer();
+    return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsArrayBuffer(b);});
+  }
+  const blobs=(()=>{
+    let dbp=null;
+    function db(){
+      if(!dbp)dbp=new Promise((res,rej)=>{
+        try{
+          const idb=window.indexedDB;if(!idb)return rej(new Error('no indexedDB'));
+          const r=idb.open('rva-engine-photos',1);
+          r.onupgradeneeded=()=>{r.result.createObjectStore('blobs');};
+          r.onsuccess=()=>res(r.result);
+          r.onerror=()=>rej(r.error||new Error('indexedDB open failed'));
+          r.onblocked=()=>rej(new Error('indexedDB blocked'));
+        }catch(e){rej(e);}
+      });
+      return dbp;
+    }
+    const tx=(mode,fn)=>db().then(d=>new Promise((res,rej)=>{
+      const t=d.transaction('blobs',mode),q=fn(t.objectStore('blobs'));let out;
+      if(q)q.onsuccess=()=>{out=q.result;};
+      t.oncomplete=()=>res(out);t.onerror=t.onabort=()=>rej(t.error||new Error('indexedDB transaction failed'));
+    }));
+    async function idOf(blob){
+      try{if(window.crypto&&crypto.subtle){const h=new Uint8Array(await crypto.subtle.digest('SHA-256',await bufOf(blob)));
+        return 'sha256-'+Array.from(h,b=>(b<16?'0':'')+b.toString(16)).join('')+'-'+blob.size;}}catch(e){}
+      return 'r-'+uid()+'-'+blob.size;   // no secure context: random id (no dedupe, still works)
+    }
+    return {
+      ready:()=>db().then(()=>true,()=>false),
+      put:async blob=>{const id=await idOf(blob);if(!(await tx('readonly',s=>s.count(id))))await tx('readwrite',s=>s.put(blob,id));return id;},
+      get:id=>tx('readonly',s=>s.get(id)),
+      del:id=>tx('readwrite',s=>s.delete(id)),
+      keys:()=>tx('readonly',s=>s.getAllKeys()),
+    };
+  })();
+  function dataToBlob(src){
+    const m=/^data:([^;,]+);base64,(.*)$/.exec(src);if(!m)throw new Error('not a data URL');
+    const bin=atob(m[2]),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);
+    return new Blob([a],{type:m[1]});
+  }
+  function blobToData(b){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsDataURL(b);});}
+  /* Feature test: an object URL must actually load as an <img> here (a CSP without blob: blocks it). */
+  function blobImgOK(){
+    // A CSP meta whose img-src lacks blob: would block it anyway: skip the probe (and its console error).
+    try{const m=document.querySelector('meta[http-equiv="Content-Security-Policy" i]'),d=m&&/(?:^|;)\s*img-src([^;]*)/i.exec(m.content||'');
+      if(d&&!/\bblob:/i.test(d[1]))return Promise.resolve(false);}catch(e){}
+    return new Promise(res=>{
+      let u=null,done=false;const fin=v=>{if(done)return;done=true;clearTimeout(t);try{if(u)URL.revokeObjectURL(u);}catch(e){}res(v);};
+      const t=setTimeout(()=>fin(false),3000);
+      try{
+        u=URL.createObjectURL(dataToBlob('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/iZk9HQAAAABJRU5ErkJggg=='));
+        const im=new Image();im.onload=()=>fin(im.naturalWidth===1);im.onerror=()=>fin(false);im.src=u;
+      }catch(e){fin(false);}
+    });
+  }
+  const allPhotos=st=>{const o=[];if(st&&st.photos)PHOTO_KINDS.forEach(k=>(st.photos[k]||[]).forEach(p=>o.push(p)));return o;};
+  function photoURL(p){return p.src||PURL.get(p.id)||'';}
+  /* Templates call photoImg(); refs whose object URL is not ready yet get their src from fillPhotoSrc(). */
+  function photoImg(p,alt){const u=photoURL(p);return `<img${p.id?` data-pid="${esc(p.id)}"`:''}${u?` src="${esc(u)}"`:''} alt="${esc(alt)}">`;}
+  function fillPhotoSrc(root){
+    if(!root||!root.querySelectorAll||!PURL.size)return;
+    root.querySelectorAll('img[data-pid]:not([src])').forEach(im=>{const u=PURL.get(im.dataset.pid);if(u)im.src=u;});
+  }
+  /* Create object URLs for every ref in S (after boot, undo, restore or another tab's change). */
+  async function loadPhotoURLs(){
+    const need=allPhotos(S).filter(p=>p.id&&!PURL.has(p.id));
+    for(const p of need){try{const b=await blobs.get(p.id);if(b){PBLOB.set(p.id,b);if(!PURL.has(p.id))PURL.set(p.id,URL.createObjectURL(b));}}catch(e){}}
+    fillPhotoSrc(document);
+  }
+  /* Move data: URL photos into IndexedDB (replacing each object, never mutating it, so undo snapshots stay valid). */
+  async function migratePhotos(){
+    if(photoMode!=='idb')return 0;
+    let n=0;
+    for(const k of PHOTO_KINDS)for(const p of S.photos[k].slice()){
+      if(!p.src)continue;
+      try{
+        const b=dataToBlob(p.src),id=await blobs.put(b);PBLOB.set(id,b);
+        if(!PURL.has(id))PURL.set(id,URL.createObjectURL(b));
+        const i=S.photos[k].indexOf(p);if(i>=0){S.photos[k][i]={id,day:p.day,t:p.t};n++;}
+      }catch(e){}
+    }
+    return n;
+  }
+  /* Store a new photo: a ref when IndexedDB works, else the data: URL (the pre-SN10 path). */
+  async function storePhoto(canvas){
+    const dataPath=()=>({src:canvas.toDataURL('image/jpeg',0.72)});
+    if(photoMode!=='idb'||!canvas.toBlob)return dataPath();
+    try{
+      const b=await new Promise(res=>canvas.toBlob(res,'image/jpeg',0.72));if(!b)return dataPath();
+      const id=await blobs.put(b);PBLOB.set(id,b);if(!PURL.has(id))PURL.set(id,URL.createObjectURL(b));
+      return {id};
+    }catch(e){return dataPath();}
+  }
+  /* Delete blobs nothing points at: not S, not an undo snapshot, not what another open tab last saved.
+     Another open tab's undo snapshots are invisible here, so an unreferenced blob is only tombstoned at first
+     (localStorage, shared by every tab) and deleted once it has stayed unreferenced past PHOTO_GRACE. */
+  const TOMB_KEY='rva-engine-photo-tombs', PHOTO_GRACE=15*60*1000;
+  let gcTimer=null;
+  function gcPhotosSoon(){clearTimeout(gcTimer);gcTimer=setTimeout(gcPhotos,1500);}
+  async function gcPhotos(now){
+    if(photoMode!=='idb')return;
+    now=typeof now==='number'?now:Date.now();
+    const keep=new Set();
+    const add=st=>allPhotos(st).forEach(p=>{if(p&&p.id)keep.add(p.id);});
+    add(S);UNDO.forEach(u=>add(u.s));
+    try{const raw=store&&store.getItem(KEY);if(raw)add(JSON.parse(raw));}catch(e){}
+    let tombs={};
+    try{const t=store&&JSON.parse(store.getItem(TOMB_KEY)||'{}');if(isObj(t))tombs=t;}catch(e){}
+    const next={};
+    try{
+      const ks=await blobs.keys();
+      for(const k of ks||[]){
+        if(keep.has(k))continue;
+        const since=num(tombs[k],0,now);
+        if(since!=null&&now-since>=PHOTO_GRACE){
+          await blobs.del(k);PBLOB.delete(k);const u=PURL.get(k);if(u){URL.revokeObjectURL(u);PURL.delete(k);}
+        }else next[k]=since!=null?since:now;
+      }
+    }catch(e){return;}
+    try{if(store){if(Object.keys(next).length)store.setItem(TOMB_KEY,JSON.stringify(next));else store.removeItem(TOMB_KEY);}}catch(e){}
+  }
+  /* Put back blobs this tab still holds in memory when a ref came back (undo) but the blob is gone. */
+  async function repairBlobs(){
+    if(photoMode!=='idb')return;
+    for(const p of allPhotos(S)){
+      if(!p.id||!PBLOB.has(p.id))continue;
+      try{if(!(await blobs.get(p.id)))await blobs.put(PBLOB.get(p.id));}catch(e){}
+    }
+  }
+  const photosReady=(async()=>{
+    if(!store)return 'data';   // nothing would remember the refs, so keep the session-only path
+    try{if(!(await blobs.ready())||!(await blobImgOK()))return 'data';}catch(e){return 'data';}
+    photoMode='idb';
+    const n=await migratePhotos();if(n)save();
+    await loadPhotoURLs();gcPhotos();
+    return 'idb';
+  })();
+
+  /* ---------- UNDO (SN1): up to 5 snapshots of S ----------
+     Photos are copied by reference (refs or immutable data: strings), so a snapshot costs a few KB. */
+  const UNDO=[], UNDO_MAX=5;
+  function snapState(){
+    const o=clone(Object.assign({},S,{photos:null}));o.photos={};
+    PHOTO_KINDS.forEach(k=>{o.photos[k]=S.photos[k].slice();});
+    return o;
+  }
+  /* Assign key by key (S is const). The current screen is navigation, not data, so it stays put. */
+  function assignState(n,keepKeys){
+    Object.keys(DEFAULTS).forEach(k=>{
+      if(k==='screen'||(keepKeys&&keepKeys.includes(k)))return;
+      if(k==='photos'){const ph={};PHOTO_KINDS.forEach(j=>{ph[j]=((n.photos||{})[j]||[]).slice();});S.photos=ph;}
+      else S[k]=n[k]===undefined?clone(DEFAULTS[k]):n[k];
+    });
+  }
+  const undoChanged=()=>{try{if(T.onUndo)T.onUndo();}catch(e){}};   // ui.js keeps the rewind button in step
+  function snap(label,meta){UNDO.push({label:String(label||''),s:snapState(),meta:meta||{}});if(UNDO.length>UNDO_MAX)UNDO.shift();undoChanged();}
+  const canUndo=()=>UNDO.length>0&&!T.busy;
+  /* Blocked while a swipe is still flying out (its timeout would advance the restored deck). */
+  function undo(){
+    if(!canUndo())return null;
+    const u=UNDO.pop();assignState(u.s);save();undoChanged();
+    if(photoMode==='idb')repairBlobs().then(migratePhotos).then(n=>{if(n)save();return loadPhotoURLs();});
+    gcPhotosSoon();
+    return u;
+  }
+
+  /* ---------- BACKUP / RESTORE (SN6) ---------- */
+  async function exportState(){
+    const st=clone(Object.assign({},S,{photos:null}));st.photos={};
+    for(const k of PHOTO_KINDS){
+      st.photos[k]=[];
+      for(const p of S.photos[k]){
+        let src=p.src;
+        if(!src&&p.id){try{const b=await blobs.get(p.id);if(b)src=await blobToData(b);}catch(e){}}
+        if(src&&PHOTO_RE.test(src))st.photos[k].push({src,day:p.day,t:p.t});
+      }
+    }
+    return JSON.stringify({app:'rva-engine',schema:SCHEMA,exported:new Date().toISOString(),state:st});
+  }
+  /* Returns 'ok' | 'format' (not an RVA backup) | 'quota' (did not fit: the previous state was put back). */
+  async function restoreState(parsed){
+    if(!isObj(parsed)||parsed.app!=='rva-engine'||!isObj(parsed.state))return 'format';
+    const n=sanitize(parsed.state);
+    // a backup carries its photos as data: URLs; a bare id ref would point at a blob this device may not have
+    PHOTO_KINDS.forEach(k=>{n.photos[k]=(n.photos[k]||[]).filter(p=>p&&p.src);});
+    snap('Backup restored',{restore:true});
+    const before=UNDO[UNDO.length-1];
+    assignState(n);
+    if(photoMode==='idb'){try{await migratePhotos();}catch(e){}}
+    const r=save();
+    if(store&&r!=='ok'){
+      if(UNDO[UNDO.length-1]===before){UNDO.pop();undoChanged();}
+      assignState(before.s);save();return 'quota';
+    }
+    loadPhotoURLs();gcPhotosSoon();
+    return 'ok';
+  }
+
+  /* ---------- TWO OPEN COPIES (SN9): follow the other tab's saves instead of overwriting them ----------
+     Android Chrome and desktop tabs only: an iOS home-screen app has its own storage, so no event ever arrives.
+     The change waits while a card is flying or being dragged, or a dialog is open (ui.js sets SYNC.canApply). */
+  const SYNC={canApply:()=>!T.busy&&!T.dragging, apply:null, pending:null, timer:null};
+  const NAV_KEYS=['feedTab','lifeTab','filter'];
+  function applyExternal(){
+    clearTimeout(SYNC.timer);
+    if(!SYNC.pending)return;
+    if(!SYNC.canApply()){SYNC.timer=setTimeout(applyExternal,400);return;}
+    const n=SYNC.pending;SYNC.pending=null;
+    assignState(n,NAV_KEYS);   // this tab keeps its own screen and tabs
+    UNDO.length=0;undoChanged();T.unsavedPhotos.clear();
+    if(photoMode==='idb')loadPhotoURLs();
+    if(SYNC.apply)SYNC.apply();
+  }
+  window.addEventListener('storage',e=>{
+    if(!store||(e.key!==KEY&&e.key!==null))return;
+    if(e.storageArea&&e.storageArea!==store)return;
+    let n;
+    try{const raw=store.getItem(KEY);n=raw?sanitize(JSON.parse(raw)):sanitize(null);}catch(err){return;}
+    SYNC.pending=n;applyExternal();
+  });
   /* ---------- 3D WORLD (Three.js r149 UMD) ---------- */
   const W3=(function(){
     /* --- night state: ONE cached source for the map, the home sky and the skyline image (works without WebGL too) --- */
@@ -896,6 +1202,8 @@ const RVA = (function(){
     /* --- power tier: decided BEFORE any renderer exists (antialias cannot change later).
        Auto: few cores / little memory / Save-Data -> low; touch devices -> mid; else high.
        A slow measured frame time demotes to low at runtime. Override: ?power=low|mid|high or localStorage 'rva-power'. --- */
+    const DEBUG=(()=>{try{return /[?&]debug\b/.test(location.search);}catch(e){return false;}})();
+    const AUTO_KEY='rva-power-auto',ORDER=['low','mid','high'],RANK={low:0,mid:1,high:2};
     const TIERS={
       high:{dprCap:2,msaa:true,shadowSize:2048,shadowSoft:true,fps:60,skyFps:30,walkerScale:1,keepHoods:4,seg:1},
       mid:{dprCap:1.5,msaa:true,shadowSize:1024,shadowSoft:false,fps:30,skyFps:30,walkerScale:1,keepHoods:2,seg:1},
@@ -906,12 +1214,21 @@ const RVA = (function(){
       if(!ov){try{ov=(localStorage.getItem('rva-power')||'').toLowerCase();}catch(e){}}
       const reasons=[];if(hc<=2)reasons.push('cpu-cores:'+hc);if(mem&&mem<=2)reasons.push('device-memory:'+mem+'GB');if(save)reasons.push('save-data');if(coarse&&hc<=4)reasons.push('touch-device-cores:'+hc);
       const forced=!!TIERS[ov];let tier=forced?ov:(reasons.length?'low':(coarse?'mid':'high'));if(forced)reasons.push('override:'+ov);
-      const P={tier,reasons,forced,coarse,cores:hc,memoryGB:mem||null,frameMs:0,downgraded:false};Object.assign(P,TIERS[tier]);P.msaa0=P.msaa;P.seg0=P.seg;return P;})();
+      // Remembered auto tier (set by the frame governor on an earlier visit); never raises the tier, expires after 14 days.
+      if(!forced){try{const m=JSON.parse(localStorage.getItem(AUTO_KEY)||'null');if(m&&TIERS[m.t]&&Date.now()-m.at<14*864e5&&RANK[m.t]<RANK[tier]){tier=m.t;reasons.push('remembered:'+m.t);}}catch(e){}}
+      const P={tier,reasons,forced,coarse,saveData:save,cores:hc,memoryGB:mem||null,frameMs:0,cpuMs:0,rafMs:0,missed:0,gpu:'',downgraded:false,promoted:false};Object.assign(P,TIERS[tier]);P.msaa0=P.msaa;P.seg0=P.seg;P.start=tier;return P;})();
     window.RVA_POWER=POWER;
+    function rememberTier(){if(POWER.forced)return;try{if(POWER.tier===POWER.start&&!POWER.downgraded)localStorage.removeItem(AUTO_KEY);else localStorage.setItem(AUTO_KEY,JSON.stringify({t:POWER.tier,at:Date.now()}));}catch(e){}}
+    // Known-weak GPUs (old Mali/Adreno/PowerVR, software rasterizers). The string is often masked (Safari: "Apple GPU"): then nothing changes.
+    const WEAK_GPU=/Mali-4\d\d|Mali-T[67]\d\d|Adreno \(TM\) [34]\d\d|Adreno \(TM\) 50\d|PowerVR SGX|PowerVR Rogue G6|SwiftShader|llvmpipe|softpipe|Microsoft Basic Render/i;
 
     let ok=false;
     // Support probe: release the throwaway context right away so only the two real contexts stay alive.
-    try{ok=!!window.THREE&&(()=>{const c=document.createElement('canvas');const gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(!gl)return false;const lc=gl.getExtension('WEBGL_lose_context');if(lc)lc.loseContext();return true;})();}catch(e){ok=false;}
+    // The same throwaway context probes the GPU name BEFORE any real renderer exists, so a weak GPU also loses MSAA.
+    try{ok=!!window.THREE&&(()=>{const c=document.createElement('canvas');const gl=c.getContext('webgl')||c.getContext('experimental-webgl');if(!gl)return false;
+      try{const di=gl.getExtension('WEBGL_debug_renderer_info');POWER.gpu=String(gl.getParameter(di?di.UNMASKED_RENDERER_WEBGL:gl.RENDERER)||'');}catch(e){}
+      const lc=gl.getExtension('WEBGL_lose_context');if(lc)lc.loseContext();return true;})();}catch(e){ok=false;}
+    if(ok&&!POWER.forced&&POWER.tier!=='low'&&WEAK_GPU.test(POWER.gpu)){Object.assign(POWER,TIERS.low);POWER.tier=POWER.start='low';POWER.msaa0=false;POWER.seg0=TIERS.low.seg;POWER.reasons.push('gpu:'+POWER.gpu.slice(0,60));}
     const NOOP={ok:false,mode:'off',setActive(){},select(){},kick(){},refresh(){},sky:{setActive(){}}};
     if(!ok)return NOOP;
     const TH=THREE, SQ2=Math.SQRT2, SQ6=Math.sqrt(6);
@@ -1024,8 +1341,19 @@ const RVA = (function(){
     function sun(s){const g=new TH.Group();g.add(glowSprite(0xffd76a,5.2,0.75));const rays=new TH.Group();for(let i=0;i<10;i++){const a=i/10*Math.PI*2;const r=P(capG(0.13,0.26),M(C.glow,{emissive:0xffc400,emissiveIntensity:0.55}),Math.cos(a)*1.48,Math.sin(a)*1.48,-0.15,false);r.rotation.z=a-Math.PI/2;rays.add(r);}g.add(rays);
       g.add(P(sph(1,28),M(C.sun,{emissive:0xffa800,emissiveIntensity:0.5,roughness:0.5}),0,0,0,false));addFace(g,0.97,1,'happy');g.userData.rays=rays;
       bakeInPlace(rays);rays.userData.keep=true;bakeInPlace(g);g.scale.setScalar(s||1);return g;}
-    function moon(s){const g=new TH.Group();g.add(glowSprite(0xbcd0ff,4,0.55));g.add(P(sph(0.9,28),M(C.moon,{emissive:0xd8d4ff,emissiveIntensity:0.25,roughness:0.9}),0,0,0,false));
-      [[0.45,0.4,0.16],[-0.5,0.35,0.11],[0.35,-0.5,0.13]].forEach(([x,y,r])=>{const c=P(sph(r,12),M(0xd9d2c0,{roughness:1}),x,y,0.78-Math.hypot(x,y)*0.25,false);c.scale.z=0.35;g.add(c);});
+    /* --- moon phase texture (SN14): today's terminator painted into an equirectangular CanvasTexture shared by every
+       3D moon (home sky + diorama skies). Unlit material, so the scene lights never fight the painted phase.
+       The sphere is flagged keep, so bakeInPlace leaves it unmerged (merging drops UVs). Redrawn at most once a day. --- */
+    const moonT={tex:null,mat:null,day:'',chk:0};
+    function paintMoonTex(){const c=moonT.tex.image,W=c.width,H=c.height,x=c.getContext('2d'),img=x.createImageData(W,H),d=img.data,m=moonInfo(new Date());
+      for(let j=0;j<H;j++){const th=(j+0.5)/H*Math.PI,ny=Math.cos(th),st=Math.sin(th);for(let i=0;i<W;i++){const ph=(i+0.5)/W*Math.PI*2,nx=-Math.cos(ph)*st,nz=Math.sin(ph)*st;
+        const col=moonRGB(moonLight(nx,ny,nz,m.frac,m.waxing),nz>0?moonAlbedo(nx,ny):1),o=(j*W+i)*4;d[o]=col[0];d[o+1]=col[1];d[o+2]=col[2];d[o+3]=255;}}
+      x.putImageData(img,0,0);moonT.tex.needsUpdate=true;moonT.day=new Date().toDateString();}
+    function moonMat(){if(!moonT.mat){const c=document.createElement('canvas');c.width=128;c.height=64;moonT.tex=new TH.CanvasTexture(c);moonT.tex.encoding=TH.sRGBEncoding;paintMoonTex();
+        moonT.mat=new TH.MeshBasicMaterial({map:moonT.tex});}return moonT.mat;}
+    // cheap per-frame check (once a minute) that repaints the phase after midnight
+    function moonTick(){const n=Date.now();if(!moonT.tex||n-moonT.chk<60000)return;moonT.chk=n;if(new Date().toDateString()!==moonT.day)paintMoonTex();}
+    function moon(s){const g=new TH.Group();g.add(glowSprite(0xbcd0ff,4,0.55));const ball=P(sph(0.9,28),moonMat(),0,0,0,false);ball.userData.keep=true;ball.name='moonSphere';g.add(ball);
       addFace(g,0.87,0.85,'sleepy');bakeInPlace(g);g.scale.setScalar(s||1);return g;}
     function pin(){const g=new TH.Group();const m=M(C.pin,{emissive:0xff7a00,emissiveIntensity:0.28,roughness:0.35});
       g.add(P(sph(0.42,20),m,0,1.3,0));const t=P(cone(0.31,0.8,20),m,0,0.8,0);t.rotation.x=Math.PI;g.add(t);
@@ -1178,8 +1506,8 @@ const RVA = (function(){
     function walker(w,R,pts,y,s){const p=person(R);p.scale.setScalar(s||1);const wk={obj:p,path:makePath(pts),d:R()*100,speed:0.45+R()*0.25,y:y||0,phase:R()*6,blink:1+R()*3,pause:3+R()*8,paused:0,heading:0,off:false};placeWalker(wk);w.act.add(p,0.3);w.walkers.push(wk);return wk;}
     function placeWalker(w){const p=at(w.path,w.d);w.obj.position.set(p.x,w.y,p.z);w.heading=Math.atan2(p.hx,p.hz);w.obj.rotation.y=w.heading;}
     function stepWalker(w,dt,t){if(w.off)return;const u=w.obj.userData;
-      if(w.paused>0){w.paused-=dt;u.arms[1].rotation.z=2.5+Math.sin(t*12)*0.35;u.legs.forEach(l=>l.rotation.x*=0.8);u.body.position.y=0;if(w.paused<=0)w.pause=5+Math.random()*9;}
-      else{w.pause-=dt;if(w.pause<=0){w.paused=1.4;}w.d+=w.speed*dt;w.phase+=dt*w.speed*15;const p=at(w.path,w.d);w.obj.position.set(p.x,w.y,p.z);const target=Math.atan2(p.hx,p.hz);let diff=target-w.heading;diff=Math.atan2(Math.sin(diff),Math.cos(diff));w.heading+=diff*Math.min(1,dt*10);w.obj.rotation.y=w.heading;
+      if(w.paused>0){w.paused-=dt;u.arms[1].rotation.z=2.5+Math.sin(t*12)*0.35;const kd=Math.exp(-dt*13.4);u.legs.forEach(l=>l.rotation.x*=kd);u.body.position.y=0;if(w.paused<=0)w.pause=5+Math.random()*9;}
+      else{w.pause-=dt;if(w.pause<=0){w.paused=1.4;}w.d+=w.speed*dt;w.phase+=dt*w.speed*15;const p=at(w.path,w.d);w.obj.position.set(p.x,w.y,p.z);const target=Math.atan2(p.hx,p.hz);let diff=target-w.heading;diff=Math.atan2(Math.sin(diff),Math.cos(diff));w.heading+=diff*(1-Math.exp(-dt*10));w.obj.rotation.y=w.heading;
         const s=Math.sin(w.phase);u.legs[0].rotation.x=s*0.6;u.legs[1].rotation.x=-s*0.6;u.arms[0].rotation.x=-s*0.5;u.arms[1].rotation.x=s*0.5;u.arms[1].rotation.z=0.15;u.body.position.y=Math.abs(s)*0.05;}
       w.blink-=dt;const sc=w.blink<0.12?0.1:1;u.eyes.forEach(e=>e.scale.y=sc);if(w.blink<0)w.blink=2+Math.random()*3;}
     function driver(w,R,axis,lane,dir,lo,hi,y,color,scale){const c=car(color);if(scale)c.scale.setScalar(scale);const d={obj:c,axis,lane,dir,lo,hi,y:y||0,pos:lerp(lo,hi,R()),speed:1.1+R()*0.5,s:scale||1};stepCar(d,0);w.act.add(c,0.5);w.cars.push(d);return d;}
@@ -1323,16 +1651,66 @@ const RVA = (function(){
 
     /* --- time-sliced jobs: build work runs in ~10 ms slices between frames --- */
     const BUDGET=10;
-    function runJob(gen,done){const step=()=>{const t0=performance.now();let r;do{r=gen.next();}while(!r.done&&performance.now()-t0<BUDGET);if(r.done)done(r.value);else setTimeout(step,0);};setTimeout(step,0);}
+    // tok (optional): {cancel:true} abandons the job between slices (a cancelled pre-warm). Nothing is on the GPU yet, so GC frees it.
+    function runJob(gen,done,tok){const step=()=>{if(tok&&tok.cancel)return;const t0=performance.now();let r;do{r=gen.next();}while(!r.done&&performance.now()-t0<BUDGET);if(r.done)done(r.value);else setTimeout(step,0);};setTimeout(step,0);}
     function* cityJob(){const w=yield* buildCity();return yield* finalizeGen(w);}
     function* hoodJob(i){const w=yield* buildHood(i);return yield* finalizeGen(w);}
 
     /* --- controller --- */
-    const ctl={inited:false,active:false,visible:true,lost:false,mode:'city',city:null,cityWait:null,hoods:{},jobs:{},order:[],cur:null,hoodIdx:null,pending:undefined,raf:0,lastT:0,renderer:null,labelsMode:null,labelKey:'',perf:{skip:10,s:[]}};
+    const ctl={inited:false,active:false,visible:true,lost:false,mode:'city',city:null,cityWait:null,hoods:{},jobs:{},order:[],cur:null,hoodIdx:null,pending:undefined,raf:0,lastT:0,renderer:null,labelsMode:null,labelKey:'',pw:null,compiling:0,
+      perf:{skip:10,n:0,miss:0,raf:0,cpu:0,atTier:0}};
     let stage,canvas,labels,fade,badge,busyT=0;
     const dpr=()=>Math.min(window.devicePixelRatio||1,POWER.dprCap);
     function ensureCity(cb){if(ctl.city){cb&&cb(ctl.city);return;}if(!ctl.cityWait){ctl.cityWait=[];runJob(cityJob(),w=>{ctl.city=w;const q=ctl.cityWait;ctl.cityWait=null;q.forEach(f=>f(w));});}if(cb)ctl.cityWait.push(cb);}
-    function ensureHood(i,cb){const h=ctl.hoods[i];if(h){cb&&cb(h);return;}let j=ctl.jobs[i];if(!j){j=ctl.jobs[i]=[];runJob(hoodJob(i),w=>{delete ctl.jobs[i];ctl.hoods[i]=w;if(ctl.order.indexOf(i)<0)ctl.order.unshift(i);if(ctl.inited)w.frame(stage.clientWidth||1,stage.clientHeight||1);j.forEach(f=>f(w));});}if(cb)j.push(cb);}
+    // pwTok marks a speculative pre-warm build (SN8); any real request for the same hood adopts the job (j.pw=false).
+    function ensureHood(i,cb,pwTok){const h=ctl.hoods[i];if(h){cb&&cb(h);return;}let j=ctl.jobs[i];
+      if(!j){j=ctl.jobs[i]=[];j.pw=!!pwTok;runJob(hoodJob(i),w=>{if(ctl.jobs[i]!==j)return;delete ctl.jobs[i];if(ctl.pw&&ctl.pw.j===j)ctl.pw=null;ctl.hoods[i]=w;
+        if(j.pw)keepPrewarmed(i);else if(ctl.order.indexOf(i)<0)ctl.order.unshift(i);
+        if(ctl.hoods[i]===w){if(ctl.inited){w.frame(stage.clientWidth||1,stage.clientHeight||1);precompile(w,null,true);}}j.forEach(f=>f(w));},pwTok);if(pwTok)ctl.pw={i,j,tok:pwTok};}
+      else if(!pwTok)j.pw=false;
+      if(cb)j.push(cb);}
+    /* --- SN7: shader pre-compile in small slices. three r149 links programs synchronously inside compile(scene), which is
+       one long task on old Mali/Adreno. Instead: one representative object per program-relevant key, compiled through a
+       proxy scene (same lights, same fog) that exposes only a slice of objects; each slice runs in an idle callback
+       (setTimeout fallback for Safari) and stops after ~8 ms. checkShaderErrors is forced on only inside a slice, so the
+       link really finishes there and not on the first visible frame. Shadow-depth programs still link on the first
+       frame, behind the fade. --- */
+    const idleCb=window.requestIdleCallback?(f,t)=>requestIdleCallback(f,{timeout:t}):(f)=>setTimeout(()=>f(null),16);
+    function compileReps(scene){const seen=new Set(),out=[];scene.traverse(o=>{const ms=o.material;if(!ms)return;(Array.isArray(ms)?ms:[ms]).forEach(m=>{const g=o.geometry,
+        k=m.uuid+'|'+(o.isInstancedMesh?1:0)+(o.instanceColor?1:0)+(o.isSprite?1:0)+(g&&g.attributes&&g.attributes.color?1:0)+(o.receiveShadow?1:0);if(!seen.has(k)){seen.add(k);out.push(o);}});});return out;}
+    function precompile(w,cb,lazy,r){r=r||ctl.renderer;if(!r||w.disposed||w.compiled===r){cb&&cb();return;}
+      if(w.pcWait){if(cb){w.pcWait.push(cb);if(w.pcFast)w.pcFast();}return;}
+      w.pcWait=cb?[cb]:[];const objs=compileReps(w.scene),proxy=Object.create(w.scene);let cur=null,i=0,gen=0,done=false;proxy.traverse=f=>{if(cur)f(cur);};ctl.compiling++;
+      const fin=()=>{if(done)return;done=true;ctl.compiling--;w.compiled=r;w.pcFast=null;const q=w.pcWait;w.pcWait=null;q.forEach(f=>f());};
+      const slice=dl=>{if(done)return;if(w.disposed||(r===ctl.renderer?ctl.lost:sky.lost)){i=objs.length;}const t0=performance.now(),prev=r.debug.checkShaderErrors;r.debug.checkShaderErrors=true;
+        try{while(i<objs.length){cur=objs[i++];r.compile(proxy,w.cam);if(performance.now()-t0>8||(dl&&dl.timeRemaining&&dl.timeRemaining()<2))break;}}catch(e){i=objs.length;}
+        cur=null;r.debug.checkShaderErrors=prev;if(i<objs.length)next();else fin();};
+      // lazy (background) slices wait for idle time; once someone waits on the result (a view swap), short timeouts keep the fade brief
+      const next=()=>{const g=++gen,run=dl=>{if(g===gen)slice(dl);};if(lazy)idleCb(run,1500);else setTimeout(()=>run(null),0);};
+      w.pcFast=()=>{if(lazy){lazy=false;next();}};next();}
+    /* --- SN8: pre-warm a hood on pointerdown. At most one at a time; cancelled past 10px of finger travel (a scroll) or on
+       pointercancel; skipped on the low tier, under Save-Data, while any other build runs; never evicts the current or
+       most recently entered hood. --- */
+    const saveData=()=>{try{return !!(navigator.connection&&navigator.connection.saveData);}catch(e){return false;}};
+    function prewarm(i){i=+i;if(!(i>=0)||!ctl.city||POWER.tier==='low'||saveData()||ctl.pw||ctl.cityWait)return false;
+      if(!ctl.city.plots.some(p=>p.i===i)||ctl.hoods[i]||Object.keys(ctl.jobs).length)return false;ensureHood(i,null,{cancel:false});return true;}
+    function cancelPrewarm(){const pw=ctl.pw;if(!pw)return;ctl.pw=null;if(ctl.jobs[pw.i]===pw.j&&pw.j.pw){pw.tok.cancel=true;delete ctl.jobs[pw.i];}}
+    function keepPrewarmed(i){if(ctl.order.indexOf(i)<0)ctl.order.unshift(i);const prot=new Set([i]);if(ctl.hoodIdx!=null)prot.add(ctl.hoodIdx);const last=ctl.order[ctl.order.length-1];if(last!==i)prot.add(last);
+      while(ctl.order.length>POWER.keepHoods){let k=ctl.order.find(x=>!prot.has(x));if(k===undefined)k=i;ctl.order.splice(ctl.order.indexOf(k),1);const w=ctl.hoods[k];if(w&&w!==ctl.cur){disposeWorld(w);delete ctl.hoods[k];}if(k===i)break;}}
+    const PWD={id:null,x:0,y:0};
+    function pwDown(e,i){if(e.isPrimary===false||(e.button!=null&&e.button>0))return;PWD.id=e.pointerId;PWD.x=e.clientX;PWD.y=e.clientY;prewarm(i);}
+    document.addEventListener('pointerdown',e=>{const t=e.target&&e.target.closest&&e.target.closest('[data-act="sector"]');if(t)pwDown(e,t.getAttribute('data-arg'));},{capture:true,passive:true});
+    document.addEventListener('pointermove',e=>{if(ctl.pw&&e.pointerId===PWD.id&&Math.hypot(e.clientX-PWD.x,e.clientY-PWD.y)>10)cancelPrewarm();},{capture:true,passive:true});
+    document.addEventListener('pointercancel',()=>cancelPrewarm(),{capture:true,passive:true});
+    // Desktop (hover:hover): a mouse resting 150ms on a hood tile or board plot pre-warms it too; leaving cancels.
+    const HOVER=(()=>{try{return matchMedia('(hover:hover) and (pointer:fine)').matches;}catch(e){return false;}})();
+    const HV={t:0,i:null};
+    function hoverStart(i){clearTimeout(HV.t);if(HV.i===i)return;HV.i=i;HV.t=setTimeout(()=>{PWD.id=null;prewarm(i);},150);}
+    function hoverEnd(){clearTimeout(HV.t);const was=HV.i;HV.i=null;if(was!=null&&ctl.pw&&ctl.pw.i===+was)cancelPrewarm();}
+    if(HOVER){
+      document.addEventListener('pointerover',e=>{if(e.pointerType!=='mouse')return;const t=e.target&&e.target.closest&&e.target.closest('[data-act="sector"]');if(t)hoverStart(t.getAttribute('data-arg'));},{passive:true});
+      document.addEventListener('pointerout',e=>{if(e.pointerType!=='mouse')return;const t=e.target&&e.target.closest&&e.target.closest('[data-act="sector"]');if(t&&!(e.relatedTarget&&t.contains(e.relatedTarget)))hoverEnd();},{passive:true});
+    }
     function setSkyCss(){if(!stage)return;const n=isNight();const w=ctl.cur;const g=ctl.mode==='hood'&&w&&w.sky?(n?w.skyN:w.sky):(n?['#1b1640','#3a2a6b']:['#78c8f5','#d9f2ff']);stage.style.background=`linear-gradient(180deg,${g[0]} 0%,${g[1]} 78%)`;}
     function busy(text){clearTimeout(busyT);if(!text){fade.innerHTML='';return;}fade.classList.add('on');busyT=setTimeout(()=>{fade.innerHTML=`<span class="map-title-pill" role="status" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap">${esc(text)}</span>`;},160);}
     // Compact two-line marker: 3D icon over the short name, event count as a corner badge. >=44px target.
@@ -1343,7 +1721,12 @@ const RVA = (function(){
     function init(){if(ctl.inited)return true;stage=$('mapStage');canvas=$('mapCanvas');labels=$('mapLabels');fade=$('mapFade');badge=$('mapBadge');if(!stage)return false;
       try{ctl.renderer=new TH.WebGLRenderer({canvas,antialias:POWER.msaa0,alpha:true,powerPreference:'low-power'});}catch(e){return false;}
       const r=ctl.renderer;r.setPixelRatio(dpr());r.shadowMap.enabled=true;r.shadowMap.type=POWER.shadowSoft?TH.PCFSoftShadowMap:TH.PCFShadowMap;r.shadowMap.autoUpdate=false;r.shadowMap.needsUpdate=true;r.outputEncoding=TH.sRGBEncoding;
-      let down=null;canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};});canvas.addEventListener('pointercancel',()=>{down=null;});
+      r.debug.checkShaderErrors=DEBUG;// production skips the synchronous link-status query on every new program (SN7)
+      let down=null;canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};if(ctl.mode==='city'&&ctl.city&&POWER.tier!=='low'){const b=canvas.getBoundingClientRect();const idx=pickPlot((e.clientX-b.left)/b.width*2-1,-((e.clientY-b.top)/b.height)*2+1);if(idx!=null)pwDown(e,idx);}});canvas.addEventListener('pointercancel',()=>{down=null;});
+      if(HOVER){let hx=0,hy=0,ht=0;   // board plots: pick once the mouse has rested 150ms, not on every move
+        canvas.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse'||e.buttons)return;hx=e.clientX;hy=e.clientY;clearTimeout(ht);
+          ht=setTimeout(()=>{if(ctl.mode!=='city'||!ctl.city||POWER.tier==='low')return;const b=canvas.getBoundingClientRect();const idx=pickPlot((hx-b.left)/b.width*2-1,-((hy-b.top)/b.height)*2+1);if(idx==null)hoverEnd();else if(String(idx)!==HV.i){hoverEnd();HV.i=String(idx);PWD.id=null;prewarm(idx);}},150);},{passive:true});
+        canvas.addEventListener('pointerleave',()=>{clearTimeout(ht);hoverEnd();},{passive:true});}
       // pick on click (a real click target, so mobile touch-adjustment does not re-target board taps to nearby labels)
       canvas.addEventListener('click',e=>{const d=down;down=null;if(d&&Math.hypot(e.clientX-d.x,e.clientY-d.y)>8)return;if(ctl.mode!=='city'||!ctl.city)return;const b=canvas.getBoundingClientRect();const idx=pickPlot((e.clientX-b.left)/b.width*2-1,-((e.clientY-b.top)/b.height)*2+1);if(idx!=null)tapSector(idx);});
       canvas.addEventListener('webglcontextlost',()=>{ctl.lost=true;if(ctl.raf){cancelAnimationFrame(ctl.raf);ctl.raf=0;}});
@@ -1351,8 +1734,8 @@ const RVA = (function(){
       if(window.ResizeObserver)new ResizeObserver(()=>resize()).observe(stage);
       if(window.IntersectionObserver)new IntersectionObserver(es=>{ctl.visible=es[es.length-1].isIntersecting;if(ctl.visible)kick();}).observe(stage);
       ctl.inited=true;
-      ensureCity(()=>{ctl.city.frame(stage.clientWidth||1,stage.clientHeight||1);buildLabels();if(!ctl.cur){ctl.cur=ctl.city;ctl.mode='city';ctl.renderer.shadowMap.needsUpdate=true;}busy(null);fade.classList.remove('on');setSkyCss();
-        const pnd=ctl.pending;ctl.pending=undefined;if(pnd!==undefined)select(pnd);resize();});
+      ensureCity(()=>precompile(ctl.city,()=>{ctl.city.frame(stage.clientWidth||1,stage.clientHeight||1);buildLabels();if(!ctl.cur){ctl.cur=ctl.city;ctl.mode='city';ctl.renderer.shadowMap.needsUpdate=true;}busy(null);fade.classList.remove('on');setSkyCss();
+        const pnd=ctl.pending;ctl.pending=undefined;if(pnd!==undefined)select(pnd);resize();}));
       if(!ctl.city)busy('Building the city board…');
       return true;}
     function resize(){if(!ctl.inited)return;const w=stage.clientWidth,h=stage.clientHeight;if(!w||!h)return;const r=ctl.renderer;if(r.getPixelRatio()!==dpr())r.setPixelRatio(dpr());r.setSize(w,h,false);
@@ -1385,21 +1768,36 @@ const RVA = (function(){
     function pickExact(nx,ny){const c=ctl.city;_ndc.set(nx,ny);_ray.setFromCamera(_ndc,c.cam);const pins=c.act.ims.filter(im=>im.userData.bin&&im.userData.bin.items[0].rig.userData.plot!=null);
       const hits=_ray.intersectObjects(c.merged.concat([c.board],pins),false);for(const h of hits){const o=h.object;if(o.isInstancedMesh){const it=o.userData.bin.items[h.instanceId];if(it&&it.rig.visible)return it.rig.userData.plot;continue;}
         const rg=o.userData.ranges;if(!rg)return null;let tag=-1;for(const r of rg){if(r[0]<=h.faceIndex)tag=r[1];else break;}return tag>=0?tag:null;}return null;}
-    function sampleFrame(ms){const pf=ctl.perf;if(pf.skip>0){pf.skip--;return;}pf.s.push(ms);if(pf.s.length<45)return;const a=pf.s.slice().sort((x,y)=>x-y),med=a[a.length>>1];pf.s=[];POWER.frameMs=+med.toFixed(1);
-      if(!POWER.forced&&POWER.tier!=='low'&&med>24)demote('slow-frames:'+med.toFixed(1)+'ms');}
-    function demote(why){Object.assign(POWER,TIERS.low,{msaa:POWER.msaa0,seg:POWER.seg0});POWER.tier='low';POWER.downgraded=true;POWER.reasons.push(why);
+    /* --- SN11 frame governor. WebGL submission is async, so CPU time around render() stays low on GPU-starved phones.
+       The governor therefore watches the rAF-to-rAF delta of rendered ambient frames against the tier's target interval
+       (missed deadlines), with exponentially weighted averages (alpha 0.05). Demote one step when >30% of frames miss
+       for 2 s; promote at most once per session, never above the start tier, never on touch devices, only after 10 s
+       with no missed frames. CPU submit ms is kept as a secondary signal and for the ?debug HUD. --- */
+    const EWA=0.05;
+    function sampleFrame(delta,cpu){const pf=ctl.perf;if(pf.skip>0){pf.skip--;return;}
+      if(!(delta>0)||delta>250||Object.keys(ctl.jobs).length||ctl.compiling||ctl.cityWait)return;// stalls from builds/tab switches are not the GPU's fault
+      const tgt=1000/POWER.fps,missed=delta>tgt*1.5;if(missed)POWER.missed+=Math.max(1,Math.round(delta/tgt)-1);
+      if(!pf.n){pf.raf=delta;pf.cpu=cpu;pf.miss=missed?1:0;}else{pf.raf+=(delta-pf.raf)*EWA;pf.cpu+=(cpu-pf.cpu)*EWA;pf.miss+=((missed?1:0)-pf.miss)*EWA;}
+      pf.n++;pf.atTier++;if(missed)pf.lastMiss=pf.atTier;POWER.rafMs=+pf.raf.toFixed(1);POWER.cpuMs=+pf.cpu.toFixed(2);POWER.frameMs=POWER.cpuMs;
+      if(POWER.forced)return;const per=POWER.fps;
+      if(POWER.tier!=='low'&&pf.atTier>=per*2&&(pf.miss>0.3||pf.cpu>24)){demote(pf.miss>0.3?'missed-frames:'+Math.round(pf.miss*100)+'%':'slow-cpu:'+pf.cpu.toFixed(1)+'ms');return;}
+      if(!POWER.promoted&&!POWER.coarse&&RANK[POWER.tier]<RANK[POWER.start]&&pf.atTier>=per*10&&pf.atTier-(pf.lastMiss||0)>=per*10&&pf.miss<0.02&&pf.cpu<tgt*0.4)
+        setTier(ORDER[RANK[POWER.tier]+1],'promoted:steady',true);}
+    function setTier(name,why,up){Object.assign(POWER,TIERS[name],{msaa:POWER.msaa0,seg:POWER.seg0});POWER.tier=name;if(up)POWER.promoted=true;else POWER.downgraded=true;POWER.reasons.push(why);
+      const pf=ctl.perf;pf.n=0;pf.atTier=0;pf.lastMiss=0;pf.skip=10;rememberTier();
       [ctl.city].concat(Object.values(ctl.hoods)).forEach(w=>w&&applyWalkerScale(w));resize();if(sky.r){sky.r.setPixelRatio(Math.min(window.devicePixelRatio||1,POWER.dprCap));skyResize();}lru();}
+    function demote(why,to){const t=to&&TIERS[to]?to:ORDER[Math.max(0,RANK[POWER.tier]-1)];if(t===POWER.tier)return;setTier(t,why,false);}
     function frame(t){ctl.raf=0;if(!ctl.active||!ctl.visible||ctl.lost||!ctl.cur||document.hidden)return;const anim=!reduce(),moving=!ctl.cur.settled();
       // fps cap while only ambient animation runs; camera moves always get full rate
       if(anim&&!moving&&ctl.lastT&&t-ctl.lastT<1000/POWER.fps-4){ctl.raf=requestAnimationFrame(frame);return;}
-      const now=t/1000,dt=Math.min(0.05,ctl.lastT?(t-ctl.lastT)/1000:0.016);ctl.lastT=t;const t0=performance.now();
-      const n=isNight();setNightMats(n);ctl.cur.setNight(n);ctl.cur.update(dt,now,anim);ctl.renderer.render(ctl.cur.scene,ctl.cur.cam);updateLabels();if(anim&&!moving)sampleFrame(performance.now()-t0);
+      const delta=ctl.lastT?t-ctl.lastT:0,now=t/1000,dt=Math.min(0.05,delta?delta/1000:0.016);ctl.lastT=t;const t0=performance.now();moonTick();
+      const n=isNight();setNightMats(n);ctl.cur.setNight(n);ctl.cur.update(dt,now,anim);ctl.renderer.render(ctl.cur.scene,ctl.cur.cam);updateLabels();if(anim&&!moving)sampleFrame(delta,performance.now()-t0);
       if(anim||!ctl.cur.settled())ctl.raf=requestAnimationFrame(frame);else ctl.lastT=0;}
     function kick(){if(ctl.active&&ctl.inited&&ctl.visible&&!ctl.lost&&!ctl.raf&&!document.hidden){ctl.raf=requestAnimationFrame(frame);}}
     function lru(){const keep=POWER.keepHoods;while(ctl.order.length>keep){const k=ctl.order.find(j=>!(ctl.mode==='hood'&&j===ctl.hoodIdx));if(k===undefined)break;ctl.order.splice(ctl.order.indexOf(k),1);const w=ctl.hoods[k];if(w&&w!==ctl.cur){disposeWorld(w);delete ctl.hoods[k];}}}
-    function swapTo(world,mode,after){const go=()=>{const prev=ctl.cur;ctl.cur=world;ctl.mode=mode;world.frame(stage.clientWidth,stage.clientHeight);ctl.renderer.shadowMap.needsUpdate=true;if(prev&&prev!==world)releaseShadow(prev);
+    function swapTo(world,mode,after){const go=()=>{if(mode==='hood'&&ctl.hoodIdx!==world.idx){busy(null);fade.classList.remove('on');return;}/* left the hood (Back/Close) during the fade */const prev=ctl.cur;ctl.cur=world;ctl.mode=mode;world.frame(stage.clientWidth,stage.clientHeight);ctl.renderer.shadowMap.needsUpdate=true;if(prev&&prev!==world)releaseShadow(prev);
         if(mode==='hood'){const k=ctl.order.indexOf(world.idx);if(k>=0)ctl.order.splice(k,1);ctl.order.push(world.idx);lru();}
-        setSkyCss();renderBadge();if(after)after();ctl.lastT=0;ctl.perf.skip=10;ctl.perf.s=[];kick();busy(null);setTimeout(()=>fade.classList.remove('on'),30);};
+        setSkyCss();renderBadge();if(after)after();ctl.lastT=0;ctl.perf.skip=10;kick();busy(null);setTimeout(()=>fade.classList.remove('on'),30);};
       if(reduce()||fade.classList.contains('on')){fade.classList.add('on');go();return;}fade.classList.add('on');setTimeout(go,230);}
     function renderBadge(){if(ctl.mode==='hood'){const s=SECTORS[ctl.hoodIdx];badge.hidden=false;badge.innerHTML=`<button class="map-back" data-act="clearFocus">← City board</button><span class="map-title-pill">${esc(s.icon)} ${esc(s.name)}</span>`;}else{badge.hidden=true;badge.innerHTML='';}}
     function select(i){if(!init())return;if(!ctl.city||!ctl.cur){ctl.pending=i==null?null:i;return;}
@@ -1407,7 +1805,7 @@ const RVA = (function(){
       if(ctl.mode==='hood'&&ctl.hoodIdx===i)return;
       const p=ctl.city.plots.find(x=>x.i===i);if(!p)return;ctl.hoodIdx=i;
       ensureHood(i);// start building right away, in slices, while the camera zooms
-      const enter=()=>{if(ctl.hoodIdx!==i)return;if(!ctl.hoods[i])busy('Building '+SECTORS[i].name+'…');ensureHood(i,h=>{if(ctl.hoodIdx!==i)return;h.zoom=0.72;h.goalZoom=1;h.target.set(0,h.ty,0);h.goalT.set(0,h.ty,0);swapTo(h,'hood');});};
+      const enter=()=>{if(ctl.hoodIdx!==i)return;if(!ctl.hoods[i])busy('Building '+SECTORS[i].name+'…');ensureHood(i,h=>precompile(h,()=>{if(ctl.hoodIdx!==i||ctl.hoods[i]!==h)return;h.zoom=0.72;h.goalZoom=1;h.target.set(0,h.ty,0);h.goalT.set(0,h.ty,0);swapTo(h,'hood');}));};
       if(ctl.mode==='hood'){enter();return;}
       ctl.mode='zoomIn';ctl.city.goalT.set(p.x,1,p.z);ctl.city.goalZoom=2.6;kick();setTimeout(enter,reduce()?0:430);}
     function setActive(on){ctl.active=on;if(on){if(!init())return;setSkyCss();kick();}}
@@ -1416,7 +1814,7 @@ const RVA = (function(){
     /* --- HOME SKY (sun/moon + clouds + stars), batched like the map actors --- */
     const sky={inited:false,active:false,visible:true,raf:0,last:0,lost:false};
     function skyInit(){if(sky.inited)return true;const cv=$('skyCanvas');if(!cv)return false;try{sky.r=new TH.WebGLRenderer({canvas:cv,antialias:POWER.msaa0,alpha:true,powerPreference:'low-power'});}catch(e){return false;}
-      sky.r.setPixelRatio(dpr());sky.r.outputEncoding=TH.sRGBEncoding;const sc=new TH.Scene();sky.scene=sc;sc.add(new TH.HemisphereLight(0xffffff,0xbfd8ff,0.95));const dl=new TH.DirectionalLight(0xffffff,0.75);dl.position.set(-3,5,6);sc.add(dl);
+      sky.r.setPixelRatio(dpr());sky.r.outputEncoding=TH.sRGBEncoding;sky.r.debug.checkShaderErrors=DEBUG;const sc=new TH.Scene();sky.scene=sc;sc.add(new TH.HemisphereLight(0xffffff,0xbfd8ff,0.95));const dl=new TH.DirectionalLight(0xffffff,0.75);dl.position.set(-3,5,6);sc.add(dl);
       sky.cam=new TH.OrthographicCamera(-5,5,2,-2,0.1,50);sky.cam.position.set(0,0,20);sky.sun=sun(0.62);sky.moon=moon(0.66);sc.add(sky.sun,sky.moon);sky.act=new Actors(sc);
       const R=rng(77);sky.clouds=[];for(let i=0;i<5;i++){const c=cloud(0.45+R()*0.35,i===1);c.position.z=1+i*0.2;sky.act.add(c);sky.clouds.push({obj:c,x:lerp(-6,6,R()),y:R(),v:0.18+R()*0.25});}
       sky.stars=[];for(let i=0;i<26;i++){const g=new TH.Group();g.add(P(sph(0.035,6),M(0xffffff,{emissive:0xffffff,emissiveIntensity:1}),0,0,0,false));sky.act.add(g);sky.stars.push({obj:g,x:R(),y:R(),p:R()*6});}
@@ -1424,32 +1822,197 @@ const RVA = (function(){
       cv.addEventListener('webglcontextlost',()=>{sky.lost=true;if(sky.raf){cancelAnimationFrame(sky.raf);sky.raf=0;}});cv.addEventListener('webglcontextrestored',()=>{sky.lost=false;sky.last=0;skyKick();});
       if(window.ResizeObserver)new ResizeObserver(()=>skyResize()).observe(cv);
       if(window.IntersectionObserver)new IntersectionObserver(es=>{sky.visible=es[es.length-1].isIntersecting;if(sky.visible)skyKick();}).observe(cv);
-      sky.inited=true;skyResize();return true;}
+      sky.inited=true;sky.ready=false;precompile(sky,()=>{sky.ready=true;sky.last=0;skyKick();},false,sky.r);skyResize();return true;}
     function skyResize(){const cv=$('skyCanvas');if(!cv||!sky.r)return;const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;if(sky.r.getPixelRatio()!==dpr())sky.r.setPixelRatio(dpr());sky.r.setSize(w,h,false);const u=1/42;sky.hw=w*u/2;sky.hh=h*u/2;Object.assign(sky.cam,{left:-sky.hw,right:sky.hw,top:sky.hh,bottom:-sky.hh});sky.cam.updateProjectionMatrix();
       sky.sun.position.set(sky.hw-1.25,sky.hh-1.25,0);sky.moon.position.copy(sky.sun.position);sky.stars.forEach(s=>s.obj.position.set(lerp(-sky.hw,sky.hw,s.x),lerp(0,sky.hh,s.y),-1));sky.last=0;skyKick();}
-    function skyFrame(t){sky.raf=0;if(!sky.active||!sky.visible||sky.lost||document.hidden)return;const anim=!reduce();
+    function skyFrame(t){sky.raf=0;if(!sky.active||!sky.visible||sky.lost||document.hidden||!sky.ready)return;const anim=!reduce();moonTick();
       if(anim&&sky.last&&t-sky.last<1000/POWER.skyFps-4){sky.raf=requestAnimationFrame(skyFrame);return;}
       const now=t/1000,dt=Math.min(0.08,sky.last?(t-sky.last)/1000:0.016);sky.last=t;const n=isNight();
       setNightMats(n);sky.sun.visible=!n;sky.moon.visible=n;sky.stars.forEach(s=>{s.obj.visible=n;s.obj.scale.setScalar(anim?0.6+0.4*Math.sin(now*2+s.p):1);});
       sky.clouds.forEach((c,i)=>{if(anim)c.x+=c.v*dt;if(c.x>sky.hw+2.5)c.x=-sky.hw-2.5;c.obj.position.x=c.x;c.obj.position.y=lerp(-sky.hh*0.15,sky.hh*0.6,c.y)+(anim?Math.sin(now*0.8+i)*0.05:0);});
       if(anim){sky.sun.userData.rays.rotation.z+=dt*0.3;sky.sun.position.y=sky.hh-1.25+Math.sin(now*1.2)*0.06;}
       sky.act.update();sky.r.render(sky.scene,sky.cam);if(anim)sky.raf=requestAnimationFrame(skyFrame);else sky.last=0;}
-    function skyKick(){if(sky.active&&sky.inited&&sky.visible&&!sky.lost&&!sky.raf&&!document.hidden)sky.raf=requestAnimationFrame(skyFrame);}
+    function skyKick(){if(sky.active&&sky.inited&&sky.ready&&sky.visible&&!sky.lost&&!sky.raf&&!document.hidden)sky.raf=requestAnimationFrame(skyFrame);}
 
     /* --- page-level hooks: tab visibility, monitor DPR changes, idle pre-build of the city board --- */
     document.addEventListener('visibilitychange',()=>{if(!document.hidden){ctl.lastT=0;sky.last=0;kick();skyKick();}});
     (function watchDpr(){try{const mq=matchMedia(`(resolution: ${window.devicePixelRatio||1}dppx)`);const h=()=>{if(mq.removeEventListener)mq.removeEventListener('change',h);else mq.removeListener(h);resize();skyResize();watchDpr();};if(mq.addEventListener)mq.addEventListener('change',h);else mq.addListener(h);}catch(e){}})();
     (function prebuild(){const go=()=>setTimeout(()=>{const idle=window.requestIdleCallback||(f=>setTimeout(f,50));idle(()=>ensureCity(),{timeout:4000});},700);if(document.readyState==='complete')go();else window.addEventListener('load',go,{once:true});})();
 
-    const api={ok:true,setActive,select,kick,refresh,get mode(){return ctl.mode;},_ctl:ctl,
+    /* --- SN15 ?debug HUD (never shown to users): tier, rAF delta, missed frames, CPU submit ms, and draw calls /
+       triangles / programs for BOTH renderers (renderer.info resets every render, so these are each one's last frame).
+       Red when the map exceeds the 60-call old-phone budget. aria-hidden: it is a developer overlay, not content. --- */
+    function hud(){if(!DEBUG||!document.body)return;const el=document.createElement('pre');el.id='rvaHud';el.setAttribute('aria-hidden','true');
+      el.style.cssText='position:fixed;left:4px;bottom:4px;z-index:99999;margin:0;padding:4px 6px;font:10px/1.3 ui-monospace,Menlo,Consolas,monospace;background:rgba(0,0,0,0.72);color:#d8ffd8;border-radius:6px;pointer-events:none;white-space:pre;max-width:calc(100vw - 8px);overflow:hidden';
+      document.body.appendChild(el);
+      const info=r=>{if(!r)return 'off';const i=r.info;return i.render.calls+' calls '+i.render.triangles+' tris '+(i.programs?i.programs.length:0)+' progs';};
+      setInterval(()=>{const over=ctl.renderer&&ctl.renderer.info.render.calls>60;el.style.background=over?'rgba(160,0,0,0.85)':'rgba(0,0,0,0.72)';
+        el.textContent='tier '+POWER.tier+' (start '+POWER.start+')'+(POWER.forced?' forced':'')+'\nrAF '+POWER.rafMs+'ms  missed '+POWER.missed+'  miss% '+Math.round(ctl.perf.miss*100)+'\nCPU '+POWER.cpuMs+'ms  fps cap '+POWER.fps+'  dpr '+dpr().toFixed(2)+
+          '\nmap '+info(ctl.renderer)+'\nsky '+info(sky.r)+'\n'+POWER.reasons.slice(-3).join(' | ');},500);}
+    if(DEBUG){if(document.body)hud();else document.addEventListener('DOMContentLoaded',hud,{once:true});}
+
+    const api={ok:true,setActive,select,kick,refresh,prewarm,get mode(){return ctl.mode;},_ctl:ctl,
       sky:{setActive(on){sky.active=on;if(on){if(skyInit())skyKick();}}}};
     // test hooks (internal state, exact picking, power) only when the page is loaded with ?debug
-    try{if(/[?&]debug\b/.test(location.search))window.RVA_W3=Object.assign(api,{_pickPlot:pickPlot,_pickExact:pickExact,_sky:sky,_power:POWER,_demote:demote});}catch(e){}
+    try{if(/[?&]debug\b/.test(location.search))window.RVA_W3=Object.assign(api,{_pickPlot:pickPlot,_pickExact:pickExact,_sky:sky,_power:POWER,_demote:demote,_setTier:setTier,_sample:sampleFrame,_cancelPrewarm:cancelPrewarm,_moonTex:()=>moonT.tex});}catch(e){}
     return api;
   })();
+  /* ---------- TASTE MODEL (SN16, lane B) ----------
+     On-device, two-timescale online logistic model over event features. Nothing leaves the device.
+       fast map: decays 15% per swipe  -> tonight's mood
+       slow map: decays  1% per swipe  -> long-term taste
+       score(e) = sigmoid(sum over features of 0.4*fast[k] + 0.6*slow[k])
+     Weights are clamped to +/-4 so one binge cannot lock the deck, maps keep at most 200 keys, and every
+     few cards one "explore" card from the least-seen category is mixed in so the deck never becomes a bubble.
+     Fresh code; ideas only (decay grid / online logistic regression, no code copied from any repo).
+     State lives in S.taste = {f:{}, s:{}, n:<swipes learned>, x:{<category>:<times seen>}}; core.js sanitize()
+     validates it (and seeds it from the old tagScores counter on migration). ui.js uses window.RVA_TASTE
+     when present and falls back to the old tagScores ranking when it is not. */
+  const TASTE=(function(){
+    const CLAMP=4, MAX_KEYS=200, MIX_F=0.4, MIX_S=0.6;
+    const RATES=[['f',0.5,0.15],['s',0.15,0.01]];     // [map, learning rate, decay per swipe]
+    const LABEL={yes:1,maybe:0.6,no:0};
+    const sig=x=>1/(1+Math.exp(-x));
+    const clampW=v=>Math.max(-CLAMP,Math.min(CLAMP,v));
+    function model(){
+      if(!S.taste||typeof S.taste!=='object')S.taste={f:{},s:{},n:0,x:{}};
+      const m=S.taste;['f','s','x'].forEach(k=>{if(!m[k]||typeof m[k]!=='object')m[k]={};});
+      if(!(m.n>=0))m.n=0;
+      return m;
+    }
+    /* Time-of-day bucket from the event's meta line ("Sat 11:30 PM", "Sunset", "Sun AM", "Evenings"). */
+    function timeBucket(e){
+      const meta=String(e.meta||'');
+      const t=meta.match(/(\d{1,2})(?::\d\d)?\s*(AM|PM)/i);
+      if(t){let h=Number(t[1])%12;if(/pm/i.test(t[2]))h+=12;return h<4||h>=21?'late':h<12?'morning':h<17?'day':'evening';}
+      if(/sunrise|\bAM\b|morning/i.test(meta))return 'morning';
+      if(/sunset|evening|night/i.test(meta))return 'evening';
+      if(/all day|afternoon/i.test(meta))return 'day';
+      return null;
+    }
+    function feats(e){
+      if(!e||e.golden)return [];
+      const f=(e.tags||[]).map(t=>'t:'+t);
+      if(e.cat)f.push('c:'+e.cat);
+      if(e.area)f.push('a:'+e.area);
+      if(e.sensory)f.push('n:'+e.sensory);
+      if(e.crowd)f.push('w:'+e.crowd);
+      const h=timeBucket(e);if(h)f.push('h:'+h);
+      if(/free/i.test(e.meta||''))f.push('free');
+      return f.filter(k=>k.length<40);
+    }
+    const contrib=(m,k)=>MIX_F*(m.f[k]||0)+MIX_S*(m.s[k]||0);
+    function raw(e){const m=model();return feats(e).reduce((a,k)=>a+contrib(m,k),0);}
+    function score(e){return sig(raw(e));}
+    /* Keep the maps small: drop near-zero weights, then the weakest keys past MAX_KEYS. */
+    function trim(w){
+      for(const k of Object.keys(w))if(Math.abs(w[k])<0.002)delete w[k];
+      const ks=Object.keys(w);
+      if(ks.length>MAX_KEYS)ks.sort((a,b)=>Math.abs(w[a])-Math.abs(w[b])).slice(0,ks.length-MAX_KEYS).forEach(k=>delete w[k]);
+    }
+    /* One SGD step per swipe. type: yes|maybe|no. conf 0.5..1.5 (a hard flick says more than a slow drag). */
+    function learn(e,type,conf){
+      if(!e||e.golden||!(type in LABEL))return;
+      const m=model(), fs=feats(e), y=LABEL[type], c=Math.max(0.5,Math.min(1.5,Number(conf)||1));
+      for(const [name,lr,decay] of RATES){
+        const w=m[name];
+        for(const k in w)w[k]*=1-decay;
+        const p=sig(fs.reduce((a,k)=>a+(w[k]||0),0)), g=(y-p)*lr*c;
+        for(const k of fs)w[k]=clampW((w[k]||0)+g);
+        trim(w);
+      }
+      m.n=(m.n|0)+1;
+      if(e.cat&&e.cat.length<40)m.x[e.cat]=(m.x[e.cat]||0)+1;
+    }
+    const NICE={'n:low':'Low sensory','n:med':'Medium sensory','n:high':'High energy','w:low':'Low crowd','w:med':'Medium crowd','w:high':'Big crowds',
+      'h:morning':'Mornings','h:day':'Daytime','h:evening':'Evenings','h:late':'Late nights','free':'Free events'};
+    function label(k){return NICE[k]||k.replace(/^[a-z]:/,'');}
+    /* Up to two strongest positive reasons, or null. */
+    function explain(e){
+      const m=model();if(!m.n)return null;
+      const top=feats(e).map(k=>[k,contrib(m,k)]).filter(x=>x[1]>0.2).sort((a,b)=>b[1]-a[1]).slice(0,2);
+      if(!top.length)return null;
+      const names=[];top.forEach(([k])=>{const l=label(k);if(!names.includes(l))names.push(l);});
+      return {keys:top.map(x=>x[0]),text:'Because you like '+names.join(' + ')};
+    }
+    /* Order undecided events by score and put one explore card (least-seen category) in every 5th slot.
+       Returns {list, explore:Set of ids}. Deterministic: ties keep the incoming order. */
+    function rank(list){
+      const m=model(), sc=new Map(list.map(e=>[e,raw(e)]));
+      const sorted=list.map((e,i)=>({e,i})).sort((a,b)=>(sc.get(b.e)-sc.get(a.e))||(a.i-b.i)).map(o=>o.e);
+      const explore=new Set();
+      if(m.n<3)return {list:sorted,explore};
+      const out=[], rest=sorted.slice(), seen=Object.assign({},m.x);   // seen = swiped before + already dealt above
+      const cnt=e=>seen[e.cat]||0;
+      while(rest.length){
+        let pick=0;
+        if(out.length%5===4&&rest.length>1){
+          rest.forEach((e,i)=>{if(cnt(e)<cnt(rest[pick]))pick=i;});   // best-scored card of the least-seen category
+          if(pick!==0&&cnt(rest[pick])<cnt(rest[0]))explore.add(rest[pick].id);else pick=0;
+        }
+        const e=rest.splice(pick,1)[0];out.push(e);if(e.cat)seen[e.cat]=cnt(e)+1;
+      }
+      return {list:out,explore};
+    }
+    function reset(){S.taste={f:{},s:{},n:0,x:{}};}
+    return {feats,score,raw,learn,explain,rank,reset,label,timeBucket};
+  })();
+  try{window.RVA_TASTE=TASTE;}catch(e){}
   /* ---------- NAV ---------- */
+  /* SN3 (lane B): the Back button steps out one level (modal -> section -> tab) and every tab/section keeps its
+     scroll position. Each history entry is {rva,s,sub,m,up}: tab, section, open modal, and the key of the level it
+     was pushed from. pushState runs only from user taps (Chrome skips entries pushed without user activation);
+     boot and programmatic changes use replaceState. The URL is never changed here: the fragment is reserved for
+     #plan= share links (SN5). */
+  T.scroll={};T.q={feeds:'',mine:''};T.qTimer={};T.explore=new Set();T.sharedPlan=null;
+  const SCREENS=['home','swipe','map','feeds','life'];
+  const subOf=scr=>scr==='feeds'?S.feedTab:scr==='life'?S.lifeTab:scr==='map'?(T.focusSector==null?'city':'h'+T.focusSector):'';
+  const navState=()=>({rva:1,s:S.screen,sub:subOf(S.screen),m:sheetOpen()?'settings':''});
+  const navKey=st=>st?st.s+'|'+st.sub+'|'+(st.m||''):'';
+  /* While our own history.back() is in flight, a tap that navigates must not push (the pending traversal would
+     then land on the wrong entry, or popstate would undo the tap). Queue the sync and run it once popstate lands. */
+  T.navBack=null;T.navQueued=null;
+  function flushNav(){const q=T.navQueued;clearTimeout(T.navBack);T.navBack=null;T.navQueued=null;if(q!==null)histSync(q);return q!==null;}
+  function histSync(push){
+    if(T.navBack){T.navQueued=!!(push||T.navQueued);return;}
+    try{
+      const cur=history.state, st=navState();
+      if(cur&&cur.rva&&navKey(cur)===navKey(st))return;
+      if(push&&cur&&cur.rva){st.up=navKey(cur);history.pushState(st,'');}
+      else{if(cur&&cur.up)st.up=cur.up;history.replaceState(st,'');}
+    }catch(e){}
+  }
+  /* Going up a level from the UI (Close, Done, Escape, "City board"): when the entry below is exactly that level,
+     step back onto it instead of stacking another entry; otherwise just rewrite the current entry. */
+  function histUp(){
+    if(T.navBack){histSync(false);return;}
+    try{const cur=history.state;if(cur&&cur.rva&&cur.up&&cur.up===navKey(navState())){T.navBack=setTimeout(flushNav,600);history.back();return;}}catch(e){}
+    histSync(false);
+  }
+  function rememberScroll(){const el=$(S.screen);if(el)T.scroll[S.screen+':'+subOf(S.screen)]=el.scrollTop;}
+  function restoreScroll(){const el=$(S.screen);if(el)el.scrollTop=T.scroll[S.screen+':'+subOf(S.screen)]||0;}
+  /* popstate: the browser already moved one entry; make the app match it (idempotent, never pushes). */
+  function applyNav(st){
+    if(!st||!st.rva||navKey(st)===navKey(navState()))return;
+    if(st.m!=='settings'&&sheetOpen())closeSettings();
+    const scr=SCREENS.includes(st.s)?st.s:'home';
+    rememberScroll();
+    if(scr==='feeds'&&FEED_TABS.some(t=>t.id===st.sub)&&S.feedTab!==st.sub){S.feedTab=st.sub;T.q.feeds='';const q=$('feedQ');if(q)q.value='';}
+    if(scr==='life'&&LIFE_TABS.some(t=>t.id===st.sub))S.lifeTab=st.sub;
+    if(scr==='map'){const i=/^h\d+$/.test(st.sub||'')?Number(st.sub.slice(1)):null;T.focusSector=i!=null&&SECTORS[i]&&!SECTORS[i].hub?i:null;}
+    if(scr!==S.screen)go(scr,true);
+    else{save();rerenderActive();restoreScroll();manageTransitTimer();}
+    if(st.m==='settings'&&!sheetOpen())openSettings();
+  }
+  addEventListener('popstate',e=>{
+    try{
+      if(T.navBack){if(flushNav())return;}   // our own step back landed; if the user moved on meanwhile, keep their place
+      applyNav(e.state);
+    }catch(err){console.warn('RVA back failed',err);}
+  });
   function go(screen,quiet){
-    if(!['home','swipe','map','feeds','life'].includes(screen))screen='home';
+    if(!SCREENS.includes(screen))screen='home';
+    if(S.screen!==screen){rememberScroll();dropUndoChip();}   // SN3 scroll memory; SN1 chip belongs to the screen it was raised on
     S.screen=screen;save();if(!quiet)vibrate();
     document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===screen));
     document.querySelectorAll('.dock-btn').forEach(b=>{const on=b.dataset.arg===screen;b.classList.toggle('active',on);b.setAttribute('aria-current',on?'page':'false');});
@@ -1458,6 +2021,7 @@ const RVA = (function(){
     if(screen==='map')renderMap();
     if(screen==='feeds')renderFeeds();
     if(screen==='life')renderLife();
+    restoreScroll();
     manageTransitTimer();
     W3.setActive(screen==='map');W3.sky.setActive(screen==='home');
   }
@@ -1483,14 +2047,8 @@ const RVA = (function(){
     const now=new Date(), sun=sunTimes(now), moon=moonInfo(now);
     const yes=S.saved.filter(s=>s.type==='yes'), maybe=S.saved.filter(s=>s.type==='maybe');
     const planned=S.plan.filter(Boolean).length;
-    const savedList=S.saved.map(s=>{const e=EV(s.id);if(!e)return'';return `
-      <div class="list-item">
-        <div class="em" aria-hidden="true">${ic(e.art)}</div>
-        <div class="grow"><div class="t">${esc(e.name)}</div><div class="m">${esc(e.meta)}</div></div>
-        <span class="pill ${s.type==='yes'?'green':''}">${s.type==='yes'?'♥ Going':'? Maybe'}</span>
-        <button type="button" class="x-btn" data-act="planEvent" data-arg="${e.id}" aria-label="Add ${esc(e.name)} to plan">${ic('🧩')}</button>
-        <button type="button" class="x-btn" data-act="unsave" data-arg="${e.id}" aria-label="Remove ${esc(e.name)}">✕</button>
-      </div>`;}).join('');
+    if(!S.saved.length)T.q.mine='';   // the box stays while a query is active (even with one saved event); none left: drop it
+    const savedList=myListHTML();
     put('homeContent',`
       <div class="home-wrap">
         <div class="home-head" style="padding-top:70px">
@@ -1499,7 +2057,7 @@ const RVA = (function(){
         </div>
         <div class="card">
           <div class="card-label">Richmond Sky · computed</div>
-          <div class="frac">${ic(moon.icon)} ${moon.name} · ${moon.illum}% lit</div>
+          <div class="frac sky-moon" style="display:flex;align-items:center;gap:10px">${(()=>{const u=moonDiscURL(moon);return u?`<img class="moon-disc" src="${u}" alt="" width="40" height="40" aria-hidden="true" style="width:40px;height:40px;flex:none;border-radius:50%">`:ic(moon.icon);})()}<span>${moon.name} · ${moon.illum}% lit</span></div>
           <div class="stat-grid">
             <div class="stat"><div class="v">${fmtTime(sun.rise)}</div><div class="k">Sunrise</div></div>
             <div class="stat"><div class="v">${fmtTime(sun.set)}</div><div class="k">Sunset</div></div>
@@ -1518,7 +2076,7 @@ const RVA = (function(){
             <div class="stat"><div class="v">${maybe.length}</div><div class="k">Maybe</div></div>
             <div class="stat"><div class="v">${planned}/4</div><div class="k">Day plan</div></div>
           </div>
-          ${S.saved.length?`<div class="mt-2">${savedList}</div>`:`<div class="empty mt-2">Nothing saved yet. Swipe right on events to keep them here.</div><button type="button" class="btn ghost" data-act="go" data-arg="swipe">Start swiping</button>`}
+          ${S.saved.length?`${S.saved.length>1||T.q.mine?searchBox('mine','myQ','Search My RVA','Search your saved events'):''}<div class="mt-2" id="myList">${savedList}</div>`:`<div class="empty mt-2">Nothing saved yet. Swipe right on events to keep them here.</div><button type="button" class="btn ghost" data-act="go" data-arg="swipe">Start swiping</button>`}
         </div>
         <div class="card gold">
           <div class="card-label">${ic('👑')} Featured Read · Issue #1</div>
@@ -1529,6 +2087,101 @@ const RVA = (function(){
         </div>
       </div>`);
     renderClock();
+  }
+
+  /* My RVA saved list, filtered by the My RVA search box (SN13). */
+  function myListHTML(){
+    const q=T.q.mine, rows=S.saved.map(s=>({s,e:EV(s.id)})).filter(o=>o.e&&(!q||searchMatch(q,eventHay(o.e))));
+    const head=q?`<div class="den t-2xs search-count" aria-hidden="true">${rows.length} of ${S.saved.length} saved match</div>`:'';
+    if(q&&!rows.length)return head+`<div class="empty">No saved events match "${esc(q)}".</div>`;
+    return head+rows.map(({s,e})=>`
+      <div class="list-item">
+        <div class="em" aria-hidden="true">${ic(e.art)}</div>
+        <div class="grow"><div class="t">${esc(e.name)}</div><div class="m">${esc(e.meta)}</div></div>
+        <span class="pill ${s.type==='yes'?'green':''}">${s.type==='yes'?'♥ Going':'? Maybe'}</span>
+        <button type="button" class="x-btn" data-act="planEvent" data-arg="${e.id}" aria-label="Add ${esc(e.name)} to plan">${ic('🧩')}</button>
+        <button type="button" class="x-btn" data-act="unsave" data-arg="${e.id}" aria-label="Remove ${esc(e.name)}">✕</button>
+      </div>`).join('');
+  }
+
+  /* ---------- SEARCH (SN13, lane B) ----------
+     Token-AND substring search: every typed word must appear (case- and accent-insensitive) in the item's text or
+     one of the word's synonyms must. A few hundred short strings, rebuilt per query; no index needed. */
+  const fold=x=>{let t=String(x==null?'':x);try{t=t.normalize('NFD');}catch(e){}return t.replace(/[\u0300-\u036f]/g,'').toLowerCase();};
+  const SYN={date:['romance','date night','quiet booth'],romantic:['romance','date'],quiet:['low crowd','low sensory','quiet booth'],
+    kids:['family','all ages'],family:['all ages','kids'],beer:['brew','taproom','cider'],drinks:['beer','cocktail','21+','brew','taproom'],
+    bar:['cocktail','beer','nightlife','taproom'],hike:['trail','hiking','hikers'],walk:['walking','stroll','trail'],run:['run club','running'],
+    bike:['cycling','bike night'],music:['concert','live','rock','festival','vocalist'],concert:['music','live','symphony'],
+    movie:['film','showtimes','theatre'],movies:['film','showtimes','theatre'],film:['movie','theatre'],art:['gallery','galleries','mural','museum'],
+    museum:['vmfa','gallery'],food:['restaurant','dinner','lunch','bakery','bbq','kitchen'],eat:['food','restaurant','dinner','bakery'],
+    outdoors:['outdoor','park','river','trail'],river:['james','belle isle'],sports:['basketball','tennis','soccer','volleyball','pickup'],
+    history:['historic','cemetery','civil war'],night:['late night','nightlife','pm'],vegan:['vegetarian','plant-based'],coffee:['café','cafe','bakery']};
+  function searchMatch(q,hay){
+    const toks=fold(q).split(/\s+/).filter(Boolean);
+    return toks.every(t=>hay.includes(t)||(SYN[t]||[]).some(x=>hay.includes(fold(x))));
+  }
+  const eventHay=e=>fold([e.name,e.meta,e.area,e.cat,(e.tags||[]).join(' ')].join(' '));
+  function searchBox(kind,id,label,ph){
+    const v=T.q[kind]||'';
+    return `<div class="search" role="search" aria-label="${esc(label)}">
+      <label class="sr-only" for="${id}">${esc(label)}</label>
+      <span class="search-ic" aria-hidden="true">${ic('🔍')}</span>
+      <input type="search" id="${id}" class="field search-in" placeholder="${esc(ph)}" autocomplete="off" enterkeyhint="search" maxlength="60" data-search="${kind}" value="${esc(v)}" aria-describedby="${id}Count">
+      <button type="button" class="search-x" data-act="clearSearch" data-arg="${kind}" aria-label="Clear search"${v?'':' hidden'}>✕</button>
+      <div class="sr-only" id="${id}Count" role="status" aria-live="polite"></div>
+    </div>`;
+  }
+  /* Everything searchable in Feeds: [tab, icon, title, detail, text, action button html] */
+  function feedItems(){
+    const it=[];
+    const add=(tab,em,title,meta,extra,btn)=>it.push({tab,em,title,meta,hay:fold([title,meta,extra].join(' ')),btn:btn||''});
+    EVENTS.forEach(e=>{const st=S.saved.some(x=>x.id===e.id);add('',e.art,e.name,e.meta+' · '+e.area,[e.cat,e.tags.join(' '),e.area].join(' '),
+      `<button type="button" class="btn sm${st?' on':' ghost'}" data-act="toggleSave" data-arg="${e.id}" aria-pressed="${st}" aria-label="${st?'Saved':'Save'}: ${esc(e.name)}">${st?'Saved':'Save'}</button>`);});
+    FOOD.forEach(f=>add('food',f.emoji,f.name,f.meta,f.tip));
+    CANVAS.forEach(c=>add('canvas',c.em,c.handle,c.desc,'photo canvas'));
+    banterAll().forEach(b=>add('banter',b.em,b.text.length>70?b.text.slice(0,68)+'…':b.text,'Banter',b.text));
+    WORK.forEach(w=>add('work','🤝',w.name+' · '+w.mediums.join(' '),w.zone,w.project));
+    FLASH.forEach(f=>add('flash',f.em,f.title,f.year,f.facts.join(' ')));
+    VENUES_FILM.forEach(v=>add('movies','🎬',v.name,'Movies',v.note));
+    VENUES_STAGE.forEach(v=>add('shows','🎭',v.name,'Shows',v.note));
+    REC.forEach(r=>add('rec',r.em,r.name,r.when,'pickup sports'));
+    TRAILS.forEach(t=>add('trails',t.em,t.name,t.den,'trail'));
+    WHEELS.forEach(w=>add('wheels',w.em,w.name,w.meta,w.tag));
+    FEET.forEach(w=>add('feet',w.em,w.name,w.meta,w.tag));
+    return it;
+  }
+  function renderFeedSearch(){
+    const q=T.q.feeds, hits=feedItems().filter(x=>searchMatch(q,x.hay));
+    const tabLabel=id=>{const t=FEED_TABS.find(x=>x.id===id);return t?t.label:'Event';};
+    return `<div class="den lead search-count">${hits.length} result${hits.length===1?'':'s'} for "${esc(q)}"</div>`+
+      (hits.length?hits.map(h=>`<div class="card">
+        <div class="row">${rowIc(h.em)}<div class="grow"><div class="frac mb-0">${esc(h.title)}</div><div class="den t-2xs">${esc(h.meta)}</div></div><span class="pill dim">${esc(tabLabel(h.tab))}</span></div>
+        <div class="row mt-2">${h.btn||`<button type="button" class="btn sm ghost" data-act="feed" data-arg="${h.tab}" aria-label="Open ${esc(tabLabel(h.tab))}: ${esc(h.title)}">Open ${esc(tabLabel(h.tab))}</button>`}</div>
+      </div>`).join(''):`<div class="empty">Nothing matches. Try fewer words, or words like "date", "quiet", "free" or "hike".</div>`);
+  }
+  function ensureFeedSearch(){
+    if($('feedSearch'))return;
+    const row=$('feedTabs');if(!row)return;
+    const d=document.createElement('div');d.id='feedSearch';
+    d.innerHTML=searchBox('feeds','feedQ','Search Feeds','Search food, trails, clubs, events');
+    row.insertAdjacentElement('beforebegin',d);
+    const I=window.RVA_I3D;if(I)I.fill(d);
+  }
+  function searchCount(kind){
+    if(kind==='feeds'){const n=T.q.feeds?feedItems().filter(x=>searchMatch(T.q.feeds,x.hay)).length:null;return n==null?'':`${n} result${n===1?'':'s'}`;}
+    const q=T.q.mine;if(!q)return '';const n=S.saved.filter(x=>{const e=EV(x.id);return e&&searchMatch(q,eventHay(e));}).length;return `${n} of ${S.saved.length} saved events match`;
+  }
+  function runSearch(kind){
+    const box=$(kind==='feeds'?'feedQ':'myQ');
+    const x=box&&box.parentNode.querySelector('.search-x');if(x)x.hidden=!T.q[kind];
+    if(kind==='feeds'){if(S.screen==='feeds')put('feedContent',T.q.feeds?renderFeedSearch():feedSection());}
+    else{const l=$('myList');if(l)put(l,myListHTML());}
+    const c=$((kind==='feeds'?'feedQ':'myQ')+'Count');if(c)c.textContent=searchCount(kind);
+  }
+  function onSearchInput(el){
+    const kind=el.dataset.search;if(!(kind in T.q))return;
+    clearTimeout(T.qTimer[kind]);
+    T.qTimer[kind]=setTimeout(()=>{T.q[kind]=el.value.trim().slice(0,60);runSearch(kind);},120);
   }
 
   /* ---------- TILE ROWS (lane A: Swipe filters, Feeds/Life sections, Map hoods) ----------
@@ -1576,13 +2229,23 @@ const RVA = (function(){
 
   /* ---------- SWIPE ---------- */
   const FILTERS=[{id:'All',ic:'✨',label:'All'},{id:'Music',ic:'🎵',label:'Music'},{id:'Food',ic:'🍽️',label:'Food'},{id:'Arts',ic:'🎨',label:'Arts'},{id:'Outdoors',ic:'🌳',label:'Outdoors'}];
-  const scoreOf=e=>e.tags.reduce((a,t)=>a+(S.tagScores[t]||0),0);
+  const scoreOf=e=>e.tags.reduce((a,t)=>a+(S.tagScores[t]||0),0);   // fallback ranking when taste.js is absent
+  const TS=()=>window.RVA_TASTE||null;
+  const idCmp=(a,b)=>(typeof a.n==='number'&&typeof b.n==='number')?a.n-b.n:String(a.id).localeCompare(String(b.id),undefined,{numeric:true});   // SN4: ids are hashed strings; n keeps the stable sample order
   let QUEUE=[], swipeIdx=0;
   function buildQueue(){
     if(!FILTERS.some(f=>f.id===S.filter))S.filter='All';
-    const q=(S.filter==='All'?EVENTS:EVENTS.filter(e=>e.cat===S.filter)).slice();
-    const decided=new Set(S.saved.map(s=>s.id));
-    q.sort((a,b)=>(decided.has(a.id)-decided.has(b.id))||(scoreOf(b)-scoreOf(a))||(a.id-b.id));
+    const base=(S.filter==='All'?EVENTS:EVENTS.filter(e=>e.cat===S.filter)).slice();
+    const decided=new Set(S.saved.map(s=>s.id)), ts=TS();
+    let q=null;T.explore=new Set();
+    if(ts){   // SN16: undecided cards by taste score with explore slots, then already-decided ones
+      try{
+        const und=base.filter(e=>!decided.has(e.id)).sort(idCmp), dec=base.filter(e=>decided.has(e.id)).sort(idCmp);
+        const r=ts.rank(und);T.explore=r.explore;
+        q=r.list.concat(dec.sort((a,b)=>(ts.raw(b)-ts.raw(a))||idCmp(a,b)));
+      }catch(e){q=null;T.explore=new Set();}
+    }
+    if(!q){q=base;q.sort((a,b)=>(decided.has(a.id)-decided.has(b.id))||(scoreOf(b)-scoreOf(a))||idCmp(a,b));}
     q.splice(Math.min(4,q.length),0,GOLDEN);
     QUEUE=q;swipeIdx=0;T.deckGen++;   // a swipe still flying out from the old deck must not advance this one (JS-6)
   }
@@ -1602,12 +2265,20 @@ const RVA = (function(){
     const w=accessWarnings(ev);
     return w.length?`<div class="access-warn">${ic('⚠️')} ${esc(w.join(' · '))}</div>`:'';
   }
-  const cardLabel=item=>item.golden?`Featured read: ${item.sub}. ${item.price}`
-    :`${item.name}. ${item.meta}, ${item.area}.${accessWarnings(item).length?' Warning: '+accessWarnings(item).join(', ')+'.':''}`;
+  /* SN16: why this card is here: "Because you like Quiet + Low crowd", "Something different" (explore slot). */
+  function reasonOf(item){
+    if(!item||item.golden)return '';
+    if(T.explore.has(item.id))return 'Something different';
+    const ts=TS();
+    if(ts){try{const r=ts.explain(item);return r?r.text:'';}catch(e){return '';}}
+    return scoreOf(item)>0?'For you':'';
+  }
+  const cardLabel=item=>{if(item.golden)return `Featured read: ${item.sub}. ${item.price}`;const r=reasonOf(item);
+    return `${item.name}. ${item.meta}, ${item.area}.${accessWarnings(item).length?' Warning: '+accessWarnings(item).join(', ')+'.':''}${r?' '+r+'.':''}`;};
   function renderDeck(){
     renderFilters();
     const deck=$('deck');
-    const btns=document.querySelectorAll('.act');
+    const btns=document.querySelectorAll('.act[data-act=swipe]');syncRewind();
     if(swipeIdx>=QUEUE.length){
       put(deck,`<div class="deck-empty">
         <div class="big" aria-hidden="true">${ic('🎉')}</div>
@@ -1645,9 +2316,9 @@ const RVA = (function(){
           </div>`;
       } else {
         const st=S.saved.find(s=>s.id===item.id);
-        const sc=scoreOf(item);
+        const why=reasonOf(item);
         card.innerHTML=`
-          <div class="ev-art"><span aria-hidden="true">${ic(item.art)}</span>${sc>0?'<span class="pill gold rank">For you</span>':''}</div>
+          <div class="ev-art"><span aria-hidden="true">${ic(item.art)}</span>${why?`<span class="pill gold rank${why==='Something different'?' explore':''}" aria-hidden="true">${esc(why)}</span>`:''}</div>
           <div class="badge yes" aria-hidden="true">YES</div><div class="badge no" aria-hidden="true">NOPE</div>
           <div class="ev-body">
             <div class="ev-name">${esc(item.name)}</div>
@@ -1663,51 +2334,80 @@ const RVA = (function(){
     if(window.RVA_I3D)RVA_I3D.fill(deck);
     updateCount();
   }
-  function flyOut(card,type,dy){
-    card.style.transition='transform 0.32s ease, opacity 0.32s';
+  /* SN2 (lane B): flick-to-swipe with a springy snap-back.
+     - Velocity: a dt-aware decaying integrator over pointermove (time constant 30 ms), decayed again for any pause
+       longer than two frames before release, so a flick counts and a drag that stops before letting go does not.
+     - Commit: |dx| > 100 px, or a flick faster than 0.5 px/ms that travelled more than 30 px.
+     - Fly-out time follows release speed (120-320 ms). Snap-back uses a damped spring (stiffness 170, damping 14)
+       sampled into a CSS linear() easing where supported, else an overshooting cubic-bezier.
+     - Calm mode / reduced motion: no animation, and the next card appears immediately (finishSwipe timeout 0). */
+  const reducedMotion=()=>!!(S.settings.calm||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches));
+  const SWIPE_DIST=100, FLICK_V=0.5, FLICK_MIN=30, V_TAU=30, V_GRACE=32, FLY_MS=320;
+  const SPRING=(function(){
+    let ease='cubic-bezier(.34,1.56,.64,1)',dur=420;
+    try{if(window.CSS&&CSS.supports&&CSS.supports('transition-timing-function','linear(0, 1)')){
+      const k=170,c=14,h=1/1000,N=30,len=0.6,pts=[];let x=0,v=0,t=0;
+      for(let i=0;i<=N;i++){const end=i*len/N;while(t<end){v+=(-k*(x-1)-c*v)*h;x+=v*h;t+=h;}pts.push(i===N?1:Math.round(x*1000)/1000);}
+      ease='linear('+pts.join(', ')+')';dur=600;
+    }}catch(e){}
+    try{const r=document.documentElement.style;r.setProperty('--spring',ease);r.setProperty('--spring-dur',dur+'ms');}catch(e){}
+    return {ease,dur};
+  })();
+  const flyMs=v=>Math.round(Math.max(120,Math.min(FLY_MS,500/Math.max(0.01,Math.abs(v||0)))));
+  function flyOut(card,type,dy,ms){
+    if(reducedMotion()){card.style.transition='none';card.style.opacity='0';return;}
+    ms=ms||FLY_MS;
+    card.style.transition=`transform ${ms}ms ease-out, opacity ${ms}ms`;
     if(type==='yes')card.style.transform=`translate(500px,${dy||-50}px) rotate(30deg)`;
     else if(type==='no')card.style.transform=`translate(-500px,${dy||-50}px) rotate(-30deg)`;
     else card.style.transform='translate(0,-600px)';
     card.style.opacity='0';
   }
-  function finishSwipe(item,type){
+  function finishSwipe(item,type,ms,conf){
     const gen=T.deckGen, hadFocus=!!document.activeElement&&document.activeElement.id==='deckTop';
-    commitSwipe(item,type);
+    snap('swipe',{swipe:true,swipeIdx,deckGen:gen});   // SN1: the card comes back on top after Undo (includes S.taste, so the taste update rolls back too)
+    commitSwipe(item,type,conf);
+    offerUndo(item&&item.golden?(type==='yes'?'Issue #1 reserved':'Skipped'):({yes:'Saved to My RVA',maybe:'Added to Maybe',no:'Skipped'}[type]||'Done'),true);
     setTimeout(()=>{
       T.busy=false;
       if(gen!==T.deckGen)return;          // deck was rebuilt (filter / reset) while this card flew out
       swipeIdx++;renderDeck();
       const next=QUEUE[swipeIdx], said={yes:'Saved',maybe:'Added to maybe',no:'Skipped'}[type]||'';
-      announce(next?`${said}. Next: ${cardLabel(next)}`:`${said}. You're all caught up.`);
+      announce(next?`${said}. Next: ${cardLabel(next)} Undo is available.`:`${said}. You're all caught up. Undo is available.`);
       if(hadFocus){const n=$('deckTop')||document.querySelector('#deck [data-act=resetDeck]');if(n)n.focus({preventScroll:true});}
-    },320);
+    },reducedMotion()?0:(ms||FLY_MS));
   }
   function attachDrag(card,item){
-    let startX=0,startY=0,dx=0,dy=0,dragging=false,horiz=false;
+    let startX=0,startY=0,dx=0,dy=0,dragging=false,horiz=false,vx=0,lastX=0,lastT=0;
     const bY=card.querySelector('.badge.yes'), bN=card.querySelector('.badge.no');
-    const reset=()=>{card.style.transition='transform 0.3s';card.style.transform='';bY.style.opacity=0;bN.style.opacity=0;};
+    const now=e=>(e&&e.timeStamp>0?e.timeStamp:performance.now());
+    const reset=()=>{card.style.transition=reducedMotion()?'none':'transform var(--spring-dur,420ms) var(--spring,cubic-bezier(.34,1.56,.64,1))';card.style.transform='';bY.style.opacity=0;bN.style.opacity=0;};
     card.addEventListener('pointerdown',e=>{
       if(T.busy)return;
-      dragging=true;horiz=false;dx=dy=0;startX=e.clientX;startY=e.clientY;
+      dragging=true;T.dragging=true;horiz=false;dx=dy=0;vx=0;startX=lastX=e.clientX;startY=e.clientY;lastT=now(e);
       try{card.setPointerCapture(e.pointerId);}catch(err){}
       card.style.transition='none';
     });
     card.addEventListener('pointermove',e=>{
       if(!dragging)return;
       dx=e.clientX-startX;dy=e.clientY-startY;
+      const t=now(e), dt=Math.min(100,Math.max(4,t-lastT)), k=1-Math.exp(-dt/V_TAU);
+      vx=vx*(1-k)+k*((e.clientX-lastX)/dt);lastX=e.clientX;lastT=t;
       // MOB-7: only drag sideways once the intent is clear; vertical moves belong to the page scroll.
-      if(!horiz){if(Math.abs(dx)<8&&Math.abs(dy)<8)return;if(Math.abs(dy)>Math.abs(dx)){dragging=false;reset();return;}horiz=true;}
+      if(!horiz){if(Math.abs(dx)<8&&Math.abs(dy)<8)return;if(Math.abs(dy)>Math.abs(dx)){dragging=false;T.dragging=false;reset();return;}horiz=true;}
       card.style.transform=`translate(${dx}px,${dy*0.15}px) rotate(${dx*0.08}deg)`;
       if(dx>30){bY.style.opacity=Math.min(1,(dx-30)/70);bN.style.opacity=0;}
       else if(dx<-30){bN.style.opacity=Math.min(1,(-dx-30)/70);bY.style.opacity=0;}
       else{bY.style.opacity=0;bN.style.opacity=0;}
     });
     const end=e=>{
-      if(!dragging)return;dragging=false;
-      if(e.type!=='pointercancel'&&horiz&&Math.abs(dx)>100&&!T.busy){
+      if(!dragging)return;dragging=false;T.dragging=false;
+      const v=vx*Math.exp(-Math.max(0,Math.min(1000,now(e)-lastT)-V_GRACE)/V_TAU);   // a pause (beyond ~2 frames) before release kills the flick
+      const flick=Math.abs(v)>FLICK_V&&Math.abs(dx)>FLICK_MIN&&Math.sign(v)===Math.sign(dx);
+      if(e.type!=='pointercancel'&&horiz&&(Math.abs(dx)>SWIPE_DIST||flick)&&!T.busy){
         T.busy=true;vibrate(25);
-        const type=dx>0?'yes':'no';
-        flyOut(card,type,dy*0.15);finishSwipe(item,type);
+        const type=dx>0?'yes':'no', ms=flick?flyMs(v):FLY_MS, conf=0.75+0.5*Math.abs(v);
+        flyOut(card,type,dy*0.15,ms);finishSwipe(item,type,ms,conf);
       } else reset();
     };
     card.addEventListener('pointerup',end);
@@ -1720,7 +2420,7 @@ const RVA = (function(){
     T.busy=true;vibrate(25);
     flyOut(top,type);finishSwipe(QUEUE[swipeIdx],type);
   }
-  function commitSwipe(item,type){
+  function commitSwipe(item,type,conf){
     if(!item)return;
     if(item.golden){
       if(type==='yes'&&!S.preorder){S.preorder=true;toast('Issue #1 reserved on this device');}
@@ -1728,6 +2428,7 @@ const RVA = (function(){
     }
     const delta={yes:2,maybe:1,no:-1}[type]||0;
     item.tags.forEach(t=>S.tagScores[t]=(S.tagScores[t]||0)+delta);
+    const ts=TS();if(ts)try{ts.learn(item,type,conf||1);}catch(e){}   // SN16
     S.saved=S.saved.filter(s=>s.id!==item.id);
     if(type==='yes'){S.saved.push({id:item.id,type:'yes'});toast('Saved to My RVA');}
     else if(type==='maybe'){S.saved.push({id:item.id,type:'maybe'});toast('Added to Maybe');}
@@ -1788,14 +2489,17 @@ const RVA = (function(){
   }
   function tapSector(i){
     i=Number(i);vibrate(20);
+    if(!SECTORS[i])return;
+    const was=T.focusSector;
     if(SECTORS[i].hub||(T.focusSector===i&&!W3.ok))T.focusSector=null;else T.focusSector=i;
     renderMap();
+    if(T.focusSector===null&&was!==null)histUp();else histSync(true);   // only ever called from taps (SN3)
   }
-  function clearFocus(){T.focusSector=null;renderMap();}
+  function clearFocus(){T.focusSector=null;renderMap();histUp();}
   function toggleSave(id){
-    id=Number(id);const e=EV(id);if(!e)return;
+    const e=EV(id);if(!e)return;
     if(S.saved.some(s=>s.id===id)){S.saved=S.saved.filter(s=>s.id!==id);toast('Removed');}
-    else{S.saved.push({id,type:'yes'});e.tags.forEach(t=>S.tagScores[t]=(S.tagScores[t]||0)+2);toast('Saved to My RVA');}
+    else{S.saved.push({id,type:'yes'});e.tags.forEach(t=>S.tagScores[t]=(S.tagScores[t]||0)+2);const ts=TS();if(ts)try{ts.learn(e,'yes',1);}catch(err){}toast('Saved to My RVA');}
     save();rerenderActive();
   }
 
@@ -1808,8 +2512,12 @@ const RVA = (function(){
   ];
   function renderFeeds(){
     tileRow('feedTabs',FEED_TABS,S.feedTab,'feed',{tabs:true,cls:'subtab',panel:'feedContent',mini:'feedMini'});
+    ensureFeedSearch();
+    put('feedContent',T.q.feeds?renderFeedSearch():feedSection());
+  }
+  function feedSection(){
     const f={food:renderFood,canvas:renderCanvas,banter:renderBanter,work:renderWork,flash:renderFlash,movies:renderMovies,shows:renderShows,rec:renderRec,trails:renderTrails,wheels:renderWheels,feet:renderFeet}[S.feedTab]||renderFood;
-    put('feedContent',f());
+    return f();
   }
   const rowIc=e=>`<div class="row-ic" aria-hidden="true">${ic(e)}</div>`;
   function renderFood(){
@@ -1821,7 +2529,7 @@ const RVA = (function(){
   }
   const photoCap=(p,label)=>esc(label)+(T.unsavedPhotos.has(p)?' · this session only':'');
   function renderCanvas(){
-    const mine=S.photos.canvas.map((p,i)=>`<div class="canvas-cell photo"><img src="${esc(p.src)}" alt="Your photo ${i+1}, ${esc(p.day)}"><div class="cap">${photoCap(p,'Yours · '+p.day)}</div></div>`).join('');
+    const mine=S.photos.canvas.map((p,i)=>`<div class="canvas-cell photo">${photoImg(p,`Your photo ${i+1}, ${p.day}`)}<div class="cap">${photoCap(p,'Yours · '+p.day)}</div></div>`).join('');
     return `<div class="den lead t-center">24-hour city showcase. Your uploads stay on this device.</div>
       <div class="canvas-grid">${mine}${CANVAS.map(c=>`<div class="canvas-cell"><div class="cem" aria-hidden="true">${ic(c.em)}</div><div class="chandle">${esc(c.handle)}</div><div class="cdesc">${esc(c.desc)}</div></div>`).join('')}</div>
       <label class="btn mt-3" for="upCanvas">Add your photo</label>
@@ -1945,7 +2653,7 @@ const RVA = (function(){
   }
   function photoSection(kind,label){
     const ph=S.photos[kind];
-    return `${ph.length?`<div class="canvas-grid mt-2">${ph.map((p,i)=>`<div class="canvas-cell photo"><img src="${esc(p.src)}" alt="${esc(label)} ${i+1}, ${esc(p.day)}"><div class="cap">${photoCap(p,p.day)}</div></div>`).join('')}</div>`:''}
+    return `${ph.length?`<div class="canvas-grid mt-2">${ph.map((p,i)=>`<div class="canvas-cell photo">${photoImg(p,`${label} ${i+1}, ${p.day}`)}<div class="cap">${photoCap(p,p.day)}</div></div>`).join('')}</div>`:''}
       <label class="btn ghost sm mt-2" for="up_${kind}">${esc(label)}</label>
       <input type="file" id="up_${kind}" class="vh" accept="image/*" data-change="photo" data-arg="${kind}">
       ${ph.length?`<button type="button" class="btn ghost sm mt-2" data-act="clearPhotos" data-arg="${kind}">Remove</button>`:''}`;
@@ -2028,11 +2736,12 @@ const RVA = (function(){
   function renderPlan(){
     const filled=S.plan.filter(Boolean).length, complete=filled===4;
     const opts=planOptions();
-    return `<div class="card"><div class="card-label">${ic('🧩')} Plan Your Day · ${filled}/4</div><div class="den">Tap an option to fill the next slot. Tap a filled slot to clear it. Your saved events are listed first.</div></div>
+    return sharedPlanCard()+`<div class="card"><div class="card-label">${ic('🧩')} Plan Your Day · ${filled}/4</div><div class="den">Tap an option to fill the next slot. Tap a filled slot to clear it. Your saved events are listed first.</div></div>
       <div class="slots" id="slots" role="group" aria-label="Day plan, ${filled} of 4 filled">
         ${S.plan.map((p,i)=>p?`<button type="button" class="slot filled" data-act="clearSlot" data-arg="${i}" aria-label="Clear slot ${i+1}: ${esc(p.name)}, ${esc(p.meta)}"><span class="si" aria-hidden="true">${ic(p.em)}</span><span class="sn">${esc(p.name)}</span><span class="smeta">${esc(p.meta)}</span></button>`
           :`<div class="slot"><span class="si" aria-hidden="true">+</span><span class="sn">Empty slot ${i+1}</span></div>`).join('')}
       </div>
+      ${filled?`<button type="button" class="btn ghost" data-act="sharePlan"><span>${ic('🔗')} Share plan as a link</span></button><textarea class="field" id="shareText" readonly hidden aria-label="Link to your plan"></textarea>`:''}
       ${complete?`<div class="card gold"><div class="card-label">${ic('✅')} Route complete</div><div class="den t-bronze">${S.plan.map(p=>esc(p.name)).join(' → ')}</div><button type="button" class="btn" data-act="copyPlan">Copy route</button><textarea class="field" id="planText" readonly hidden aria-label="Your route"></textarea></div>`:''}
       <div class="card-label mt-2">Add to plan</div>
       ${opts.map((o,i)=>{const used=S.plan.some(p=>p&&p.name===o.name);return `<button type="button" class="plan-opt${o.mine?' mine':''}" data-act="fillSlot" data-arg="${i}" ${used||complete?'disabled':''}>
@@ -2049,6 +2758,86 @@ const RVA = (function(){
     return true;
   }
 
+  /* ---------- SHARE MY PLAN AS A LINK (SN5, lane B) ----------
+     The plan travels in the URL fragment (#plan=<base64url JSON>), which never reaches the server. The link is
+     always built from the canonical published app URL (window.RVA_APP_URL, injected by build.py), never from
+     location.href: the desktop build runs from file:// and the artifact build inside a host frame. */
+  const APP_URL_FALLBACK='https://amonrayford-ai.github.io/rva-engine/app.html';
+  const appUrl=()=>{const u=window.RVA_APP_URL;return typeof u==='string'&&/^https:\/\/[^\s#]+$/.test(u)?u:APP_URL_FALLBACK;};
+  function b64uEnc(str){const b=new TextEncoder().encode(str);let bin='';for(let i=0;i<b.length;i++)bin+=String.fromCharCode(b[i]);return btoa(bin).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+  function b64uDec(code){let t=code.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const bin=atob(t),b=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)b[i]=bin.charCodeAt(i);return new TextDecoder().decode(b);}
+  /* v2 carries stable keys only: SN4 event ids and PLAN_BASE keys. Stops this app can't name are left out. */
+  function encodePlan(plan){return b64uEnc(JSON.stringify({v:2,p:(plan||S.plan).map(p=>planKeyOf(p)||0)}));}
+  const planHasKeys=plan=>(plan||S.plan).some(p=>planKeyOf(p));
+  /* Returns a 4-slot array (null for empty) or null when the code is not a valid plan. Every key is resolved
+     against the app's own events and options; unknown ones are dropped (count in .dropped). v1 links (free text
+     from 1.1.0 builds) are resolved by name the same way, so their text and icons never reach the screen. */
+  function decodePlan(code){
+    try{
+      if(typeof code!=='string'||!/^[A-Za-z0-9_-]{4,3000}$/.test(code))return null;
+      const o=JSON.parse(b64uDec(code));
+      if(!o||(o.v!==1&&o.v!==2)||!Array.isArray(o.p))return null;
+      let dropped=0;
+      const p=[0,1,2,3].map(i=>{const x=o.p[i];
+        const key=o.v===2?(typeof x==='string'&&x.length<40?x:null):(Array.isArray(x)?planKeyOf({name:typeof x[1]==='string'?x[1].trim():null}):null);
+        const it=key&&planItem(key);
+        if(!it&&x)dropped++;
+        return it||null;});
+      if(!p.some(Boolean))return null;
+      p.dropped=dropped;return p;
+    }catch(e){return null;}
+  }
+  function planLink(){return appUrl()+'#plan='+encodePlan();}
+  /* Read #plan= from the address bar (boot and hashchange), then clear it so a reload does not ask again. */
+  function readSharedPlan(){
+    let h='';try{h=location.hash||'';}catch(e){}
+    if(!/^#plan=/.test(h))return false;
+    try{history.replaceState(history.state,'',location.pathname+location.search);}catch(e){}
+    // standard base64 '=' padding and trailing params (?utm=, &x=) are tolerated; anything else is damaged
+    const m=/^#plan=([A-Za-z0-9_-]+)=*(?:[&?].*)?$/.exec(h);
+    const p=m&&decodePlan(m[1]);
+    if(!p){toast('That plan link is damaged or incomplete');return false;}
+    T.sharedPlan=p;S.lifeTab='plan';
+    return true;
+  }
+  function sharedPlanCard(){
+    const p=T.sharedPlan;if(!p)return '';
+    const items=p.filter(Boolean), mine=new Set(S.plan.filter(Boolean).map(x=>x.name));
+    const have=items.every(x=>mine.has(x.name));
+    return `<div class="card accent shared-plan" role="region" aria-labelledby="sharedTitle">
+      <div class="card-label" id="sharedTitle">${ic('🔗')} A friend's plan</div>
+      <ol class="shared-list">${items.map(x=>`<li><span aria-hidden="true">${ic(x.em)}</span> <strong>${esc(x.name)}</strong>${x.meta?` <span class="t-2xs t-dim2">${esc(x.meta)}</span>`:''}</li>`).join('')}</ol>
+      ${have?'<div class="den">You already have everything from this plan.</div>':'<div class="den t-2xs">Make it mine adds these stops to your empty slots.</div>'}
+      ${p.dropped?`<div class="den t-2xs">${p.dropped} stop${p.dropped===1?'':'s'} this app doesn't know ${p.dropped===1?'was':'were'} left out.</div>`:''}
+      <div class="row shared-acts">${have?'':'<button type="button" class="btn" data-act="takePlan">Make it mine</button>'}<button type="button" class="btn ghost" data-act="dismissPlan">Dismiss</button></div>
+    </div>`;
+  }
+  /* Undo hooks from lane A (SN1) when present: RVA_SNAP(label) before a change, RVA_UNDO() to roll back. */
+  function snapForUndo(label){try{if(typeof window.RVA_SNAP==='function'){window.RVA_SNAP(label);return true;}}catch(e){}return false;}
+  function doneWithUndo(msg,snapped){
+    if(snapped&&window.RVA_UNDO===RVA_UNDO_OWN){offerUndo(msg);return;}   // integrated lane A undo: Ctrl+Z, 44px chip, live region
+    if(snapped&&typeof window.RVA_UNDO==='function'&&window.RVA_CHIP)RVA_CHIP(msg,'Undo',()=>{try{window.RVA_UNDO();}catch(e){}const c=document.querySelector('.rva-chip');if(c)c.remove();buildQueue();rerenderActive();});
+    else toast(msg);
+  }
+  function takeSharedPlan(){
+    const p=T.sharedPlan;if(!p)return;
+    const snapped=snapForUndo("Friend's plan");
+    let added=0,full=0;
+    p.filter(Boolean).forEach(x=>{if(S.plan.some(y=>y&&y.name===x.name))return;const i=S.plan.findIndex(y=>!y);if(i<0){full++;return;}S.plan[i]={em:x.em,name:x.name,meta:x.meta};added++;});
+    if(snapped&&UNDO.length)UNDO[UNDO.length-1].meta.sharedPlan=p;   // Undo brings the friend's offer back too
+    T.sharedPlan=null;save();
+    if(S.plan.every(Boolean)&&added)T.spinNext=true;
+    doneWithUndo(full?`Added ${added}. ${full} didn't fit: clear a slot first`:`Added ${added} stop${added===1?'':'s'} to your plan`,snapped&&added>0);
+  }
+  function sharePlan(){
+    if(!planHasKeys()){toast('Add a stop from the list to share your plan');return;}
+    const url=planLink(), text='My RVA day: '+S.plan.filter(Boolean).map(p=>p.name).join(' → ');
+    const fallback=()=>{const ta=$('shareText');if(ta){ta.hidden=false;ta.value=url;ta.focus();ta.select();}toast('Select the link to copy');};
+    const clip=()=>{try{navigator.clipboard.writeText(url).then(()=>toast('Plan link copied'),fallback);}catch(e){fallback();}};
+    if(navigator.share){try{navigator.share({title:'My RVA day',text,url}).catch(err=>{if(!err||err.name!=='AbortError')clip();});return;}catch(e){}}
+    clip();
+  }
+
   /* ---------- PHOTOS ---------- */
   function handlePhoto(input,kind){
     const file=input.files&&input.files[0];input.value='';
@@ -2062,14 +2851,7 @@ const RVA = (function(){
         const max=480, sc=Math.min(1,max/Math.max(img.width,img.height));
         const c=document.createElement('canvas');c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
         c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-        const src=c.toDataURL('image/jpeg',0.72);
-        const list=S.photos[kind], photo={src,day:new Date().toLocaleDateString('en-US',{timeZone:TZ,month:'short',day:'numeric'}),t:Date.now()};
-        list.unshift(photo);
-        if(list.length>6)list.length=6;
-        const r=save();
-        // JS-5: older photos stay saved; only what does not fit is kept for this session.
-        toast(r==='ok'?'Photo added':r==='partial'?(T.unsavedPhotos.size===1&&T.unsavedPhotos.has(photo)?'Photo added for this session. Device storage is full.':`Device storage is full: ${T.unsavedPhotos.size} photo${T.unsavedPhotos.size>1?'s':''} kept for this session only`):'Photo added for this session only',3200);
-        keepFocus(rerenderActive);
+        storePhoto(c).then(ref=>addPhoto(kind,ref));
       };
       img.onerror=()=>toast('That image could not be read');
       img.src=reader.result;
@@ -2077,7 +2859,129 @@ const RVA = (function(){
     reader.onerror=()=>toast('That file could not be read');
     reader.readAsDataURL(file);
   }
+  /* SN10: ref is {id} (IndexedDB) or {src} (data: URL fallback). */
+  function addPhoto(kind,ref){
+    const list=S.photos[kind], photo=Object.assign(ref,{day:new Date().toLocaleDateString('en-US',{timeZone:TZ,month:'short',day:'numeric'}),t:Date.now()});
+    list.unshift(photo);
+    if(list.length>6)list.length=6;
+    const r=save();
+    // JS-5: older photos stay saved; only what does not fit is kept for this session.
+    toast(r==='ok'?'Photo added':r==='partial'?(T.unsavedPhotos.size===1&&T.unsavedPhotos.has(photo)?'Photo added for this session. Device storage is full.':`Device storage is full: ${T.unsavedPhotos.size} photo${T.unsavedPhotos.size>1?'s':''} kept for this session only`):'Photo added for this session only',3200);
+    keepFocus(rerenderActive);
+    if(photoMode==='idb')gcPhotosSoon();   // a photo pushed past 6 drops its blob
+  }
 
+
+  /* ---------- DATA SAFETY (lane A): undo chip (SN1), backup/restore (SN6), two open copies (SN9) ---------- */
+  let undoChipTimer=null;
+  function dropUndoChip(){clearTimeout(undoChipTimer);const c=document.querySelector('.rva-chip[data-undo]');if(c)c.remove();}
+  /* Notice chip with an Undo button (RVA_CHIP: 44px targets, role=status). It replaces the toast for the same
+     action, stays while hovered or focused, and leaves after 10 s; Ctrl/Cmd+Z works as long as a snapshot exists.
+     quiet: the caller announces it itself (swipes fold "undo available" into the next-card announcement). */
+  function offerUndo(msg,quiet){
+    if(!window.RVA_CHIP){toast(msg);return;}
+    hideToast();clearTimeout(undoChipTimer);
+    RVA_CHIP(msg,'Undo',()=>doUndo());
+    const c=document.querySelector('.rva-chip');if(!c)return;
+    c.dataset.undo='1';c.setAttribute('aria-live','polite');
+    const b=c.querySelector('button:not(.x)');
+    if(b){b.setAttribute('aria-label','Undo: '+msg);b.setAttribute('aria-keyshortcuts','Control+Z Meta+Z');}
+    const x=c.querySelector('button.x');if(x){x.style.minWidth='44px';x.setAttribute('aria-label','Dismiss undo notice');}   // WCAG 2.5.5 target size
+    // On Swipe the default spot covers the three deck buttons: sit on the card's decorative art instead.
+    if(S.screen==='swipe'){const d=$('deck'),r=d&&d.getBoundingClientRect();if(r&&r.height>120){c.style.top=Math.max(8,Math.round(r.top+12))+'px';c.style.bottom='auto';
+      // and keep it over the deck's own column (landscape puts the filter tiles beside the deck)
+      c.style.left=Math.round(r.left+r.width/2)+'px';c.style.maxWidth=Math.max(200,Math.round(r.width-16))+'px';}}
+    if(!quiet)announce(msg+'. Undo is available.');
+    const arm=()=>{undoChipTimer=setTimeout(()=>{if(!c.isConnected)return;if(c.matches(':hover')||c.contains(document.activeElement))return arm();c.remove();},10000);};
+    arm();
+  }
+  /* Integration (lanes A+B): SN5 'Make it mine' and SN16 'Reset my taste' go through the same snapshot stack. */
+  const RVA_UNDO_OWN=()=>doUndo();
+  window.RVA_SNAP=label=>snap(label,{rebuild:true});
+  window.RVA_UNDO=RVA_UNDO_OWN;
+  function doUndo(tries){
+    if(T.busy){if((tries||0)<6)setTimeout(()=>doUndo((tries||0)+1),120);return;}   // a card is still flying out
+    const chip=document.querySelector('.rva-chip[data-undo]'), a=document.activeElement;
+    const focusWasLost=!a||a===document.body||(chip&&chip.contains(a));
+    dropUndoChip();
+    const u=undo();
+    if(!u){toast('Nothing to undo');return;}
+    applySettings();
+    const m=u.meta||{};
+    if(m.swipe&&m.deckGen===T.deckGen){swipeIdx=Math.max(0,Math.min(m.swipeIdx,QUEUE.length));if(S.screen==='swipe')renderDeck();else updateCount();}
+    else{if(m.sharedPlan){T.sharedPlan=m.sharedPlan;S.lifeTab='plan';}if(m.rebuild||m.restore)buildQueue();rerenderActive();}
+    toast('Undone');announce('Undone. '+(m.swipe&&S.screen==='swipe'&&QUEUE[swipeIdx]?'Back to: '+cardLabel(QUEUE[swipeIdx]):''));
+    if(focusWasLost){
+      const n=(m.swipe&&S.screen==='swipe'&&($('deckTop')||document.querySelector('#deck [data-act=resetDeck]')))
+        ||(m.focus&&document.querySelector(m.focus))||document.querySelector('.topbar [data-act=openSettings]');
+      if(n)n.focus({preventScroll:true});
+    }
+  }
+  document.addEventListener('keydown',e=>{
+    if(!(e.ctrlKey||e.metaKey)||e.shiftKey||e.altKey||(e.key!=='z'&&e.key!=='Z'))return;
+    const a=document.activeElement;
+    if(a&&(/^(TEXTAREA|SELECT)$/.test(a.tagName)||a.tagName==='INPUT'&&!/^(file|range|checkbox|radio|button)$/.test(a.type)))return;   // native text undo
+    if(!UNDO.length)return;
+    e.preventDefault();doUndo();
+  });
+
+  /* Backup: the JSON is prepared when Settings opens, so the Save tap can call navigator.share right away
+     (iOS drops the user gesture if the share waits on IndexedDB reads). */
+  let backupCache=null;
+  function backupNote(msg){const n=$('backupNote');if(n)n.textContent=msg;}
+  function prepBackup(){
+    const seq=T.saveSeq;
+    return exportState().then(json=>{backupCache={seq,json};return json;}).catch(()=>null);
+  }
+  const canShareFiles=()=>!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches&&navigator.share&&navigator.canShare&&typeof File==='function');
+  function backupName(){const p=rvaParts(new Date()),z=n=>(n<10?'0':'')+n;return `my-rva-${p.y}-${z(p.m)}-${z(p.d)}.json`;}
+  function downloadBackup(blob,name){
+    const u=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=u;a.download=name;a.rel='noopener';a.style.display='none';document.body.appendChild(a);a.click();
+    setTimeout(()=>{URL.revokeObjectURL(u);a.remove();},5000);
+    backupNote(`Saved ${name} to your downloads.`);
+  }
+  async function saveBackup(){
+    let json=backupCache&&backupCache.seq===T.saveSeq?backupCache.json:null;
+    if(!json){backupNote('Preparing your backup…');json=await prepBackup();}
+    if(!json){backupNote('The backup could not be made. Try again.');return;}
+    const name=backupName(), blob=new Blob([json],{type:'application/json'});
+    // Phones: share sheet (Files, Drive, email) where the browser can share a .json file. Desktop, the exe and
+    // browsers that refuse the file type: a normal download.
+    if(canShareFiles()){
+      try{
+        const file=new File([blob],name,{type:'application/json'});
+        if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'My RVA backup'});backupNote('Backup shared. Keep the file somewhere safe.');return;}
+      }catch(e){if(e&&e.name==='AbortError'){backupNote('');return;}}
+    }
+    downloadBackup(blob,name);
+  }
+  function pickRestore(el){
+    const f=el.files&&el.files[0];el.value='';
+    if(!f)return;
+    if(f.size>5*1024*1024){backupNote('That file is over 5 MB, so it is not an RVA backup.');return;}
+    const r=new FileReader();
+    r.onerror=()=>backupNote('That file could not be read.');
+    r.onload=()=>{
+      let parsed;try{parsed=JSON.parse(r.result);}catch(e){parsed=null;}
+      restoreState(parsed).then(res=>{
+        if(res==='format'){backupNote('That file is not an RVA backup. Nothing changed.');return;}
+        if(res==='quota'){backupNote('Not enough device storage to restore this backup. Nothing changed.');return;}
+        closeSettings();histUp();applySettings();T.focusSector=null;buildQueue();go(S.screen,true);
+        offerUndo('Backup restored');
+      },()=>backupNote('The backup could not be restored. Nothing changed.'));
+    };
+    r.readAsText(f);
+  }
+
+  /* SN9: another open copy saved. Wait for a quiet moment (no flying or dragged card, no open dialog), then
+     redraw the current screen without moving this tab off its screen. The deck keeps its position. */
+  SYNC.canApply=()=>!T.busy&&!T.dragging&&!sheetOpen();
+  SYNC.apply=()=>{
+    dropUndoChip();applySettings();
+    if(S.screen==='swipe')renderDeck();else keepFocus(rerenderActive);
+    announce('Updated with changes from another open copy of the app.');
+  };
   /* ---------- SETTINGS (modal dialog: inert background, Tab wrap fallback, Escape, focus return; DES-8/JS-10) ---------- */
   const BG_SEL='.topbar,.screens,.dock';
   function storageLine(){
@@ -2101,11 +3005,25 @@ const RVA = (function(){
           <div class="den">Computed live: clock, sunrise/sunset, moon phase and sign. Real places: restaurants, venues, trails, history facts. Labeled <span class="pill sample">Sample</span>: events, posts, headcounts, alerts, ratings. Transit is a simulated schedule.</div>
           <div class="den mt-2" id="storeLine">${storageLine()}</div>
         </div>
+        <div class="card">
+          <div class="card-label">Backup</div>
+          <div class="den" id="backupHelp">Save one file with your picks, plan, posts, ratings and photos. Restore it on another device, in the desktop app, or after the browser clears its storage.</div>
+          <button type="button" class="btn" data-act="backupSave" aria-describedby="backupHelp">Save backup file</button>
+          <button type="button" class="btn ghost" data-act="restorePick" aria-describedby="backupHelp">Restore from backup file</button>
+          <input type="file" id="restoreFile" class="vh" tabindex="-1" aria-hidden="true" accept=".json,application/json" data-change="restore">
+          <div class="den t-2xs mt-1" id="backupNote" role="status" aria-live="polite"></div>
+        </div>
+        <div class="card">
+          <div class="card-label">Your taste</div>
+          <div class="den" id="tasteLine">The Swipe deck learns from your picks on this device only${TS()&&S.taste&&S.taste.n?` (${S.taste.n} pick${S.taste.n===1?'':'s'} so far)`:''}. Resetting keeps your saved events.</div>
+          <button type="button" class="btn ghost" data-act="resetTaste" aria-describedby="tasteLine">Reset my taste</button>
+        </div>
         <button type="button" class="btn red" data-act="resetAll" id="resetBtn">Erase my data on this device</button>
         <button type="button" class="btn ghost" data-act="closeSettings">Done</button>
       </div>`);
     document.querySelectorAll(BG_SEL).forEach(n=>{n.setAttribute('inert','');n.setAttribute('aria-hidden','true');});
     const first=$('sheetRoot').querySelector('.sw');if(first)first.focus();
+    if(canShareFiles())prepBackup();   // only the share path needs the file ready before the tap
   }
   function closeSettings(){
     if(!$('sheetRoot').firstElementChild)return;
@@ -2182,26 +3100,49 @@ const RVA = (function(){
     g.querySelectorAll('[role=radio]').forEach(r=>{const on=r===btn;r.setAttribute('aria-checked',on);r.tabIndex=on?0:-1;
       if(r.classList.contains('btn')){r.classList.toggle('on',on);r.classList.toggle('ghost',!on);}});
   }
+  /* SN1: the rewind button beside the deck buttons reaches the undo stack after the chip has gone. */
+  function syncRewind(){
+    const b=document.querySelector('#swipe [data-act=rewind]');if(!b)return;
+    const top=UNDO[UNDO.length-1];b.disabled=!top;
+    b.setAttribute('aria-label',top&&top.meta&&top.meta.swipe?'Undo last swipe':'Undo last change');
+  }
+  T.onUndo=syncRewind;
   const ACT={
-    go:a=>go(a),
-    openSettings, closeSettings,
+    rewind:(a,t)=>{doUndo();setTimeout(()=>{const f=document.activeElement;if(t&&t.disabled&&!(f&&f.closest&&f.closest('#deck'))){const n=$('deckTop')||document.querySelector('#deck [data-act=resetDeck]');if(n)n.focus({preventScroll:true});}},0);},
+    go:a=>{go(a);histSync(true);},
+    openSettings:()=>{openSettings();histSync(true);},
+    closeSettings:()=>{closeSettings();histUp();},
+    resetTaste:()=>{
+      const snapped=snapForUndo('Taste');
+      if(TS())TS().reset();else S.taste={f:{},s:{},n:0,x:{}};
+      S.tagScores={};save();buildQueue();
+      if(S.screen==='swipe')renderDeck();   // the visible cards carried the old 'Because you like' pills
+      const l=$('tasteLine');if(l)l.textContent='The Swipe deck learns from your picks on this device only. Resetting keeps your saved events.';
+      doneWithUndo('Taste reset. The deck starts fresh.',snapped);
+    },
+    clearSearch:a=>{if(!(a in T.q))return;T.q[a]='';
+      if(a==='mine'&&S.saved.length<=1){renderHome();const n=document.querySelector('#myList button');if(n)n.focus();return;}   // the box only stayed for the query
+      const f=$(a==='feeds'?'feedQ':'myQ');if(f)f.value='';runSearch(a);if(f)f.focus();},
+    sharePlan, takePlan:()=>{takeSharedPlan();renderLife();}, dismissPlan:()=>{T.sharedPlan=null;renderLife();},
     setting:(a,t)=>{if(!(a in S.settings))return;S.settings[a]=!S.settings[a];save();applySettings();if(t)t.setAttribute('aria-checked',S.settings[a]);},
     resetAll:()=>{
       if(!T.resetArmed){T.resetArmed=true;const b=$('resetBtn');if(b)b.textContent='Tap again to erase everything';return;}
+      snap('erase',{rebuild:true,focus:'.topbar [data-act=openSettings]'});
       try{if(store)store.removeItem(KEY);}catch(e){}
       Object.keys(DEFAULTS).forEach(k=>S[k]=clone(DEFAULTS[k]));
-      T.lastFocus=null;applySettings();closeSettings();buildQueue();T.focusSector=null;go('home',true);toast('Data erased');
+      T.lastFocus=null;applySettings();closeSettings();buildQueue();T.focusSector=null;go('home',true);histSync(false);offerUndo('Data erased');
       const g=document.querySelector('.topbar [data-act=openSettings]');if(g)g.focus({preventScroll:true});
+      gcPhotosSoon();
     },
     filter:a=>{S.filter=a;save();buildQueue();renderDeck();},
     swipe:a=>swipeAction(a),
     resetDeck:()=>{buildQueue();renderDeck();announce('Deck restarted. '+cardLabel(QUEUE[0]));},
-    unsave:a=>{S.saved=S.saved.filter(s=>s.id!==Number(a));save();toast('Removed');rerenderActive();},
-    planEvent:a=>{const e=EV(Number(a));if(!e)return;const r=addToPlan({em:e.art,name:e.name,meta:e.meta.split(' · ').slice(0,2).join(' · ')});if(r===true)toast('Added to Plan Day');rerenderActive();},
+    unsave:a=>{S.saved=S.saved.filter(s=>s.id!==a);save();toast('Removed');rerenderActive();},
+    planEvent:a=>{const e=EV(a);if(!e)return;const r=addToPlan({em:e.art,name:e.name,meta:e.meta.split(' · ').slice(0,2).join(' · ')});if(r===true)toast('Added to Plan Day');rerenderActive();},
     preorder:()=>{S.preorder=!S.preorder;save();toast(S.preorder?'Issue #1 reserved on this device':'Reservation cancelled');renderHome();},
     sector:a=>tapSector(a), clearFocus, toggleSave:a=>toggleSave(a),
-    feed:a=>{S.feedTab=a;save();renderFeeds();$('feeds').scrollTop=0;},
-    life:a=>{S.lifeTab=a;save();renderLife();$('life').scrollTop=0;manageTransitTimer();},
+    feed:a=>{if(!FEED_TABS.some(t=>t.id===a))return;rememberScroll();S.feedTab=a;T.q.feeds='';const q=$('feedQ');if(q){q.value='';runSearch('feeds');}save();renderFeeds();restoreScroll();histSync(true);},
+    life:a=>{if(!LIFE_TABS.some(t=>t.id===a))return;rememberScroll();S.lifeTab=a;save();renderLife();restoreScroll();manageTransitTimer();histSync(true);},
     flash:a=>{T.flashIdx=(T.flashIdx+Number(a)+FLASH.length)%FLASH.length;vibrate();renderFeeds();},
     postBanter:()=>{const v=readText('banterText',3);if(!v)return;S.banterPosts.unshift({id:'u'+uid(),em:'🗣️',text:v,votes:0});save();clearFields('banterText');toast('Posted');renderFeeds();},
     delBanter:a=>{S.banterPosts=S.banterPosts.filter(p=>p.id!==a);delete S.banterUserVote[a];save();toast('Post deleted');renderFeeds();},
@@ -2209,7 +3150,7 @@ const RVA = (function(){
     handshake:a=>{S.handshakes[a]=!S.handshakes[a];if(!S.handshakes[a])delete S.handshakes[a];save();vibrate(20);toast(S.handshakes[a]?'Marked interested':'Removed');renderFeeds();},
     join:a=>{S.joins[a]=!S.joins[a];if(!S.joins[a])delete S.joins[a];save();vibrate(20);toast(S.joins[a]?"You're in":'You left the game');renderFeeds();},
     interest:a=>{S.interested[a]=!S.interested[a];if(!S.interested[a])delete S.interested[a];save();vibrate(20);renderFeeds();},
-    clearPhotos:a=>{if(!S.photos[a])return;S.photos[a]=[];save();toast('Photos removed');rerenderActive();},
+    clearPhotos:a=>{if(!S.photos[a])return;snap('photos',{focus:`[data-act=clearPhotos][data-arg="${a}"]`});S.photos[a]=[];save();offerUndo('Photos removed');rerenderActive();gcPhotosSoon();},
     watchType:(a,t)=>{T.watchType=Number(a)||0;if(t)setRadio(t);},
     postWatch:()=>{const v=readText('watchText',8);if(!v)return;const type=WATCH_TYPES[T.watchType]||WATCH_TYPES[0];S.watchPosts.unshift({id:'u'+uid(),type,text:v,votes:0,dist:'Near you'});save();clearFields('watchText');toast('Alert posted');renderLife();},
     delWatch:a=>{S.watchPosts=S.watchPosts.filter(p=>p.id!==a);delete S.watchUserVote[a];save();toast('Alert deleted');renderLife();},
@@ -2222,7 +3163,9 @@ const RVA = (function(){
     toggleAccess:a=>{if(!(a in S.access))return;S.access[a]=!S.access[a];save();vibrate(20);renderLife();toast(S.access[a]?'Warning on':'Warning off');},
     waitlist:()=>{S.waitlist=!S.waitlist;save();renderLife();},
     fillSlot:a=>{const o=planOptions()[Number(a)];if(o)addToPlan(o);renderLife();},
-    clearSlot:a=>{S.plan[Number(a)]=null;vibrate();save();renderLife();},
+    clearSlot:a=>{const i=Number(a);if(!S.plan[i])return;snap('slot',{focus:`[data-act=clearSlot][data-arg="${i}"]`});S.plan[i]=null;vibrate();save();renderLife();offerUndo('Slot cleared');},
+    backupSave:()=>saveBackup(),
+    restorePick:()=>{const f=$('restoreFile');if(f)f.click();},
     copyPlan:()=>{
       const text='My RVA day: '+S.plan.filter(Boolean).map(p=>`${p.name} (${p.meta})`).join(' → ');
       const fallback=()=>{const ta=$('planText');if(ta){ta.hidden=false;ta.value=text;ta.focus();ta.select();}toast('Select the text to copy');};
@@ -2232,6 +3175,7 @@ const RVA = (function(){
   const CHANGE={
     count:(el,a)=>{const c=$(a);if(c)c.textContent=`${el.value.length} / ${el.maxLength}`;},
     photo:(el,a)=>{if(PHOTO_KINDS.includes(a))handlePhoto(el,a);},
+    restore:el=>pickRestore(el),
   };
 
   /* ---------- WIRE UP ---------- */
@@ -2240,11 +3184,14 @@ const RVA = (function(){
     const fn=ACT[t.dataset.act];if(!fn)return;
     keepFocus(()=>fn(t.dataset.arg,t,e));
   });
-  document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.change==='count')CHANGE.count(t,t.dataset.arg);});
+  // The search clear button must not take focus from its box: blurring the box brings the dock back (kb dock),
+  // which can slide over the button between press and release and swallow the tap.
+  document.addEventListener('mousedown',e=>{if(e.target.closest&&e.target.closest('.search-x'))e.preventDefault();});
+  document.addEventListener('input',e=>{const t=e.target;if(!t.dataset)return;if(t.dataset.change==='count')CHANGE.count(t,t.dataset.arg);else if(t.dataset.search)onSearchInput(t);});
   document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.change&&t.dataset.change!=='count'){const f=CHANGE[t.dataset.change];if(f)keepFocus(()=>f(t,t.dataset.arg));}});
   document.addEventListener('keydown',e=>{
     if(sheetOpen()){
-      if(e.key==='Escape'){e.preventDefault();closeSettings();}
+      if(e.key==='Escape'){e.preventDefault();closeSettings();histUp();}
       else if(e.key==='Tab')trapTab(e);
       return;
     }
@@ -2256,6 +3203,7 @@ const RVA = (function(){
       const n=rs[(j+rs.length)%rs.length];e.preventDefault();n.focus();n.click();return;
     }
     if(e.key==='Escape'&&S.screen==='map'&&T.focusSector!==null){clearFocus();return;}
+    if(e.key==='Escape'&&a&&a.dataset&&a.dataset.search&&a.value){e.preventDefault();ACT.clearSearch(a.dataset.search);return;}
     if(S.screen==='swipe'&&!/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&!(a.closest&&a.closest('.tiles'))){
       const k={ArrowRight:'yes',ArrowLeft:'no',ArrowUp:'maybe'}[e.key];
       if(k){e.preventDefault();swipeAction(k);}
@@ -2263,7 +3211,10 @@ const RVA = (function(){
   });
   /* MOB-10: hide the dock while the on-screen keyboard is up (fallback for browsers without :has()). */
   document.addEventListener('focusin',e=>{const t=e.target;if(/^(INPUT|TEXTAREA)$/.test(t.tagName)&&!/range|file/.test(t.type||''))document.body.classList.add('kb');});
-  document.addEventListener('focusout',()=>document.body.classList.remove('kb'));
+  // Bring the dock back a moment after the box loses focus: removing .kb at once can slide the dock over the
+  // button being tapped between press and click, and the tap is lost (any button, not only .search-x).
+  const typing=a=>a&&/^(INPUT|TEXTAREA)$/.test(a.tagName)&&!/range|file/.test(a.type||'');
+  document.addEventListener('focusout',()=>setTimeout(()=>{if(!typing(document.activeElement))document.body.classList.remove('kb');},300));
 
   /* ---------- BOOT ----------
      icons.js (the next script) calls RVA_BOOT once the 3D icon table exists, so the first render already has its
@@ -2282,8 +3233,11 @@ const RVA = (function(){
     applySettings();
     setupSwipeA11y();
     buildQueue();
+    if(readSharedPlan())S.screen='life';
     go(S.screen,true);
+    histSync(false);
   }
+  addEventListener('hashchange',()=>{if(booted&&readSharedPlan()){if(sheetOpen())closeSettings();go('life',true);histSync(true);}});
   function boot(){
     if(booted)return;booted=true;
     try{startApp();}
@@ -2304,7 +3258,9 @@ const RVA = (function(){
 
   window.RVA_W3_OK=()=>W3.ok;window.RVA_W3_MODE=()=>W3.mode||'2d';
   window.RVA_W3_PROJECT=(x,y,z)=>{if(!W3.ok||!W3._ctl||!W3._ctl.city)return null;const c=W3._ctl.city,v=new THREE.Vector3(x,y,z).project(c.cam),st=document.getElementById('mapStage');return [(v.x+1)/2*st.clientWidth,(1-v.y)/2*st.clientHeight];};
-  return {state:S, _test:{sunTimes,moonInfo,rvaParts,nextArrivals,TRANSIT,sanitize,T,storeState:()=>storeState,acts:Object.keys(ACT)}};
+  return {state:S, _test:{sunTimes,moonInfo,rvaParts,nextArrivals,TRANSIT,sanitize,T,storeState:()=>storeState,acts:Object.keys(ACT),
+    EVENTS,UNDO,snap,undo:()=>doUndo(),photoMode:()=>photoMode,photosReady,PURL,blobs,exportState,restoreState,gcPhotos,
+    queue:()=>QUEUE.slice(swipeIdx),spring:SPRING,searchMatch,encodePlan,decodePlan,planLink}};
 })();
 </script>
 <script type="text/rva" id="rva-icons">
@@ -2375,7 +3331,7 @@ const RVA = (function(){
   }}).observe(root,{childList:true,subtree:true,characterData:true});
 })();
 </script>
-<script>window.RVA_VERSION="1.0.0";window.RVA_BUILD="4c16211067";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
+<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="7ed7734844";window.RVA_APP_URL="https://amonrayford-ai.github.io/rva-engine/app.html";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
 addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(reg){
 function offer(w){if(!w||!navigator.serviceWorker.controller)return;window.RVA_CHIP&&RVA_CHIP('A new version is ready','Update',function(){asked=true;w.postMessage('skipWaiting');});}
 offer(reg.waiting);reg.addEventListener('updatefound',function(){var w=reg.installing;w&&w.addEventListener('statechange',function(){if(w.state==='installed')offer(w);});});

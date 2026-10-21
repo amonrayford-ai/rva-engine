@@ -47,11 +47,19 @@
       </div>
       <p class="fine">Free, runs in your browser, works offline after the first visit. No account, no tracking: everything you save stays on your device.</p>
     </div>
-    <picture class="hero-art">
-      <source type="image/webp" srcset="img/skyline-night-800.webp 800w, img/skyline-night-1600.webp 1600w" sizes="(min-width: 960px) 560px, 100vw">
-      <img src="img/skyline-night-800.webp" width="800" height="251" alt="A toy-3D Richmond skyline at night beside the James River, rendered in Blender">
-    </picture>
+    <div class="hero-art">
+      <canvas class="molten" width="160" height="90" aria-hidden="true"></canvas>
+      <picture>
+        <source type="image/webp" srcset="img/skyline-night-800.webp 800w, img/skyline-night-1600.webp 1600w" sizes="(min-width: 960px) 560px, 100vw">
+        <img src="img/skyline-night-800.webp" width="800" height="251" alt="A toy-3D Richmond skyline at night beside the James River, rendered in Blender">
+      </picture>
+    </div>
   </section>
+
+  <figure class="pulse">
+    <canvas id="pulse" height="24" role="img" aria-label="City pulse: Richmond's sky color through the day, with bronze bars for how busy each hour gets (sample data)"></canvas>
+    <figcaption>City pulse: Richmond&rsquo;s sky through the day, and how busy it gets (sample data).</figcaption>
+  </figure>
 
   <section class="features" aria-labelledby="what">
     <h2 id="what">What&rsquo;s inside</h2>
@@ -86,6 +94,7 @@
     <h2 id="inst">Install on your phone</h2>
     <p class="lede sm">Installed, the RVA Engine opens full screen from your home screen like any app, and keeps working without a connection.</p>
     <p class="native" hidden><button class="btn" type="button" id="installBtn">Install the app</button></p>
+    <figure class="qr"><svg class="qr-code" viewBox="0 0 41 41" width="168" height="168" role="img" aria-labelledby="qrT" shape-rendering="crispEdges"><title id="qrT">QR code for the app</title><rect width="41" height="41" fill="#fff"/><path fill="#0B0A0E" d="M4 4h7v1h-7zM12 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM25 4h2v1h-2zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM15 5h2v1h-2zM21 5h1v1h-1zM23 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM12 6h1v1h-1zM15 6h2v1h-2zM20 6h4v1h-4zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM16 7h1v1h-1zM24 7h2v1h-2zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM12 8h1v1h-1zM15 8h1v1h-1zM17 8h3v1h-3zM22 8h1v1h-1zM24 8h3v1h-3zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM16 9h3v1h-3zM21 9h2v1h-2zM26 9h2v1h-2zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM17 11h2v1h-2zM23 11h1v1h-1zM26 11h2v1h-2zM4 12h1v1h-1zM7 12h7v1h-7zM18 12h5v1h-5zM27 12h1v1h-1zM29 12h1v1h-1zM32 12h1v1h-1zM34 12h3v1h-3zM6 13h3v1h-3zM11 13h1v1h-1zM13 13h2v1h-2zM16 13h1v1h-1zM18 13h2v1h-2zM22 13h2v1h-2zM27 13h1v1h-1zM32 13h4v1h-4zM7 14h1v1h-1zM9 14h4v1h-4zM14 14h2v1h-2zM18 14h5v1h-5zM25 14h1v1h-1zM27 14h3v1h-3zM32 14h5v1h-5zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM12 15h2v1h-2zM16 15h1v1h-1zM18 15h1v1h-1zM21 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM30 15h2v1h-2zM34 15h3v1h-3zM4 16h2v1h-2zM7 16h6v1h-6zM16 16h7v1h-7zM24 16h1v1h-1zM28 16h1v1h-1zM30 16h2v1h-2zM8 17h1v1h-1zM12 17h2v1h-2zM20 17h2v1h-2zM25 17h5v1h-5zM31 17h1v1h-1zM34 17h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h3v1h-3zM12 18h1v1h-1zM14 18h2v1h-2zM17 18h1v1h-1zM20 18h2v1h-2zM23 18h4v1h-4zM30 18h1v1h-1zM32 18h1v1h-1zM4 19h2v1h-2zM8 19h2v1h-2zM12 19h5v1h-5zM19 19h1v1h-1zM22 19h1v1h-1zM29 19h1v1h-1zM31 19h4v1h-4zM36 19h1v1h-1zM4 20h3v1h-3zM10 20h2v1h-2zM15 20h2v1h-2zM18 20h1v1h-1zM20 20h1v1h-1zM23 20h2v1h-2zM26 20h7v1h-7zM6 21h2v1h-2zM9 21h1v1h-1zM12 21h3v1h-3zM16 21h4v1h-4zM22 21h2v1h-2zM26 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM34 21h1v1h-1zM36 21h1v1h-1zM4 22h3v1h-3zM8 22h4v1h-4zM14 22h2v1h-2zM19 22h2v1h-2zM23 22h5v1h-5zM30 22h2v1h-2zM33 22h4v1h-4zM5 23h2v1h-2zM11 23h1v1h-1zM13 23h1v1h-1zM15 23h4v1h-4zM21 23h3v1h-3zM27 23h1v1h-1zM32 23h3v1h-3zM5 24h3v1h-3zM9 24h2v1h-2zM12 24h1v1h-1zM15 24h1v1h-1zM18 24h1v1h-1zM23 24h1v1h-1zM26 24h3v1h-3zM31 24h1v1h-1zM33 24h1v1h-1zM36 24h1v1h-1zM4 25h2v1h-2zM11 25h1v1h-1zM14 25h4v1h-4zM20 25h1v1h-1zM22 25h2v1h-2zM26 25h2v1h-2zM31 25h4v1h-4zM4 26h1v1h-1zM7 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM18 26h3v1h-3zM24 26h1v1h-1zM26 26h3v1h-3zM30 26h1v1h-1zM33 26h1v1h-1zM35 26h2v1h-2zM4 27h1v1h-1zM6 27h3v1h-3zM11 27h1v1h-1zM13 27h2v1h-2zM17 27h1v1h-1zM20 27h2v1h-2zM24 27h1v1h-1zM26 27h1v1h-1zM29 27h1v1h-1zM31 27h1v1h-1zM34 27h1v1h-1zM4 28h5v1h-5zM10 28h3v1h-3zM14 28h1v1h-1zM17 28h1v1h-1zM19 28h2v1h-2zM23 28h2v1h-2zM28 28h6v1h-6zM36 28h1v1h-1zM12 29h1v1h-1zM15 29h2v1h-2zM18 29h3v1h-3zM22 29h1v1h-1zM25 29h1v1h-1zM28 29h1v1h-1zM32 29h1v1h-1zM34 29h2v1h-2zM4 30h7v1h-7zM12 30h2v1h-2zM15 30h2v1h-2zM18 30h3v1h-3zM22 30h2v1h-2zM27 30h2v1h-2zM30 30h1v1h-1zM32 30h1v1h-1zM34 30h1v1h-1zM4 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h1v1h-1zM16 31h2v1h-2zM23 31h2v1h-2zM26 31h3v1h-3zM32 31h5v1h-5zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM12 32h2v1h-2zM15 32h1v1h-1zM18 32h2v1h-2zM21 32h2v1h-2zM26 32h7v1h-7zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM12 33h3v1h-3zM16 33h1v1h-1zM23 33h4v1h-4zM28 33h2v1h-2zM31 33h1v1h-1zM33 33h4v1h-4zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM15 34h2v1h-2zM20 34h5v1h-5zM29 34h1v1h-1zM31 34h2v1h-2zM34 34h3v1h-3zM4 35h1v1h-1zM10 35h1v1h-1zM13 35h8v1h-8zM23 35h2v1h-2zM26 35h1v1h-1zM29 35h1v1h-1zM31 35h2v1h-2zM34 35h3v1h-3zM4 36h7v1h-7zM12 36h4v1h-4zM18 36h1v1h-1zM21 36h1v1h-1zM24 36h1v1h-1zM27 36h2v1h-2zM31 36h2v1h-2z"/></svg><figcaption><b>Scan to open on your phone</b><a href="https://amonrayford-ai.github.io/rva-engine/app.html">amonrayford-ai.github.io/rva-engine/app.html</a></figcaption></figure>
     <div class="cards">
       <article class="card" data-os="ios">
         <h3>iPhone &amp; iPad</h3>
@@ -110,7 +119,7 @@
     <div>
       <h2 id="win">On a Windows PC</h2>
       <p class="lede sm">The desktop app is the same RVA Engine in its own window, fully offline.</p>
-      <a class="btn" href="downloads/RVA-Engine-1.0.0-portable.exe" download>Download for Windows</a><p class="fine">RVA-Engine-1.0.0-portable.exe &middot; 92 MB &middot; Windows 10/11, 64-bit &middot; portable, no install needed<br>SHA-256 <code>b9f10ced4f6e5b94875432ec9cf21e11bac347979317e9392e6dab1ac3b4d19a</code></p>
+      <a class="btn" href="https://github.com/amonrayford-ai/rva-engine/releases/latest" rel="noopener">Download for Windows (GitHub Releases)</a><p class="fine">Pick <b>RVA-Engine-&lt;version&gt;-portable.exe</b> (no install needed) or the <b>-setup.exe</b> installer &middot; Windows 10/11, 64-bit<br>This page was built with RVA-Engine-1.1.0-portable.exe (92 MB), SHA-256 <code>ce92d8375bdf357407e618ef69d7e42b6f77d2e579968869f3ae65fd6feb7d9a</code></p>
       <p class="fine">The download is not code-signed yet, so Windows SmartScreen may warn the first time. Choose <b>More info</b>, then <b>Run anyway</b>. On a Mac or Chromebook, use <a href="app.html">the web app</a>.</p>
     </div>
   </section>
@@ -118,7 +127,7 @@
 
 <footer class="foot">
   <p><b>Sample data.</b> Events, places, feeds and transit times in this build are illustrative sample content for Richmond, not live listings. Sun and moon times are computed for Richmond. The RVA Engine is an independent project and is not affiliated with the City of Richmond.</p>
-  <p class="fine">Version 1.0.0 &middot; Made in Richmond, VA</p>
+  <p class="fine">Version 1.1.0 &middot; Made in Richmond, VA &middot; Molten-bronze hero after the metaball &ldquo;bell&rdquo; experiments of Ben F. Rayfield (MIT), reimplemented.</p>
 </footer>
 <script>window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
 addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(reg){
@@ -134,6 +143,90 @@ navigator.serviceWorker.addEventListener('controllerchange',function(){if(asked)
   addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;wrap.hidden=false;});
   document.getElementById('installBtn').addEventListener('click',function(){if(!deferred)return;deferred.prompt();deferred.userChoice.then(function(){deferred=null;wrap.hidden=true;});});
   addEventListener('appinstalled',function(){wrap.hidden=true;});
+})();
+</script>
+<script>
+/* WS2 molten-bronze hero: a cut-down 2D metaball ("bell") field in raw WebGL1 (no three.js), rendered at <=160 px wide
+   and upscaled by CSS (DPR <= 1), mediump, 30 fps cap. Starts after load, pauses when off-screen or the tab is hidden,
+   never runs under prefers-reduced-motion or without WebGL (the static skyline picture and CSS glow stay). Fresh code;
+   the idea follows Ben F. Rayfield's MIT-licensed bell raymarch experiments. */
+(function(){
+  var cv=document.querySelector('.molten'),rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)');
+  if(!cv||(rm&&rm.matches))return;
+  var gl,prog,uB,uA,N=8,raf=0,last=0,t0=0,seen=true,dead=false,asp=16/9,B=new Float32Array(N*3);
+  var SEED=[[.14,.68,.9,1.3,.2],[.3,.3,1.7,.8,.16],[.5,.6,.6,1.1,.19],[.7,.35,1.2,.7,.15],
+            [.87,.66,.8,1.5,.2],[.24,.48,1.4,.6,.13],[.62,.78,1.1,1.2,.13],[.82,.2,.7,1.6,.15]];
+  function sh(t,src){var s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);return gl.getShaderParameter(s,gl.COMPILE_STATUS)?s:null;}
+  function size(){var w=cv.clientWidth||1,h=cv.clientHeight||1,bw=Math.max(32,Math.min(160,Math.round(w)));
+    cv.width=bw;cv.height=Math.max(18,Math.round(bw*h/w));asp=w/h;if(gl)gl.viewport(0,0,cv.width,cv.height);}
+  function frame(now){raf=0;if(dead||!seen||document.hidden)return;raf=requestAnimationFrame(frame);
+    if(now-last<33)return;last=now;var t=(now-t0)/1000;
+    for(var i=0;i<N;i++){var s=SEED[i];B[i*3]=(s[0]+.1*Math.sin(t*.21*s[2]+i))*asp;B[i*3+1]=s[1]+.12*Math.cos(t*.17*s[3]+i*1.7);B[i*3+2]=s[4]*(1+.12*Math.sin(t*.5+i));}
+    gl.uniform3fv(uB,B);gl.uniform1f(uA,asp);gl.drawArrays(gl.TRIANGLES,0,3);}
+  function go(){if(!raf&&!dead&&seen&&!document.hidden)raf=requestAnimationFrame(frame);}
+  function stop(){if(raf)cancelAnimationFrame(raf);raf=0;}
+  function start(){
+    try{gl=cv.getContext('webgl',{alpha:true,antialias:false,depth:false,stencil:false,premultipliedAlpha:true,powerPreference:'low-power'});}catch(e){}
+    if(!gl)return;
+    var vs=sh(gl.VERTEX_SHADER,'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}');
+    var fs=sh(gl.FRAGMENT_SHADER,'precision mediump float;varying vec2 v;uniform vec3 b['+N+'];uniform float asp;'+
+      'void main(){vec2 q=vec2(v.x*asp,v.y);float f=0.;vec2 g=vec2(0.);'+
+      'for(int i=0;i<'+N+';i++){vec2 d=q-b[i].xy;float dd=dot(d,d)+.0004;float k=b[i].z*b[i].z/dd;f+=k;g-=2.*k*d/dd;}'+
+      'float a=smoothstep(.85,1.2,f);vec3 n=normalize(vec3(-g*.05,1.));'+
+      'float l=max(dot(n,normalize(vec3(-.45,.55,.7))),0.);float s=pow(max(dot(n,normalize(vec3(-.2,.3,1.))),0.),28.);'+
+      'vec3 c=mix(vec3(.10,.06,.04),vec3(.80,.50,.20),l)+vec3(.96,.82,.62)*s*.7;gl_FragColor=vec4(c*a,a);}');
+    if(!vs||!fs)return;
+    prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS))return;
+    gl.useProgram(prog);var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    var ap=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(ap);gl.vertexAttribPointer(ap,2,gl.FLOAT,false,0,0);
+    uB=gl.getUniformLocation(prog,'b');uA=gl.getUniformLocation(prog,'asp');gl.clearColor(0,0,0,0);
+    size();t0=performance.now();cv.classList.add('on');window.RVA_HERO='on';
+    cv.addEventListener('webglcontextlost',function(e){e.preventDefault();dead=true;stop();cv.classList.remove('on');window.RVA_HERO='lost';});
+    if('IntersectionObserver' in window)new IntersectionObserver(function(es){seen=es[0].isIntersecting;seen?go():stop();}).observe(cv);
+    document.addEventListener('visibilitychange',function(){document.hidden?stop():go();});
+    var rt;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(size,150);});
+    if(rm&&rm.addEventListener)rm.addEventListener('change',function(){if(rm.matches){dead=true;stop();cv.classList.remove('on');}});
+    go();
+  }
+  window.RVA_HERO_STATE=function(){return {running:!!raf,seen:seen,dead:dead,w:cv.width,h:cv.height};};
+  if(document.readyState==='complete')start();else addEventListener('load',function(){setTimeout(start,0);});
+})();
+
+/* WS3 city pulse ribbon: one new 1 px column per second, colored by the sun's altitude over Richmond (fresh NOAA-style
+   approximation) with bronze bars for sample event density by hour. Each column steps the clock forward, so the strip
+   flows through day and night. Paused when off-screen or hidden; under reduced motion it draws one static day. */
+(function(){
+  var cv=document.getElementById('pulse');if(!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d'),LAT=37.5407*Math.PI/180,LON=-77.436,H=24,W=0,step=0,t=0,timer=0,seen=true;
+  var rm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DENS=[.15,.1,.05,.03,.02,.03,.08,.15,.2,.22,.25,.35,.45,.38,.3,.32,.4,.6,.8,.95,1,.85,.6,.3];   // sample data
+  var fmt=null;try{fmt=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',hourCycle:'h23'});}catch(e){}
+  function hourRVA(ms){var d=new Date(ms);if(fmt){var h=parseInt(fmt.format(d),10);if(!isNaN(h))return h%24;}return d.getHours();}
+  function alt(ms){var d=new Date(ms),y0=Date.UTC(d.getUTCFullYear(),0,1),doy=Math.floor((ms-y0)/864e5)+1,
+    hr=d.getUTCHours()+d.getUTCMinutes()/60,g=2*Math.PI/365*(doy-1+(hr-12)/24),
+    eq=229.18*(.000075+.001868*Math.cos(g)-.032077*Math.sin(g)-.014615*Math.cos(2*g)-.040849*Math.sin(2*g)),
+    dec=.006918-.399912*Math.cos(g)+.070257*Math.sin(g)-.006758*Math.cos(2*g)+.000907*Math.sin(2*g)-.002697*Math.cos(3*g)+.00148*Math.sin(3*g),
+    ha=((hr*60+eq+4*LON)/4-180)*Math.PI/180,
+    c=Math.sin(LAT)*Math.sin(dec)+Math.cos(LAT)*Math.cos(dec)*Math.cos(ha);
+    return 90-Math.acos(Math.max(-1,Math.min(1,c)))*180/Math.PI;}
+  var STOPS=[[-18,[12,11,22]],[-10,[34,26,58]],[-4,[96,52,48]],[0,[205,127,50]],[6,[232,169,104]],[20,[150,170,190]],[90,[120,150,185]]];
+  function sky(a){if(a<=STOPS[0][0])return STOPS[0][1];for(var i=1;i<STOPS.length;i++)if(a<=STOPS[i][0]){var p=STOPS[i-1],q=STOPS[i],k=(a-p[0])/(q[0]-p[0]);
+    return [0,1,2].map(function(j){return Math.round(p[1][j]+(q[1][j]-p[1][j])*k);});}return STOPS[STOPS.length-1][1];}
+  function col(x,ms){var c=sky(alt(ms)),d=DENS[hourRVA(ms)];ctx.fillStyle='rgb('+c+')';ctx.fillRect(x,0,1,H);
+    var bh=Math.round(2+d*12);ctx.fillStyle='rgba(232,169,104,.9)';ctx.fillRect(x,H-bh,1,bh);ctx.fillStyle='rgba(11,10,14,.55)';ctx.fillRect(x,H-bh-1,1,1);}
+  function fill(){W=cv.width=Math.max(1,Math.round(cv.clientWidth||300));cv.height=H;
+    if(rm){var m=new Date();m.setHours(0,0,0,0);var s=m.getTime();for(var x=0;x<W;x++)col(x,s+x*864e5/W);return;}
+    step=Math.max(2,2160/W)*6e4;t=Date.now()-(W-1)*step;for(var i=0;i<W;i++)col(i,t+i*step);t+=(W-1)*step;}
+  function tick(){t+=step;ctx.drawImage(cv,-1,0);col(W-1,t);}
+  function run(){var on=seen&&!document.hidden&&!rm;if(on&&!timer)timer=setInterval(tick,1000);if(!on&&timer){clearInterval(timer);timer=0;}}
+  fill();
+  window.RVA_PULSE_STATE=function(){return {running:!!timer,w:W,reduced:!!rm};};
+  if('IntersectionObserver' in window)new IntersectionObserver(function(es){seen=es[0].isIntersecting;run();}).observe(cv);
+  document.addEventListener('visibilitychange',run);
+  var rt,lw=cv.clientWidth;addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){if(cv.clientWidth!==lw){lw=cv.clientWidth;fill();}},200);});
+  run();
 })();
 </script>
 </body>

@@ -97,3 +97,39 @@ h3{font-size:var(--fs-l);font-weight:800;color:var(--bronze-lt);margin-bottom:va
 .rva-chip{position:fixed;left:50%;transform:translateX(-50%);width:max-content;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 32px);padding:8px 8px 8px 14px;border-radius:14px;background:linear-gradient(180deg,#3A2418,#261710);border:1.5px solid #CD7F32;color:#F5EFE6;font:700 14px/1.3 inherit;box-shadow:0 8px 24px rgba(0,0,0,.6)}
 .rva-chip button{min-height:44px;padding:0 14px;border:0;border-radius:10px;background:linear-gradient(180deg,#E8A968,#CD7F32);color:#0B0A0E;font:800 14px/1 inherit;cursor:pointer}
 .rva-chip button.x{background:none;color:#C4B5A0;padding:0 10px;font-size:18px}
+
+/* WS2 molten-bronze hero: the canvas fills a frame around the skyline picture (not behind the text, which keeps the
+   copy's contrast intact). Static fallback: the CSS glow below plus the picture. */
+.hero-art{position:relative;padding:clamp(14px,3vw,28px);border-radius:calc(var(--r) + 10px);
+  background:radial-gradient(60% 70% at 30% 35%,rgba(205,127,50,.32),transparent 70%),radial-gradient(50% 60% at 78% 70%,rgba(139,90,43,.38),transparent 70%),var(--choc)}
+.hero-art .molten{position:absolute;inset:0;width:100%;height:100%;border-radius:inherit;opacity:0;transition:opacity .9s ease-out}
+.hero-art .molten.on{opacity:1}
+.hero-art picture{position:relative;z-index:1;display:block}
+
+/* WS3 city pulse ribbon */
+.pulse{margin-top:var(--sp-6)}
+.pulse canvas{display:block;width:100%;height:24px;border-radius:6px;border:1px solid var(--bronze-dk);background:var(--choc)}
+.pulse figcaption{color:var(--dim-2);font-size:14px;margin-top:var(--sp-2)}
+
+/* WS1 "Scan to open on your phone": desktop-sized screens with a mouse only */
+.qr{display:none}
+@media (min-width:760px) and (hover:hover) and (pointer:fine){
+  .qr{display:flex;align-items:center;gap:var(--sp-5);margin:0 0 var(--sp-5);padding:var(--sp-4) var(--sp-5);border-radius:var(--r);
+    background:linear-gradient(160deg,var(--choc-3),var(--choc-2));border:1.5px solid var(--bronze-dk);max-width:560px}
+}
+.qr-code{flex:none;width:168px;height:168px;border-radius:8px}
+.qr figcaption{display:flex;flex-direction:column;gap:var(--sp-2);color:var(--dim);min-width:0}
+.qr figcaption b{color:var(--text);font-size:var(--fs-l)}
+.qr figcaption a{word-break:break-all;font-size:var(--fs-s)}
+
+/* WS4 phone mockups posed in perspective, turned toward the copy, standing on a soft floor shadow. Flat on small screens. */
+.phone{position:relative}
+.phone::after{content:"";position:absolute;left:8%;right:8%;bottom:-22px;height:22px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(0,0,0,.6),transparent);pointer-events:none}
+@media (min-width:760px){
+  .feature .phone{transform:perspective(1100px) rotateY(-17deg) rotateX(7deg) rotateZ(1.2deg);transform-origin:50% 70%;
+    box-shadow:-14px 24px 38px rgba(0,0,0,.55),inset 0 0 0 1px rgba(232,169,104,.12);transition:transform .45s ease-out}
+  .feature:nth-of-type(even) .phone{transform:perspective(1100px) rotateY(17deg) rotateX(7deg) rotateZ(-1.2deg);
+    box-shadow:14px 24px 38px rgba(0,0,0,.55),inset 0 0 0 1px rgba(232,169,104,.12)}
+  .feature .phone:hover{transform:perspective(1100px) rotateY(0) rotateX(2deg)}
+}
