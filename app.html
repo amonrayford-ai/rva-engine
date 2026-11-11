@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-oRLcOAhGAwwAWX3CwPwJjwXQR7ZUo84Rp1THXrfeWwA=' 'sha256-UL9zqz0S/lNaU8mDf+m7QJ3/AFSgSyOkZhfWHfLQ2eo=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-GJEx3H1qhsYLz3zXPSS71uu/sYeup3prY9GVLI8DTT8=' 'sha256-tkaIvUhJFMP6kfqhcZwq9A8F9J+ttolqIS9A0bFw27M=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://rva-engine-relay.rva-engine.workers.dev; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>The RVA Engine</title>
 <meta name="description" content="Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.">
 <meta name="theme-color" content="#0B0A0E">
@@ -30,9 +30,9 @@
 </head>
 <body>
 <style>
-/* RVA Engine — layout & visual design (lane A).
+/* RVA Engine — layout & visual design (lane A & upgraded reference styling).
    One-screen phone app in a 480px column with a 5-screen dock. Single warm dark look by design.
-   Everything sizes off the tokens below: type scale, 4px spacing grid, icon scale, radii. */
+   Infused with sleek translucent glass, liquid light accents, tactile hardware controls, and minimalist hierarchy. */
 :root{
   color-scheme:dark;
   /* color */
@@ -43,6 +43,19 @@
   --line:#8A7560;          /* control boundaries: 4.29:1 on --choc, 3.32:1 on --choc-3 (WCAG 1.4.11) */
   --red:#E74C3C;--red-dk:#B83227;--red-txt:#F5A9A0;--green:#2ECC71;--green-dk:#1E8449;
   --ink:#150A05;--gold-sh:#3A1F05;--on-light:#2A1A12;
+
+  /* glassmorphic & liquid tokens */
+  --glass-bg:rgba(26, 17, 12, 0.72);
+  --glass-card:linear-gradient(165deg, rgba(42, 26, 18, 0.75), rgba(20, 13, 9, 0.85));
+  --glass-border:rgba(232, 169, 104, 0.28);
+  --glass-border-hi:rgba(255, 255, 255, 0.16);
+  --glass-blur:blur(18px);
+  --glass-sh:0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.14);
+
+  /* tactile button & pill tokens */
+  --btn-gold:linear-gradient(135deg, #F5B577 0%, #CD7F32 50%, #9E5B1A 100%);
+  --btn-gold-sh:0 6px 20px rgba(205,127,50,0.32), inset 0 1px 1px rgba(255,255,255,0.55), inset 0 -2px 4px rgba(0,0,0,0.35);
+
   /* type scale (floor 11px) */
   --fs-2xs:11px;--fs-xs:12px;--fs-s:13px;--fs-m:15px;--fs-l:18px;--fs-xl:24px;--fs-display:52px;
   /* spacing, 4px grid */
@@ -51,76 +64,95 @@
   /* 3D icon scale */
   --ic-s:18px;--ic-m:24px;--ic-l:28px;--ic-xl:40px;
   /* shape + depth */
-  --r-s:8px;--r-m:12px;--r:14px;--r-l:18px;--r-pill:22px;
+  --r-s:8px;--r-m:12px;--r:16px;--r-l:20px;--r-pill:24px;
   --tap:44px;
-  --sh-sm:0 3px 0 var(--ink),0 6px 12px rgba(0,0,0,0.4);
+  --sh-sm:0 4px 14px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
 html,body{height:100%;background:var(--black);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;overflow:hidden;overscroll-behavior:none;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 button,label.btn{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
-/* 16px stops iOS Safari from zooming the page on focus (MOB-6); never use maximum-scale for this */
 input,select,textarea{font-family:inherit;font-size:16px}
 :focus-visible{outline:2px solid var(--bronze-lt);outline-offset:2px}
 .vh,.sr-only{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;padding:0;margin:-1px}
-#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;background:var(--black);position:relative;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto;background:radial-gradient(ellipse at 50% 0%, #1c120b 0%, var(--black) 80%);position:relative;overflow:hidden}
 
 /* ---------- CHROME: top bar + dock ---------- */
-.topbar{padding:max(10px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));background:linear-gradient(180deg,var(--choc-2),var(--black));border-bottom:1px solid var(--bronze-dk);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:20;flex-shrink:0}
-.brand{font-size:var(--fs-xs);font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--bronze-lt)}
+.topbar{padding:max(10px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));background:rgba(18,12,10,0.82);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(232,169,104,0.25);box-shadow:0 4px 20px rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:space-between;position:relative;z-index:20;flex-shrink:0}
+.brand{font-size:var(--fs-xs);font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--bronze-lt);text-shadow:0 0 12px rgba(232,169,104,0.3)}
 .brand span{color:var(--silver)}
-.icon-btn{width:var(--tap);height:var(--tap);border-radius:var(--r-m);display:flex;align-items:center;justify-content:center;background:var(--choc-3);border:1px solid var(--bronze-dk);font-size:17px;box-shadow:var(--sh-sm);transition:transform 0.06s}
-.icon-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.icon-btn{width:var(--tap);height:var(--tap);border-radius:14px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.12);font-size:17px;box-shadow:0 4px 12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15);transition:transform 0.1s cubic-bezier(.34,1.56,.64,1),box-shadow 0.15s,border-color 0.15s}
+.icon-btn:hover{border-color:var(--bronze-lt);color:var(--bronze-lt)}
+.icon-btn:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.4)}
 .screens{flex:1;position:relative;overflow:hidden;min-height:0}
 .screen{position:absolute;top:0;right:0;bottom:0;left:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;opacity:0;pointer-events:none;visibility:hidden;transition:opacity 0.25s,visibility 0s 0.25s;-webkit-overflow-scrolling:touch}
 .screen.active{opacity:1;pointer-events:auto;visibility:visible;transition:opacity 0.25s}
-.dock{display:flex;justify-content:space-around;flex-shrink:0;padding:var(--sp-2) max(6px,env(safe-area-inset-right,0px)) calc(var(--sp-2) + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));background:linear-gradient(180deg,var(--choc-2),var(--black));border-top:1px solid var(--bronze-dk);box-shadow:0 -8px 20px rgba(0,0,0,0.6);position:relative;z-index:20}
-.dock-btn{flex:1 1 0;min-width:0;margin:0 3px;padding:7px 2px 6px;background:linear-gradient(180deg,var(--choc-3),var(--choc));border:1.5px solid var(--bronze-dk);border-radius:var(--r-m);color:var(--dim);font-size:var(--fs-2xs);font-weight:800;text-transform:uppercase;letter-spacing:0.3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;box-shadow:var(--sh-sm);transition:transform 0.06s,box-shadow 0.06s,color 0.2s,background 0.2s}
+
+/* Sleek translucent dock with tactile pill tabs */
+.dock{display:flex;justify-content:space-around;flex-shrink:0;padding:var(--sp-2) max(6px,env(safe-area-inset-right,0px)) calc(var(--sp-2) + env(safe-area-inset-bottom,0px)) max(6px,env(safe-area-inset-left,0px));background:rgba(14,9,7,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(232,169,104,0.22);box-shadow:0 -10px 32px rgba(0,0,0,0.7);position:relative;z-index:20}
+.dock-btn{position:relative;flex:1 1 0;min-width:0;margin:0 3px;padding:7px 2px 6px;background:rgba(255,255,255,0.035);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;color:var(--dim);font-size:var(--fs-2xs);font-weight:800;text-transform:uppercase;letter-spacing:0.3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:54px;box-shadow:0 4px 12px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);transition:transform 0.12s cubic-bezier(.34,1.56,.64,1),box-shadow 0.15s,color 0.2s,background 0.2s,border-color 0.2s}
 .dock-btn>span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dock-btn .icon{font-size:18px;line-height:1;height:var(--ic-l);display:flex;align-items:center}
-.dock-btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
-.dock-btn.active{color:var(--black);background:linear-gradient(180deg,var(--bronze-lt),var(--bronze));border-color:var(--bronze-lt)}
+.dock-btn .icon{font-size:18px;line-height:1;height:var(--ic-l);display:flex;align-items:center;transition:transform 0.2s cubic-bezier(.34,1.56,.64,1)}
+.dock-btn:hover{color:var(--text);border-color:rgba(232,169,104,0.35)}
+.dock-btn:active{transform:scale(0.94);box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+.dock-btn.active{color:#0B0A0E;background:var(--btn-gold);border-color:rgba(255,255,255,0.65);font-weight:900;box-shadow:0 6px 20px rgba(205,127,50,0.45), inset 0 1px 2px rgba(255,255,255,0.8), inset 0 -1px 2px rgba(0,0,0,0.35);transform:translateY(-2px)}
+.dock-btn.active .icon{transform:scale(1.12)}
+.dock-btn.active::after{content:'';position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:#0B0A0E;opacity:0.8}
 
 /* ---------- COMPONENTS ---------- */
-.card{background:linear-gradient(160deg,var(--choc-3),var(--choc-2));border:1.5px solid var(--bronze-dk);border-radius:var(--r);padding:var(--sp-3);margin-bottom:var(--sp-3);box-shadow:var(--sh-sm)}
-.card.accent{border-color:var(--burgundy);background:linear-gradient(160deg,var(--burgundy-2),var(--choc-2))}
-.card.gold{border-color:var(--bronze-lt);background:linear-gradient(160deg,#4A2E15,var(--choc-3));box-shadow:0 5px 0 var(--gold-sh),0 10px 20px rgba(205,127,50,0.3)}
+/* Frosted glass cards with luminous borders */
+.card{background:var(--glass-card);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:var(--r);padding:var(--sp-3);margin-bottom:var(--sp-3);box-shadow:var(--glass-sh);position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);pointer-events:none}
+.card.accent{border-color:rgba(231,76,60,0.35);background:linear-gradient(165deg, rgba(58,20,32,0.82), rgba(26,15,10,0.88))}
+.card.gold{border-color:rgba(232,169,104,0.65);background:linear-gradient(165deg, rgba(74,46,21,0.85), rgba(38,23,14,0.9));box-shadow:0 10px 36px rgba(205,127,50,0.35), inset 0 1px 1px rgba(255,255,255,0.25)}
 .card-label{font-size:var(--fs-2xs);color:var(--bronze-lt);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:6px;font-weight:800;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.frac{border-bottom:2px solid var(--bronze);padding-bottom:var(--sp-1);margin-bottom:6px;font-weight:800;font-size:var(--fs-m);letter-spacing:0.2px;line-height:1.25;text-wrap:balance}
+.frac{border-bottom:1px solid rgba(205,127,50,0.4);padding-bottom:var(--sp-1);margin-bottom:6px;font-weight:800;font-size:var(--fs-m);letter-spacing:0.2px;line-height:1.25;text-wrap:balance}
 .den{font-size:var(--fs-xs);color:var(--dim);line-height:1.5}
-.btn{display:block;width:100%;min-height:var(--tap);padding:11px;margin-top:var(--sp-2);background:linear-gradient(180deg,var(--bronze-lt),var(--bronze));color:var(--black);border:1.5px solid var(--bronze-dk);border-radius:11px;font-weight:900;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:1px;box-shadow:0 3px 0 var(--bronze-dk),0 5px 10px rgba(0,0,0,0.4);transition:transform 0.06s,box-shadow 0.06s;text-align:center}
-.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--bronze-dk)}
-.btn.ghost{background:transparent;color:var(--bronze-lt);border-color:var(--bronze)}
-.btn.ghost:active{background:rgba(205,127,50,0.15)}
-.btn.on{background:linear-gradient(180deg,#5CE08A,var(--green));border-color:var(--green-dk);color:var(--black)}
-.btn.red{background:linear-gradient(180deg,#C8412F,var(--red-dk));border-color:#7E2219;color:#fff}
-.btn.sm{padding:8px 12px;font-size:var(--fs-2xs);width:auto;display:inline-flex;align-items:center;justify-content:center;margin-top:0}
-.btn:disabled{opacity:0.45;cursor:default}
-.pill{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:rgba(205,127,50,0.15);border:1px solid var(--bronze);border-radius:11px;font-size:var(--fs-2xs);color:var(--bronze-lt);text-transform:uppercase;letter-spacing:0.3px;font-weight:800;line-height:1.3}
-.pill.dim{background:var(--choc);border-color:var(--choc-4);color:var(--dim)}
-.pill.green{background:rgba(46,204,113,0.15);border-color:var(--green);color:var(--green)}
-.pill.red{background:rgba(231,76,60,0.15);border-color:var(--red);color:var(--red-txt)}
-.pill.gold{background:var(--bronze);border-color:var(--bronze-lt);color:var(--black)}
+
+/* Tactile liquid buttons matching reference */
+.btn{display:block;width:100%;min-height:var(--tap);padding:11px 16px;margin-top:var(--sp-2);background:var(--btn-gold);color:#0B0A0E;border:1px solid rgba(255,255,255,0.4);border-radius:14px;font-weight:900;font-size:var(--fs-xs);text-transform:uppercase;letter-spacing:1.2px;box-shadow:var(--btn-gold-sh);transition:transform 0.12s cubic-bezier(.34,1.56,.64,1),box-shadow 0.15s,filter 0.15s;text-align:center;position:relative}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:scale(0.975) translateY(2px);box-shadow:0 2px 8px rgba(205,127,50,0.25), inset 0 1px 2px rgba(0,0,0,0.4)}
+.btn.ghost{background:rgba(205,127,50,0.08);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:var(--bronze-lt);border:1.5px solid rgba(232,169,104,0.45);box-shadow:0 4px 16px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.1)}
+.btn.ghost:hover{background:rgba(205,127,50,0.16);border-color:var(--bronze-lt)}
+.btn.ghost:active{background:rgba(205,127,50,0.25);transform:scale(0.975) translateY(1px)}
+.btn.on{background:linear-gradient(135deg, #48DF80, #1EA354);border-color:rgba(255,255,255,0.4);color:#0B0A0E;box-shadow:0 6px 20px rgba(46,204,113,0.35), inset 0 1px 1px rgba(255,255,255,0.6)}
+.btn.red{background:linear-gradient(135deg, #E8594B, #AF281E);border-color:rgba(255,255,255,0.4);color:#fff;box-shadow:0 6px 20px rgba(231,76,60,0.35), inset 0 1px 1px rgba(255,255,255,0.5)}
+.btn.sm{padding:8px 14px;font-size:var(--fs-2xs);width:auto;display:inline-flex;align-items:center;justify-content:center;margin-top:0;border-radius:12px}
+.btn:disabled{opacity:0.45;cursor:default;box-shadow:none}
+
+/* Modern pill badges with indicator glow */
+.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(205,127,50,0.12);backdrop-filter:blur(8px);border:1px solid rgba(232,169,104,0.35);border-radius:var(--r-pill);font-size:var(--fs-2xs);color:var(--bronze-lt);text-transform:uppercase;letter-spacing:0.4px;font-weight:800;line-height:1.3;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+.pill.dim{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.12);color:var(--dim)}
+.pill.green{background:rgba(46,204,113,0.15);border-color:rgba(46,204,113,0.4);color:var(--green);box-shadow:0 0 12px rgba(46,204,113,0.25)}
+.pill.red{background:rgba(231,76,60,0.15);border-color:rgba(231,76,60,0.4);color:var(--red-txt);box-shadow:0 0 12px rgba(231,76,60,0.25)}
+.pill.gold{background:var(--btn-gold);border-color:rgba(255,255,255,0.5);color:#0B0A0E;box-shadow:0 2px 8px rgba(205,127,50,0.35)}
 .pill.sample{background:transparent;border:1px dashed var(--dim-2);color:var(--dim-2)}
 .panel{padding:var(--sp-3) var(--gut-r) var(--sp-4) var(--gut-l)}
 .row{display:flex;gap:var(--sp-2);align-items:center;flex-wrap:wrap}
 .row.between{justify-content:space-between}
 .grow{flex:1;min-width:0}
-.toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(20px);background:var(--bronze);color:var(--black);padding:10px 18px;border-radius:20px;font-size:var(--fs-xs);font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:0;transition:all 0.25s;z-index:200;box-shadow:0 4px 0 var(--bronze-dk),0 8px 16px rgba(0,0,0,0.5);pointer-events:none;max-width:86%;text-align:center}
+
+/* Liquid toast */
+.toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(20px);background:var(--btn-gold);color:#0B0A0E;padding:11px 22px;border-radius:var(--r-pill);font-size:var(--fs-xs);font-weight:900;text-transform:uppercase;letter-spacing:1px;opacity:0;transition:all 0.25s cubic-bezier(.34,1.56,.64,1);z-index:200;box-shadow:0 10px 30px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.7);pointer-events:none;max-width:86%;text-align:center}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.field{width:100%;background:var(--choc);border:1.5px solid var(--line);border-radius:10px;color:var(--text);padding:10px;min-height:var(--tap);margin-top:6px;line-height:1.35}
-.field::placeholder{color:var(--dim-2);opacity:1}
+
+/* Inset glass input fields */
+.field{width:100%;background:rgba(18,11,7,0.72);backdrop-filter:blur(12px);border:1px solid rgba(232,169,104,0.28);border-radius:14px;color:var(--text);padding:10px 14px;min-height:var(--tap);margin-top:6px;line-height:1.35;box-shadow:inset 0 2px 5px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.06);transition:border-color 0.15s,box-shadow 0.15s}
+.field::placeholder{color:var(--dim-2);opacity:0.8}
 textarea.field{resize:vertical;min-height:72px}
-.field:focus{border-color:var(--bronze-lt);outline:none;box-shadow:0 0 0 2px rgba(232,169,104,0.45)}
+.field:focus{border-color:var(--bronze-lt);outline:none;box-shadow:0 0 0 3px rgba(232,169,104,0.35), inset 0 2px 4px rgba(0,0,0,0.5)}
 .field:focus-visible{outline:none}
 .counter{font-size:var(--fs-2xs);color:var(--dim-2);text-align:right;margin-top:3px;font-variant-numeric:tabular-nums}
 .empty{text-align:center;color:var(--dim);font-size:var(--fs-xs);padding:10px 0;line-height:1.5}
-.list-item{display:flex;align-items:center;gap:10px;padding:var(--sp-2) 0;border-bottom:1px solid var(--choc-3)}
+.list-item{display:flex;align-items:center;gap:10px;padding:var(--sp-2) 0;border-bottom:1px solid rgba(255,255,255,0.06)}
 .list-item:last-child{border-bottom:0}
 .list-item .em{font-size:22px;width:var(--ic-l);text-align:center;flex-shrink:0}
 .list-item .t{font-size:var(--fs-s);font-weight:800;line-height:1.25}
 .list-item .m{font-size:var(--fs-2xs);color:var(--dim)}
-.x-btn{width:var(--tap);height:var(--tap);border-radius:10px;border:1px solid var(--choc-4);background:var(--choc);color:var(--dim);font-size:14px;flex-shrink:0}
-/* utility classes for template copy (replace inline style= in templates) */
+.x-btn{width:var(--tap);height:var(--tap);border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:var(--dim);font-size:14px;flex-shrink:0;box-shadow:0 2px 6px rgba(0,0,0,0.3);transition:all 0.1s}
+.x-btn:active{transform:scale(0.92)}
+
+/* utility classes for template copy */
 .t-2xs{font-size:var(--fs-2xs)}.t-xs{font-size:var(--fs-xs)}.t-s{font-size:var(--fs-s)}.t-m{font-size:var(--fs-m)}
 .t-body{color:var(--text);font-size:var(--fs-s);line-height:1.4}
 .t-center{text-align:center}.t-bronze{color:var(--bronze-lt)}.t-warn{color:var(--red-txt)}.t-dim2{color:var(--dim-2)}
@@ -130,35 +162,32 @@ textarea.field{resize:vertical;min-height:72px}
 .row-ic img.i3d{width:var(--ic-l);height:var(--ic-l);vertical-align:middle}
 
 /* ---------- TILE GRID (filters / feed sections / life sections / hoods) ----------
-   Every option visible at once: a wrapping grid of icon-over-label tiles, no horizontal scroll.
-   Active tile = filled bronze + raised + heavier label + a pointer notch (shape, not only color). */
-.tiles{--cols:4;--tgap:6px;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--tgap);row-gap:calc(var(--tgap) + 3px);padding:var(--sp-2) var(--gut-r) 10px var(--gut-l);background:var(--black);border-bottom:1px solid var(--choc-3)}
-.tile{position:relative;flex:0 0 calc((100% - (var(--cols) - 1) * var(--tgap)) / var(--cols));max-width:calc((100% - (var(--cols) - 1) * var(--tgap)) / var(--cols));min-width:0;min-height:54px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:linear-gradient(180deg,var(--choc-3),var(--choc-2));border:1.5px solid var(--choc-4);border-radius:var(--r-m);color:var(--dim);font-size:var(--fs-2xs);font-weight:700;letter-spacing:-0.2px;line-height:1.1;text-align:center;box-shadow:0 2px 0 var(--ink);transition:background 0.15s,border-color 0.15s,transform 0.1s,box-shadow 0.15s}
-.tile-ic{width:var(--ic-m);height:var(--ic-m);display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;flex-shrink:0}
-.tile-lb{display:block;max-width:100%;padding:0 1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tile-n{position:absolute;top:3px;right:3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--choc);border:1px solid var(--choc-4);color:var(--dim);font-size:var(--fs-2xs);font-weight:800;line-height:15px;font-variant-numeric:tabular-nums}
-.tile:active{transform:translateY(1px);box-shadow:0 1px 0 var(--ink)}
-.tile.active{background:linear-gradient(180deg,var(--bronze-lt),var(--bronze));border-color:var(--bronze-lt);color:var(--black);font-weight:800;box-shadow:0 3px 0 var(--bronze-dk),0 6px 14px rgba(205,127,50,0.3);transform:translateY(-1px)}
+   Translucent frosted glass tiles with tactile liquid active state and glowing indicator light */
+.tiles{--cols:4;--tgap:6px;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--tgap);row-gap:calc(var(--tgap) + 3px);padding:var(--sp-2) var(--gut-r) 10px var(--gut-l);background:rgba(11,10,14,0.65);backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,169,104,0.18)}
+.tile{position:relative;flex:0 0 calc((100% - (var(--cols) - 1) * var(--tgap)) / var(--cols));max-width:calc((100% - (var(--cols) - 1) * var(--tgap)) / var(--cols));min-width:0;min-height:54px;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:rgba(38,23,16,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08);border-radius:14px;color:var(--dim);font-size:var(--fs-2xs);font-weight:700;letter-spacing:-0.2px;line-height:1.1;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);transition:background 0.15s,border-color 0.15s,transform 0.12s cubic-bezier(.34,1.56,.64,1),box-shadow 0.15s,color 0.15s}
+.tile-ic{width:var(--ic-m);height:var(--ic-m);display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;flex-shrink:0;transition:transform 0.2s cubic-bezier(.34,1.56,.64,1)}
+.tile-lb{display:block;max-width:100%;padding:0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile-n{position:absolute;top:3px;right:3px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:rgba(18,11,7,0.85);border:1px solid rgba(255,255,255,0.12);color:var(--dim);font-size:var(--fs-2xs);font-weight:800;line-height:15px;font-variant-numeric:tabular-nums}
+.tile:hover{border-color:rgba(232,169,104,0.4);color:var(--text)}
+.tile:active{transform:scale(0.95);box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+.tile.active{background:var(--btn-gold);border-color:rgba(255,255,255,0.65);color:#0B0A0E;font-weight:900;box-shadow:0 6px 20px rgba(205,127,50,0.45), inset 0 1px 2px rgba(255,255,255,0.8), inset 0 -1px 2px rgba(0,0,0,0.3);transform:translateY(-2px)}
 .tile.active::after{content:'';position:absolute;left:50%;bottom:-7px;margin-left:-5px;border:5px solid transparent;border-top-width:6px;border-top-color:var(--bronze);border-bottom:0;pointer-events:none}
-.tile.active .tile-n{background:var(--black);border-color:var(--black);color:var(--bronze-lt)}
-.tile.active .tile-ic{transform:scale(1.1)}
+.tile.active .tile-n{background:#0B0A0E;border-color:#0B0A0E;color:var(--bronze-lt)}
+.tile.active .tile-ic{transform:scale(1.12)}
 #filterRow{--cols:5;--tgap:4px;padding:0;background:none;border:0;margin-bottom:12px;flex-shrink:0}
 #filterRow .tile{min-height:50px}
 #lifeTabs{--cols:3}
 #hoodChips{--cols:4;--tgap:5px;padding:0;background:none;border:0;margin-top:var(--sp-3)}
 @media (min-width:420px){#feedTabs,#lifeTabs{--cols:6}}
 @media (max-width:340px){#filterRow .tile,#hoodChips .tile{letter-spacing:-0.45px}}
-@media (hover:hover) and (pointer:fine){
-  .tile:hover{border-color:var(--bronze-dk);color:var(--text)}
-  .tile.active:hover{color:var(--black);border-color:var(--bronze-lt)}
-}
-/* compact "current section" bar that slides in once the tile grid scrolls out of view */
+
+/* compact "current section" bar */
 .tabs-mini{position:-webkit-sticky;position:sticky;top:0;height:0;z-index:12}
-.tabs-mini-bar{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:var(--sp-2);width:100%;min-height:48px;padding:2px var(--gut-r) 2px var(--gut-l);background:linear-gradient(180deg,var(--choc-2),var(--black));border-bottom:1px solid var(--bronze-dk);box-shadow:0 6px 14px rgba(0,0,0,0.5);color:var(--text);font-size:var(--fs-s);font-weight:800;text-align:left;transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform 0.2s,opacity 0.2s,visibility 0s 0.2s}
-.tabs-mini.show .tabs-mini-bar{transform:none;opacity:1;visibility:visible;transition:transform 0.2s,opacity 0.2s}
+.tabs-mini-bar{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:var(--sp-2);width:100%;min-height:48px;padding:2px var(--gut-r) 2px var(--gut-l);background:rgba(18,12,10,0.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(232,169,104,0.25);box-shadow:0 8px 24px rgba(0,0,0,0.6);color:var(--text);font-size:var(--fs-s);font-weight:800;text-align:left;transform:translateY(-110%);opacity:0;visibility:hidden;transition:transform 0.2s cubic-bezier(.34,1.56,.64,1),opacity 0.2s,visibility 0s 0.2s}
+.tabs-mini.show .tabs-mini-bar{transform:none;opacity:1;visibility:visible;transition:transform 0.2s cubic-bezier(.34,1.56,.64,1),opacity 0.2s}
 .tabs-mini-bar .tile-ic{width:var(--ic-l);height:var(--ic-l)}
 .tabs-mini-bar .mini-lb{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tabs-mini-bar .mini-more{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:var(--r-pill);border:1.5px solid var(--bronze);color:var(--bronze-lt);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:0.6px}
+.tabs-mini-bar .mini-more{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 14px;border-radius:var(--r-pill);border:1.5px solid rgba(232,169,104,0.5);background:rgba(205,127,50,0.1);backdrop-filter:blur(8px);color:var(--bronze-lt);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:0.6px;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
 .tabs-mini-bar .mini-more::before{content:'';width:7px;height:7px;border-left:2px solid currentColor;border-top:2px solid currentColor;transform:translateY(2px) rotate(45deg)}
 
 /* ---------- HOME ---------- */
@@ -167,15 +196,15 @@ textarea.field{resize:vertical;min-height:72px}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 @keyframes drift{0%{transform:translateX(-80px)}100%{transform:translateX(560px)}}
 .home-head{text-align:center;margin-bottom:var(--sp-5);position:relative;z-index:2}
-/* Clock sits on a chocolate glass plaque so white digits pass on the bright day sky:
-   white on rgba(26,15,10,.72) over the lightest sky stop #d9f2ff = 8.19:1, over sampled #99D5F7 = 9.61:1 (was 1.59:1 bare). */
-.clock{display:table;margin:0 auto;padding:6px 18px 8px;border-radius:var(--r-l);background:rgba(26,15,10,0.72);border:1.5px solid rgba(232,169,104,0.45);box-shadow:0 4px 0 rgba(21,10,5,0.35);font-size:var(--fs-display);font-weight:300;letter-spacing:-2px;color:#fff;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(42,26,18,0.5)}
+
+/* Clock sits on a sleek frosted liquid glass plaque */
+.clock{display:table;margin:0 auto;padding:8px 24px 10px;border-radius:24px;background:rgba(24, 15, 11, 0.68);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(232,169,104,0.35);box-shadow:0 10px 32px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.25);font-size:var(--fs-display);font-weight:300;letter-spacing:-2px;color:#fff;line-height:1;font-variant-numeric:tabular-nums;text-shadow:0 2px 10px rgba(0,0,0,0.5)}
 .clock .ampm{font-size:var(--fs-s);font-weight:800;letter-spacing:1px;margin-left:6px;vertical-align:0.9em;text-transform:uppercase;color:var(--bronze-lt)}
-.date{display:inline-block;margin-top:var(--sp-2);padding:4px 10px;border-radius:var(--r-m);background:rgba(11,10,14,0.78);color:var(--text);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:1.6px;font-weight:700}
+.date{display:inline-block;margin-top:var(--sp-2);padding:5px 14px;border-radius:var(--r-pill);background:rgba(11,10,14,0.78);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);color:var(--text);font-size:var(--fs-2xs);text-transform:uppercase;letter-spacing:1.6px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
 @media (max-width:374px){.date{letter-spacing:0.5px;padding:4px 8px;text-wrap:balance}}
 .home-wrap .card{position:relative;z-index:2}
 .stat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2);margin-top:var(--sp-2)}
-.stat{background:var(--choc);border:1px solid var(--choc-4);border-radius:10px;padding:var(--sp-2) 4px;text-align:center}
+.stat{background:rgba(26,15,10,0.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:var(--sp-2) 4px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.25)}
 .stat .v{font-size:var(--fs-m);font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
 .stat .k{font-size:var(--fs-2xs);color:var(--dim);text-transform:uppercase;letter-spacing:0.6px;margin-top:2px;font-weight:700}
 .sky3d{position:absolute;left:0;right:0;top:0;height:272px;pointer-events:none;z-index:0}
@@ -183,35 +212,37 @@ textarea.field{resize:vertical;min-height:72px}
 #homeContent{position:relative;z-index:1}
 
 /* ---------- SWIPE ---------- */
-/* Column flex: head, filters and actions never shrink; the deck takes what is left (MOB-1). */
 #swipe{padding:var(--sp-3) var(--gut-r) var(--sp-3) var(--gut-l);display:flex;flex-direction:column;background:radial-gradient(circle at 50% 100%, #2A1A12 0%, var(--black) 70%)}
 .swipe-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--sp-2);gap:var(--sp-2);flex-shrink:0}
-.swipe-title{font-size:var(--fs-m);font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--bronze-lt)}
+.swipe-title{font-size:var(--fs-m);font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--bronze-lt);text-shadow:0 0 10px rgba(232,169,104,0.3)}
 .swipe-count{font-size:var(--fs-2xs);color:var(--dim);text-transform:uppercase;letter-spacing:0.8px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 .deck{flex:1 1 auto;position:relative;min-height:200px;margin-bottom:var(--sp-3)}
 .deck>*{top:0;right:0;bottom:0;left:0}
-/* pan-y: a vertical drag on the card scrolls the screen when it has to (MOB-7); horizontal drags still swipe */
-.ev-card{position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(170deg,var(--choc-3),var(--choc-2));border:2px solid var(--bronze);border-radius:var(--r-l);overflow:hidden;box-shadow:0 8px 0 var(--ink),0 14px 28px rgba(0,0,0,0.7);display:flex;flex-direction:column;cursor:grab;touch-action:pan-y;will-change:transform;user-select:none;-webkit-user-select:none}
-.ev-card.gold{border-color:var(--bronze-lt);box-shadow:0 8px 0 var(--gold-sh),0 14px 28px rgba(205,127,50,0.5);background:linear-gradient(170deg,#4A2E15,var(--choc-2))}
-.ev-art{flex:1 1 auto;display:flex;align-items:center;justify-content:center;font-size:90px;background:radial-gradient(circle at 50% 50%, var(--choc-4), var(--choc-2) 70%);min-height:96px;position:relative;overflow:hidden}
+
+/* Sleek glass event card */
+.ev-card{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--glass-card);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:1.5px solid rgba(232,169,104,0.35);border-radius:22px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.18);display:flex;flex-direction:column;cursor:grab;touch-action:pan-y;will-change:transform;user-select:none;-webkit-user-select:none}
+.ev-card.gold{border-color:rgba(232,169,104,0.7);box-shadow:0 16px 40px rgba(205,127,50,0.35), inset 0 1px 1px rgba(255,255,255,0.3);background:linear-gradient(170deg,rgba(74,46,21,0.9),rgba(38,23,16,0.95))}
+.ev-art{flex:1 1 auto;display:flex;align-items:center;justify-content:center;font-size:90px;background:radial-gradient(circle at 50% 50%, rgba(74,48,32,0.8), rgba(26,15,10,0.9) 70%);min-height:96px;position:relative;overflow:hidden}
 .ev-art .rank{position:absolute;top:var(--sp-3);left:var(--sp-3)}
 .ev-body{padding:var(--sp-3) 14px 14px;position:relative;z-index:2;flex-shrink:0}
 .ev-name{font-size:var(--fs-l);font-weight:900;margin-bottom:3px;line-height:1.15}
 .ev-meta{font-size:var(--fs-xs);color:var(--dim);margin-bottom:var(--sp-2)}
 .ev-tags{display:flex;gap:5px;flex-wrap:wrap}
-.access-warn{margin-top:var(--sp-2);padding:6px 8px;background:rgba(231,76,60,0.12);border:1px solid var(--red);border-radius:var(--r-s);font-size:var(--fs-2xs);color:var(--red-txt);font-weight:700}
-.badge{position:absolute;top:16px;padding:7px 14px;border-radius:var(--r-s);font-weight:900;font-size:14px;letter-spacing:2px;opacity:0;transition:opacity 0.1s;pointer-events:none;z-index:5;text-transform:uppercase}
-.badge.yes{right:16px;background:var(--green-dk);color:#fff;border:2px solid #fff;transform:rotate(12deg)}
-.badge.no{left:16px;background:var(--red-dk);color:#fff;border:2px solid #fff;transform:rotate(-12deg)}
+.access-warn{margin-top:var(--sp-2);padding:6px 10px;background:rgba(231,76,60,0.15);border:1px solid rgba(231,76,60,0.4);border-radius:var(--r-s);font-size:var(--fs-2xs);color:var(--red-txt);font-weight:700}
+.badge{position:absolute;top:16px;padding:8px 18px;border-radius:14px;font-weight:900;font-size:14px;letter-spacing:2px;opacity:0;transition:opacity 0.1s;pointer-events:none;z-index:5;text-transform:uppercase}
+.badge.yes{right:16px;background:linear-gradient(135deg,#36e27a,#1b8c47);color:#fff;border:2px solid rgba(255,255,255,0.7);box-shadow:0 8px 24px rgba(46,204,113,0.5);transform:rotate(12deg)}
+.badge.no{left:16px;background:linear-gradient(135deg,#f25241,#b52a1f);color:#fff;border:2px solid rgba(255,255,255,0.7);box-shadow:0 8px 24px rgba(231,76,60,0.5);transform:rotate(-12deg)}
+
+/* Spherical tactile action buttons */
 .actions{display:flex;justify-content:center;gap:var(--sp-4);align-items:center;flex-shrink:0;padding-bottom:4px}
-.act{width:60px;height:60px;border-radius:50%;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 rgba(0,0,0,0.4),0 8px 16px rgba(0,0,0,0.5);transition:transform 0.06s,box-shadow 0.06s}
-.act:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,0.4)}
-.act.no{background:linear-gradient(180deg,#C8412F,var(--red-dk));color:#fff;border:2px solid var(--red)}
-.act.maybe{width:52px;height:52px;font-size:20px;background:linear-gradient(180deg,var(--bronze-lt),var(--bronze));color:var(--black);border:2px solid var(--bronze-dk)}
-/* white heart: 3.06:1 on #2EA85A, 4.72:1 on #1E8449 (was 2.36:1 on #3FBF6E) */
-.act.yes{background:linear-gradient(180deg,#2EA85A,var(--green-dk));color:#fff;border:2px solid var(--green)}
-.act:disabled{opacity:0.4}
-.act.rewind{width:44px;height:44px;font-size:20px;font-weight:900;background:linear-gradient(180deg,var(--choc-3),var(--choc));color:var(--bronze-lt);border:2px solid var(--bronze-dk);box-shadow:0 3px 0 rgba(0,0,0,0.4)}
+.act{width:60px;height:60px;border-radius:50%;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.55), inset 0 2px 3px rgba(255,255,255,0.35), inset 0 -2px 5px rgba(0,0,0,0.45);transition:transform 0.12s cubic-bezier(.34,1.56,.64,1),box-shadow 0.15s,filter 0.15s}
+.act:hover{filter:brightness(1.08)}
+.act:active{transform:scale(0.92);box-shadow:0 2px 8px rgba(0,0,0,0.6)}
+.act.no{background:linear-gradient(135deg,#f25241,#b52a1f);color:#fff;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 28px rgba(231,76,60,0.45), inset 0 2px 3px rgba(255,255,255,0.5)}
+.act.maybe{width:52px;height:52px;font-size:20px;background:var(--btn-gold);color:#0B0A0E;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 24px rgba(205,127,50,0.4), inset 0 2px 3px rgba(255,255,255,0.5)}
+.act.yes{background:linear-gradient(135deg,#36e27a,#1b8c47);color:#fff;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 28px rgba(46,204,113,0.45), inset 0 2px 3px rgba(255,255,255,0.5)}
+.act:disabled{opacity:0.4;box-shadow:none}
+.act.rewind{width:44px;height:44px;font-size:20px;font-weight:900;background:rgba(36,22,15,0.75);backdrop-filter:blur(12px);color:var(--bronze-lt);border:2px solid rgba(232,169,104,0.4);box-shadow:0 6px 18px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.2)}
 .ev-card.gold .ev-art{background:radial-gradient(circle at 50% 50%,#5C3A1A,#261710 70%);font-size:60px}
 .ev-card.gold .ev-name{color:var(--bronze-lt);font-size:var(--fs-m)}
 .ev-meta.sub{margin-top:6px;color:var(--bronze-lt);font-weight:700}
@@ -222,9 +253,8 @@ textarea.field{resize:vertical;min-height:72px}
 /* ---------- MAP ---------- */
 #map{padding:var(--sp-3) var(--gut-r) var(--sp-4) var(--gut-l);background:radial-gradient(circle at 50% 40%, #1A1008 0%, var(--black) 70%)}
 .map-head{text-align:center;margin-bottom:var(--sp-2)}
-.map-title{font-size:var(--fs-m);font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--bronze-lt)}
+.map-title{font-size:var(--fs-m);font-weight:900;text-transform:uppercase;letter-spacing:2px;color:var(--bronze-lt);text-shadow:0 0 12px rgba(232,169,104,0.3)}
 .map-sub{font-size:var(--fs-2xs);color:var(--dim);text-transform:uppercase;letter-spacing:1px;margin-top:2px;font-weight:700}
-/* 2D fallback board (no WebGL) */
 .board-wrap{position:relative;padding:14px 0}
 .board-deco{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;z-index:1;overflow:hidden}
 .board-deco .sun{position:absolute;top:0;right:8px;font-size:32px;filter:drop-shadow(0 0 12px rgba(232,169,104,0.8));animation:float 5s ease-in-out infinite}
@@ -235,92 +265,92 @@ textarea.field{resize:vertical;min-height:72px}
 .board-deco .grass.r{left:auto;right:0}
 .board{perspective:900px;perspective-origin:50% 35%;position:relative;z-index:2}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,76px);grid-template-areas:"nw n ne" "w c e" "sw s se";gap:5px;transform:rotateX(42deg) rotateZ(-8deg) scale(0.94);transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)}
-.sector{background:linear-gradient(160deg,var(--choc-4),var(--choc-2));border:1.5px solid var(--bronze);border-radius:var(--r-s);padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 5px 0 var(--ink),0 6px 12px rgba(0,0,0,0.6);transition:transform 0.3s,filter 0.3s,opacity 0.3s,box-shadow 0.3s;position:relative;z-index:1;overflow:hidden;color:inherit}
+.sector{background:linear-gradient(160deg,rgba(74,48,32,0.85),rgba(38,23,16,0.95));backdrop-filter:blur(10px);border:1px solid rgba(232,169,104,0.4);border-radius:14px;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);transition:transform 0.3s,filter 0.3s,opacity 0.3s,box-shadow 0.3s;position:relative;z-index:1;overflow:hidden;color:inherit}
 .sector .sicon{font-size:16px;line-height:1;margin-bottom:2px}
 .sector .sname{font-size:var(--fs-2xs);font-weight:900;text-transform:uppercase;letter-spacing:0;color:var(--bronze-lt);line-height:1.05}
 .sector .scount{font-size:var(--fs-2xs);color:var(--dim);margin-top:1px;font-variant-numeric:tabular-nums}
-.sector.hub{background:linear-gradient(160deg,var(--burgundy),#3A0A15);border-color:var(--bronze-lt)}
+.sector.hub{background:linear-gradient(160deg,rgba(94,18,36,0.9),rgba(58,10,21,0.95));border-color:rgba(232,169,104,0.7);box-shadow:0 6px 20px rgba(94,18,36,0.4)}
 .sector.hub .sname{color:var(--text)}
 .sector .chars{position:absolute;bottom:2px;font-size:var(--fs-2xs);opacity:0.8;animation:float 3s ease-in-out infinite}
 .board.focus .sector:not(.focused){filter:blur(2.5px) brightness(0.35);opacity:0.5}
 .board.focus .grid{transform:rotateX(30deg) rotateZ(-4deg) scale(1.02)}
-.sector.focused{transform:translateZ(50px) scale(1.3);box-shadow:0 12px 0 var(--ink),0 16px 32px rgba(205,127,50,0.6);z-index:100;filter:none!important;opacity:1!important}
-.map-detail{margin-top:var(--sp-3);background:linear-gradient(160deg,var(--choc-3),var(--choc-2));border:1.5px solid var(--bronze);border-radius:var(--r-m);padding:var(--sp-3);box-shadow:var(--sh-sm);position:relative;z-index:3}
+.sector.focused{transform:translateZ(50px) scale(1.3);box-shadow:0 14px 36px rgba(205,127,50,0.65), inset 0 1px 1px rgba(255,255,255,0.4);z-index:100;filter:none!important;opacity:1!important}
+.map-detail{margin-top:var(--sp-3);background:var(--glass-card);backdrop-filter:blur(18px);border:1px solid var(--glass-border);border-radius:18px;padding:var(--sp-3);box-shadow:var(--glass-sh);position:relative;z-index:3}
 .map-detail h3{margin:0 0 6px;font-size:var(--fs-m);color:var(--bronze-lt);text-transform:uppercase;letter-spacing:1px}
-.mini{background:linear-gradient(160deg,#4A2E15,var(--choc));border:1.5px solid var(--bronze-lt);border-radius:10px;padding:10px;display:flex;align-items:center;gap:10px;margin-bottom:var(--sp-2)}
-.mini .micon{font-size:30px;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.6));flex-shrink:0}
+.mini{background:linear-gradient(160deg,rgba(74,46,21,0.8),rgba(26,15,10,0.9));border:1px solid rgba(232,169,104,0.5);border-radius:14px;padding:12px;display:flex;align-items:center;gap:12px;margin-bottom:var(--sp-2);box-shadow:0 4px 14px rgba(0,0,0,0.35)}
+.mini .micon{font-size:30px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.6));flex-shrink:0}
 .mini .micon img.i3d{width:var(--ic-xl);height:var(--ic-xl)}
 .mini .mtext{font-size:var(--fs-xs);color:var(--dim);line-height:1.45}
-.shout{background:var(--black);border:1px solid var(--choc-4);border-radius:var(--r-s);padding:var(--sp-2);font-size:var(--fs-xs);color:var(--silver);font-style:italic;line-height:1.4}
+.shout{background:rgba(11,10,14,0.7);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:var(--sp-2) 10px;font-size:var(--fs-xs);color:var(--silver);font-style:italic;line-height:1.4}
+
 /* 3D map stage */
-.map-stage{position:relative;width:100%;aspect-ratio:1/1.02;max-height:62vh;border-radius:var(--r-l);overflow:hidden;border:2px solid var(--bronze);box-shadow:0 6px 0 var(--ink),0 12px 24px rgba(0,0,0,0.6);background:linear-gradient(180deg,#78c8f5,#d9f2ff);touch-action:manipulation}
+.map-stage{position:relative;width:100%;aspect-ratio:1/1.02;max-height:62vh;border-radius:24px;overflow:hidden;border:1.5px solid rgba(232,169,104,0.4);box-shadow:0 12px 36px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25);background:linear-gradient(180deg,#78c8f5,#d9f2ff);touch-action:manipulation}
 .map-stage canvas{display:block;width:100%;height:100%}
 #mapLabels{position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;transition:opacity 0.2s}
-.map-label{position:absolute;left:0;top:0;pointer-events:auto;min-height:36px;min-width:44px;justify-content:center;padding:4px 8px;font-size:15px;border-radius:16px;background:rgba(255,255,255,0.92);color:var(--on-light);font-weight:900;letter-spacing:0.3px;text-transform:uppercase;white-space:nowrap;box-shadow:0 3px 0 rgba(42,26,18,0.35);display:flex;align-items:center;gap:5px}
-/* count badge: #2A1A12 on #ff9f1c = 8.15:1 (white was 2.05:1) */
+.map-label{position:absolute;left:0;top:0;pointer-events:auto;min-height:36px;min-width:44px;justify-content:center;padding:4px 10px;font-size:15px;border-radius:18px;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);color:var(--on-light);font-weight:900;letter-spacing:0.3px;text-transform:uppercase;white-space:nowrap;box-shadow:0 4px 12px rgba(42,26,18,0.35);display:flex;align-items:center;gap:6px}
 .map-label b{background:#ff9f1c;color:var(--on-light);border-radius:10px;padding:1px 6px;font-size:var(--fs-2xs);font-variant-numeric:tabular-nums}
-.map-label.sel{background:#ffd43b}
-.map-label::after{content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(255,255,255,0.92);border-bottom:0}
-/* focus on the light sky: dark ring #2A1A12 = 14.4:1 on #d9f2ff (bronze-lt was 1.76:1) */
+.map-label.sel{background:#ffd43b;box-shadow:0 4px 16px rgba(255,212,59,0.5)}
+.map-label::after{content:'';position:absolute;left:50%;bottom:-5px;transform:translateX(-50%);border:5px solid transparent;border-top-color:rgba(255,255,255,0.94);border-bottom:0}
 .map-label:focus-visible,.map-back:focus-visible,.map-title-pill:focus-visible{outline:3px solid var(--on-light);outline-offset:2px}
 #mapFade{position:absolute;top:0;right:0;bottom:0;left:0;background:#fff8e7;opacity:0;pointer-events:none;transition:opacity 0.22s}
 #mapFade.on{opacity:1}
 #mapBadge{position:absolute;left:10px;right:10px;top:10px;display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);pointer-events:none}
-.map-back,.map-title-pill{pointer-events:auto;min-height:var(--tap);padding:0 14px;border-radius:var(--r-pill);background:rgba(255,255,255,0.94);color:var(--on-light);font-size:var(--fs-2xs);font-weight:900;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 3px 0 rgba(42,26,18,0.35);display:inline-flex;align-items:center;gap:4px;min-width:0}
+.map-back,.map-title-pill{pointer-events:auto;min-height:var(--tap);padding:0 14px;border-radius:var(--r-pill);background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);color:var(--on-light);font-size:var(--fs-2xs);font-weight:900;text-transform:uppercase;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(42,26,18,0.35);display:inline-flex;align-items:center;gap:4px;min-width:0}
 .map-title-pill{background:#ffd43b;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .map-title-pill img.i3d{width:var(--ic-s);height:var(--ic-s)}
 
-/* ---------- TOGGLES ---------- */
-.toggle-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:var(--sp-2) 0;border-bottom:1px solid var(--choc-3)}
+/* ---------- TOGGLES (Tactile pill switches matching reference photo) ---------- */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:var(--sp-2) 0;border-bottom:1px solid rgba(255,255,255,0.06)}
 .toggle-row:last-child{border-bottom:0}
 .toggle-label{font-size:var(--fs-s);font-weight:700;color:var(--text)}
 .toggle-sub{font-size:var(--fs-2xs);color:var(--dim-2);margin-top:2px;line-height:1.4}
 .sw{width:58px;height:var(--tap);position:relative;flex-shrink:0}
-/* OFF track edge uses --dim-2: 4.87:1 on the card (was 1.20:1) */
-.sw::before{content:'';position:absolute;left:6px;top:9px;width:46px;height:26px;border-radius:14px;background:var(--choc);border:1.5px solid var(--dim-2);transition:all 0.2s}
-.sw::after{content:'';position:absolute;top:13px;left:10px;width:18px;height:18px;border-radius:50%;background:var(--dim);transition:all 0.2s}
-.sw[aria-checked="true"]::before{background:var(--bronze);border-color:var(--bronze-lt)}
-.sw[aria-checked="true"]::after{transform:translateX(20px);background:var(--black)}
+.sw::before{content:'';position:absolute;left:6px;top:9px;width:46px;height:26px;border-radius:14px;background:rgba(18,11,7,0.72);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.18);box-shadow:inset 0 2px 4px rgba(0,0,0,0.6);transition:all 0.2s cubic-bezier(.34,1.56,.64,1)}
+.sw::after{content:'';position:absolute;top:13px;left:10px;width:18px;height:18px;border-radius:50%;background:linear-gradient(145deg,#E0D5C7,#A39380);box-shadow:0 2px 6px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.6);transition:all 0.2s cubic-bezier(.34,1.56,.64,1)}
+.sw[aria-checked="true"]::before{background:rgba(205,127,50,0.35);border-color:var(--bronze-lt);box-shadow:0 0 14px rgba(205,127,50,0.35), inset 0 2px 4px rgba(0,0,0,0.4)}
+.sw[aria-checked="true"]::after{transform:translateX(20px);background:var(--btn-gold);box-shadow:0 0 10px rgba(245,181,119,0.7), 0 2px 6px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.5)}
 
 /* ---------- VOTES ---------- */
 .vote-row{display:flex;align-items:center;gap:var(--sp-2);margin-top:var(--sp-2);flex-wrap:wrap}
-.vote-btn{display:inline-flex;align-items:center;gap:4px;min-height:var(--tap);min-width:52px;justify-content:center;padding:0 12px;background:var(--choc);border:1px solid var(--choc-4);border-radius:10px;font-size:var(--fs-xs);font-weight:800;color:var(--dim);transition:all 0.15s;font-variant-numeric:tabular-nums}
-.vote-btn.up{color:var(--green);border-color:rgba(46,204,113,0.5)}
-.vote-btn.down{color:var(--red-txt);border-color:rgba(231,76,60,0.5)}
-.vote-btn.up.active{background:rgba(46,204,113,0.18);border-color:var(--green)}
-.vote-btn.down.active{background:rgba(231,76,60,0.18);border-color:var(--red)}
+.vote-btn{display:inline-flex;align-items:center;gap:4px;min-height:var(--tap);min-width:52px;justify-content:center;padding:0 12px;background:rgba(255,255,255,0.04);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1);border-radius:12px;font-size:var(--fs-xs);font-weight:800;color:var(--dim);transition:all 0.15s cubic-bezier(.34,1.56,.64,1);font-variant-numeric:tabular-nums;box-shadow:0 2px 6px rgba(0,0,0,0.25)}
+.vote-btn:active{transform:scale(0.94)}
+.vote-btn.up{color:var(--green);border-color:rgba(46,204,113,0.4)}
+.vote-btn.down{color:var(--red-txt);border-color:rgba(231,76,60,0.4)}
+.vote-btn.up.active{background:rgba(46,204,113,0.2);border-color:var(--green);box-shadow:0 0 12px rgba(46,204,113,0.35)}
+.vote-btn.down.active{background:rgba(231,76,60,0.2);border-color:var(--red);box-shadow:0 0 12px rgba(231,76,60,0.35)}
 
 /* ---------- CANVAS ---------- */
 .canvas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-2)}
-.canvas-cell{background:var(--choc-2);border:1.5px solid var(--bronze-dk);border-radius:10px;padding:var(--sp-3);aspect-ratio:1;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--sh-sm);overflow:hidden;position:relative}
+.canvas-cell{background:var(--glass-card);backdrop-filter:blur(14px);border:1px solid var(--glass-border);border-radius:14px;padding:var(--sp-3);aspect-ratio:1;max-width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:var(--sh-sm);overflow:hidden;position:relative}
 .canvas-cell.photo{padding:0}
 .canvas-cell.photo img{width:100%;height:100%;object-fit:cover}
-.canvas-cell .cap{position:absolute;bottom:0;left:0;right:0;background:rgba(11,10,14,0.78);font-size:var(--fs-2xs);color:var(--bronze-lt);padding:5px;font-weight:800;text-transform:uppercase}
+.canvas-cell .cap{position:absolute;bottom:0;left:0;right:0;background:rgba(11,10,14,0.85);backdrop-filter:blur(10px);font-size:var(--fs-2xs);color:var(--bronze-lt);padding:6px;font-weight:800;text-transform:uppercase}
 .canvas-cell .cem{font-size:34px;margin-bottom:6px}
 .canvas-cell .chandle{font-size:var(--fs-2xs);color:var(--bronze-lt);font-weight:800;text-transform:uppercase;letter-spacing:0.4px}
 .canvas-cell .cdesc{font-size:var(--fs-2xs);color:var(--dim);margin-top:3px;line-height:1.3}
 input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 
-/* ---------- PLAN DAY ----------
-   Slots are short cards (not squares) so the options list starts above the fold (DES-14). */
+/* ---------- PLAN DAY ---------- */
 .slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-bottom:var(--sp-3)}
 .slots.spin{animation:spin 1.2s ease-in-out}
 @keyframes spin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
-.slot{min-height:92px;max-width:100%;min-width:0;background:var(--choc);border:2px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;text-align:center;transition:all 0.25s;color:inherit;overflow:hidden}
-.slot.filled{background:linear-gradient(160deg,var(--choc-4),var(--choc-2));border-style:solid;border-color:var(--bronze);box-shadow:inset 0 3px 0 rgba(0,0,0,0.4),0 3px 0 var(--bronze-dk)}
+.slot{min-height:92px;max-width:100%;min-width:0;background:rgba(255,255,255,0.03);backdrop-filter:blur(8px);border:1.5px dashed rgba(232,169,104,0.3);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;text-align:center;transition:all 0.25s;color:inherit;overflow:hidden}
+.slot.filled{background:var(--glass-card);border-style:solid;border-color:rgba(232,169,104,0.5);box-shadow:0 4px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12)}
 .slot .si{font-size:24px;margin-bottom:3px;line-height:1}
 .slot .si img.i3d{width:var(--ic-l);height:var(--ic-l)}
 .slot .sn{font-size:var(--fs-2xs);font-weight:800;color:var(--bronze-lt);line-height:1.2;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;max-width:100%;-webkit-hyphens:auto;hyphens:auto}
 .slot .smeta{font-size:var(--fs-2xs);color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 @media (min-width:420px){.slot{min-height:100px}}
-.plan-opt{width:100%;min-height:var(--tap);padding:var(--sp-2) 11px;background:var(--choc-3);border:1.5px solid var(--choc-4);border-radius:10px;font-size:var(--fs-s);font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);transition:all 0.15s;text-align:left;color:inherit}
+.plan-opt{width:100%;min-height:var(--tap);padding:var(--sp-2) 14px;background:rgba(38,24,17,0.65);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);border-radius:12px;font-size:var(--fs-s);font-weight:700;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:var(--sp-2);transition:all 0.15s cubic-bezier(.34,1.56,.64,1);text-align:left;color:inherit;box-shadow:0 2px 8px rgba(0,0,0,0.25)}
+.plan-opt:hover{border-color:rgba(232,169,104,0.4)}
+.plan-opt:active{transform:scale(0.98)}
 .plan-opt>span:first-child{min-width:0}
 .plan-opt>.pill{flex-shrink:0;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}
 .plan-opt:disabled{opacity:0.4}
-.plan-opt.mine{border-color:var(--bronze-dk)}
+.plan-opt.mine{border-color:var(--bronze-lt)}
 
 /* ---------- FLASHBACK ---------- */
-.flash-frame{aspect-ratio:16/10;max-width:100%;border-radius:var(--r-m);background:linear-gradient(160deg,#2A1A12,var(--black));border:1.5px solid var(--bronze);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-bottom:10px;box-shadow:var(--sh-sm)}
+.flash-frame{aspect-ratio:16/10;max-width:100%;border-radius:18px;background:linear-gradient(160deg,#2A1A12,var(--black));border:1.5px solid rgba(232,169,104,0.4);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;margin-bottom:10px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 .flash-frame::after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,0.8))}
 .flash-frame .era{position:absolute;bottom:10px;left:12px;font-size:var(--fs-2xs);color:var(--bronze-lt);font-weight:900;letter-spacing:2px;text-transform:uppercase;z-index:2}
 .flash-frame .pos{position:absolute;bottom:10px;right:12px;font-size:var(--fs-2xs);color:var(--dim);font-weight:800;z-index:2;font-variant-numeric:tabular-nums}
@@ -328,13 +358,12 @@ input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-eve
 .flash-nav .btn{margin-top:0}
 .range{width:100%;accent-color:var(--bronze);min-height:var(--tap)}
 
-/* ---------- SETTINGS SHEET ---------- */
-.sheet-bg{position:absolute;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,0.6);z-index:150}
-.sheet{position:absolute;left:0;right:0;bottom:0;max-height:85%;overflow-y:auto;overscroll-behavior:contain;background:linear-gradient(180deg,var(--choc-2),var(--black));border-top:2px solid var(--bronze);border-radius:var(--r-l) var(--r-l) 0 0;z-index:151;padding:var(--sp-4) var(--gut-r) calc(var(--sp-4) + env(safe-area-inset-bottom,0px)) var(--gut-l)}
-.sheet h2{font-size:var(--fs-m);letter-spacing:2px;text-transform:uppercase;color:var(--bronze-lt);margin-bottom:10px}
+/* ---------- SETTINGS SHEET (Frosted Glass Window Modal) ---------- */
+.sheet-bg{position:absolute;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,0.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:150}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:85%;overflow-y:auto;overscroll-behavior:contain;background:rgba(18,12,10,0.94);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border-top:1.5px solid rgba(232,169,104,0.4);border-radius:28px 28px 0 0;box-shadow:0 -20px 50px rgba(0,0,0,0.85);z-index:151;padding:var(--sp-4) var(--gut-r) calc(var(--sp-4) + env(safe-area-inset-bottom,0px)) var(--gut-l)}
+.sheet h2{font-size:var(--fs-m);letter-spacing:2px;text-transform:uppercase;color:var(--bronze-lt);margin-bottom:10px;text-shadow:0 0 10px rgba(232,169,104,0.3)}
 
 /* ---------- RESPONSIVE ---------- */
-/* Short phones (568-640px tall, or browser chrome eating the viewport): tighter card art, smaller actions. */
 @media (max-height:700px){
   .ev-art{font-size:64px;min-height:72px}
   .ev-body{padding:10px 12px 12px}
@@ -352,7 +381,6 @@ input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-eve
   .map-head{margin-bottom:6px}
   .badge{top:10px;padding:5px 10px;font-size:var(--fs-xs)}
 }
-/* Landscape phones: chrome compacts, and Swipe goes two-column (deck left, controls right). */
 @media (max-height:500px) and (min-aspect-ratio:1/1){
   .topbar{padding-top:max(4px,env(safe-area-inset-top,0px));padding-bottom:4px}
   .dock{padding-top:4px;padding-bottom:calc(4px + env(safe-area-inset-bottom,0px))}
@@ -370,15 +398,12 @@ input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-eve
   .ev-name{font-size:var(--fs-s)}
   .ev-meta{font-size:var(--fs-2xs);margin-bottom:4px}
 }
-/* Desktop browsers / website: the phone column becomes a framed device-like panel on a warm backdrop. */
 @media (min-width:640px) and (min-height:720px){
   body{background:radial-gradient(ellipse at 50% 0%,#2A1A12 0%,var(--black) 65%) fixed}
-  #app{height:calc(100% - 48px);margin:24px auto;border:1.5px solid var(--bronze-dk);border-radius:28px;box-shadow:0 0 0 6px rgba(21,10,5,0.9),0 30px 80px rgba(0,0,0,0.7),0 0 120px rgba(205,127,50,0.12)}
+  #app{height:calc(100% - 48px);margin:24px auto;border:1.5px solid rgba(232,169,104,0.35);border-radius:28px;box-shadow:0 0 0 6px rgba(21,10,5,0.9),0 30px 80px rgba(0,0,0,0.7),0 0 120px rgba(205,127,50,0.18)}
   .toast{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
 }
-/* keep keyboard-focused content clear of the sticky section bar */
 #feeds,#life{scroll-padding-top:56px}
-/* 200% zoom / very narrow: icon-only dock (labels stay in aria-label) (DES-7) */
 @media (max-width:300px){
   .dock-btn>span:last-child{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   .dock-btn{margin:0 2px}
@@ -387,20 +412,17 @@ input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-eve
   #feedTabs,#lifeTabs,#hoodChips{--cols:3}
   #filterRow{--cols:3}
 }
-/* Touch + on-screen keyboard: give the focused field the room the dock was using (MOB-10). */
 @media (hover:none) and (pointer:coarse){
   body:has(.screen input:not([type=range]):not([type=file]):focus) .dock,
   body:has(.screen textarea:focus) .dock{display:none}
 }
 
 /* ---------- OLDER ENGINES (MOB-5) ---------- */
-/* no aspect-ratio (iOS < 15, Chrome < 88): give the boxes real heights */
 @supports not (aspect-ratio:1/1){
   .map-stage{height:92vw;max-height:62vh}
   .canvas-cell{height:42vw;max-height:200px}
   .flash-frame{height:56vw;max-height:268px}
 }
-/* no flex gap (iOS < 14.5): inset support is the closest detectable proxy */
 @supports not (inset:0){
   .tiles{margin:0}
   .tiles>.tile{margin:3px;flex-basis:calc(100% / var(--cols) - 6px);max-width:calc(100% / var(--cols) - 6px)}
@@ -408,23 +430,25 @@ input[type=file].vh{position:absolute;width:1px;height:1px;opacity:0;pointer-eve
   .actions>*+*{margin-left:var(--sp-4)}
 }
 
-/* ---------- LANE B: flick spring, taste pill, search, shared plan ---------- */
-:root{--spring:cubic-bezier(.34,1.56,.64,1);--spring-dur:420ms}   /* ui.js swaps in a CSS linear() spring where supported */
+/* ---------- SPRING MOTION & CONTROLS ---------- */
+:root{--spring:cubic-bezier(.34,1.56,.64,1);--spring-dur:420ms}
 .tile.active{transition:background 0.15s,border-color 0.15s,box-shadow 0.15s,transform var(--spring-dur) var(--spring)}
 .dock-btn.active{transform:translateY(-2px);transition:transform var(--spring-dur) var(--spring),box-shadow 0.06s,color 0.2s,background 0.2s}
 .dock-btn.active:active{transform:translateY(2px);transition-duration:0.06s}
-.sector{transition:transform var(--spring-dur) var(--spring),filter 0.3s,opacity 0.3s,box-shadow 0.3s}   /* 2D board: focused hood pops */
-.map-label .ml-ic{display:inline-block;transition:transform var(--spring-dur) var(--spring)}   /* 3D board pin: the label itself is positioned by transform */
+.sector{transition:transform var(--spring-dur) var(--spring),filter 0.3s,opacity 0.3s,box-shadow 0.3s}
+.map-label .ml-ic{display:inline-block;transition:transform var(--spring-dur) var(--spring)}
 .map-label.sel .ml-ic,.map-label:active .ml-ic{transform:scale(1.25)}
 .ev-art .rank{right:auto;max-width:calc(100% - 2 * var(--sp-3));white-space:normal;text-align:left;font-size:var(--fs-2xs);line-height:1.25}
-.ev-art .rank.explore{background:rgba(26,15,10,0.85);color:var(--bronze-lt)}
+.ev-art .rank.explore{background:rgba(26,15,10,0.85);backdrop-filter:blur(8px);color:var(--bronze-lt)}
+
+/* Search bar styled after translucent liquid capsule reference */
 .search{position:relative;display:flex;align-items:center;margin:0 0 var(--sp-2)}
-#feedSearch{padding:var(--sp-2) var(--gut-r) 0 var(--gut-l);background:var(--black)}
-.search-ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;line-height:1;pointer-events:none;margin-top:3px}
+#feedSearch{padding:var(--sp-2) var(--gut-r) 0 var(--gut-l);background:transparent}
+.search-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:15px;line-height:1;pointer-events:none;margin-top:3px}
 .search-ic img{width:18px;height:18px}
-.field.search-in{padding-left:38px;padding-right:50px;-webkit-appearance:none;appearance:none;font-size:16px}
+.field.search-in{padding-left:42px;padding-right:50px;-webkit-appearance:none;appearance:none;font-size:16px;border-radius:var(--r-pill)}
 .field.search-in::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
-.search-x{position:absolute;right:2px;top:50%;transform:translateY(-50%);margin-top:3px;width:var(--tap);height:var(--tap);border-radius:10px;background:transparent;border:0;color:var(--dim);font-size:15px}
+.search-x{position:absolute;right:4px;top:50%;transform:translateY(-50%);margin-top:3px;width:var(--tap);height:var(--tap);border-radius:50%;background:transparent;border:0;color:var(--dim);font-size:15px}
 .search-x:focus-visible{outline:2px solid var(--bronze-lt);outline-offset:-4px}
 .search-x[hidden]{display:none}
 .search-count{color:var(--dim)}
@@ -442,11 +466,11 @@ body.calm *,body.calm *::before,body.calm *::after{animation:none!important;tran
 @media (hover:none) and (pointer:coarse){body.kb .dock{display:none}}
 .rate-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--sp-2)}
 .rate-row .vote-btn{min-width:0;padding:0}
-.rate-row .vote-btn[aria-checked=true]{background:linear-gradient(180deg,var(--bronze-lt),var(--bronze));color:var(--black);border-color:var(--bronze-lt)}
+.rate-row .vote-btn[aria-checked=true]{background:var(--btn-gold);color:#0B0A0E;border-color:rgba(255,255,255,0.6)}
 .row.top{align-items:flex-start;gap:10px}
 .flash-frame .big{font-size:80px}
 a.btn{text-decoration:none}
-.transit-row{padding:6px 0;border-bottom:1px solid var(--choc-3)}
+.transit-row{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
 .sector{padding-bottom:18px}
 .sector .chars{bottom:3px;line-height:1}
 /* 3D icons (Blender renders swapped in for emoji by icons.js). Sizes come from the --ic-* scale in styles.css:
@@ -546,6 +570,8 @@ body.calm .ev-art img.i3d{animation:none}
 
 <div id="rvaBoot" aria-hidden="true"><img src="data:image/webp;base64,UklGRlYLAABXRUJQVlA4WAoAAAAQAAAAXwAAXwAAQUxQSJ4BAAANkKJtk2Mr/1815KxyBgUWi8xYkJcrsTxsgD2wgpw8z1XEBYADlzM6h676xQxz74UiIyJiAjBIwyDxDQp9AYAACDPfhTBMazmkb2EmSdJIMxrNaIPvXzdQAxa5dOtiM3dzN7PO3N3Nzb0zdze3zt3czc3d3dzN3M3N3My8BxIgBgVIfHP2ZKMAMFac2Id6F2yb2HH4DQTLNZcBZE9DmiWO4jiOg9r+Q0c9AZzC5zm0Hoc4S98su3bk3m33L7sWtIWo+sAUqd0iyt7wBMBKqC5LAIbf+FR1wt/+VHXCH0GxOuJPt1hd/Szvz7dYHfG/W7G6+lneb02VR1X3h1ysjviNSVUn/BdRrI74jZm91tWlF737W+viFJS4cpBiOQLUFl6GfUm/e/XYF5KAxmmUZolfIQD2CBBgd+uCBZB2fOcE+hzHUZylmZU+Pjh7BwQgfJnE5PZFisxUhjIjMjMyI1tmZGREZGRERsuIiIxsLTMiIyIyMiKzZUZmZEakEASYACDi4ukHDQQBEkSVnolBocv3nzCeANjjAL8JjVFPDX1WUDggkgkAAPAnAJ0BKmAAYAA+YSySRqQioaGoFVrwgAwJaiyQOIOlAB6tLTmUuS+t/Gb2d7U/ot2k8fxMfoO+v/mf9v7L+aV/xPUt/UP+N6gP5d/ev2Z94X/Yftf7qN4i9A39ZvTc/dX4b/9x/0v2O9nj//4UpoV4V+Tb4fJY7stS/rjgn4AX43/JN9hAH84HhBaqCxDMt/xfoSf9fny+l/YO/k/9G/5fYU9DD9nRTGmLWY7uF3ZuBsx0/eW+MEHeab2eV9N7wYxsHq4CVV0HqAdV1PVWJQTNWvBm+lHbNi2E/LetPsssMsYgzX9+Tq1wvRYwWvL/IZjOTuLnM/dYfJEnxQIYNWFlQ6GGpkW5lXmiyCjj2rMM8ReLrF5WO2sdaCoElWOpDy476DCLAWIcuM6GFM1u4EipByX6GXKLNfkdKFE7zxkjYApgRxXPiQAA/u2S5xVEmj+jVhkSVfnPCu64fNwx6fkxcCTgwNtNJNjImfH8pjLxFfLZXiDt9AkExnb4T/xhptso/+VztMc8slSsdK72L96Ko8dmhpbBWBZx18NT3O7jcDl1KDBQCqXhp5nS5njtA7YSJU8zCji/OXfV6EwvvCmS4nYNCRkI74y9SPlTCqhQUn23G4cDkt3mkxfgtUWg61GUbZGNSncX9gLjr/VcN9ht46XwBCYFkzcrSREfpslmThefZ/8PUZeZZBYvV+EuamGN9z7+jjayDq/U6yRLBmNmDFjlu8yrHYX2ieVUU57d9puPfysxeU+qofc4KLRLBhVEk/7fBr1umWLc2RFHlx0fXypiLWg358bcuGZuiA/6VY7gZTi5lEA00ii7okKndnV2giLFVHofHpqS69qlPAiNxoYdsZo6mglnQevmBWxszZqkzme6PGD8EdIDQ8kuc335bYjgBWXs27nm26DpRoLIl9KiUsWhczQGOtKPRqT0F/sWhndXUFHKH8+n33Tun/7+Z3zU+xtw16Sb7zwM3PCdx4gy5WhwuEnWLDaZl9EkmB5u+baTHbyCmt/5/vrnnU3KZ7z4BsgNxMQWn9IBDwg/6vmp8/VNhRS5A66ehX0KrXajADgef1woag2CjGjkoUuLIpWfrbAsImQq/C6FzSvLP3GbHmHP9uZDH3uVqa8Jvyx/sXUZ0vY2mrNgpmz3eC0abCzdmZQ0ILYHOCtJWUHMYH9UVD5NqwXCoJKfiBD7Dn9f2sUwfha3A45/Q639xs3LR8mA1W1FlECGSpD4fXDkq0V57+CzVmAMrSpXbquphr0GGb+VZkDYxps2P1gY5Q3ftNAXPkNmS3BwpYKasKbw/lNh1FHJyKfJ+jkr2E8J6cIGB97fX7UNSm8+XpWlLs6e/sbi/FsKZZbuAcTXme/fAH6eYcaoh+qV+qOw7+1fbfMrN/3s67mJQ2vaAXJNvEqvP3sj3yWgtBIVFZjhpQG3BbA4bK1nGelqyxjIdiEgIYmkHjX16ITiMFOZf9IBS1ZSv9zLeA1P02bo1FqnQ17aLQqjaqR24wsYrOX9j9d5QmL+YAvizgxZ23Eb/Qwc/96u09oMGIT1DL/C/jgBr2gXpx985Fkv8j2JExbG6qR7muzESwwww2TJV+Ed/Dua7yE++X2T35p5I3d9v7kw7VHo/q5szNMuU2r1pz8FZhrhfDAfnoXg6sd0CqhhAu0/+XBWw037RdvJXaqiXP9UbPnSPFGH3uxqZAhOnzoZ4FyjA+FwJQE5tNtOyNCFfLvT1kJa6w6NXIW3OKV90Vwx7thMqehzulWn6nW1c38yOS2YHYBbSr92Qxt1GlGiuESC9cQLGYMToOOtkeFgT4Ei8he4B8lZpQ/iI2K7epcbe7dbYUJtALFvtR5X7yaWXZ/5UQS6V9u6SFyBkoHvZ2ou0KDO137aNqqeesoXB45NRY/S+vVyBZDqLXcxUJDfQe5CFhxRdAler5juSQpxfPhjYOn4Cw23gjfQyrNdc8VNvgrsv488QVnUPV6xf88Yv3p3jvPDnTJmwZBSr7Vke1peVkwLDUKS2rx/DBIasyLXbIq0Q0tvRcEzS/lkfnWw6V7241EguYZ552TJUFD8JCm/FCVr2OCHhM08c2QH81MDzH6djTUqWAkdQXlcRfy9DON8k4ZfPxFa+XmlDh7EC8J8/2Ufb1zDhg3r9MeZJ2lhQ+DtXiMBvZuJmP4iN5tIo9Ihx176xpBOrGx1HY8RxFPz125xUl0p+6h5kpdepREwS7S6Ct0QxVkKB7AUHA7RxQ6/3SuwWaMC+0TzWwqScB5lJBHV+f9CRCetvNT53dixcHrWDSX5pByPKdhElfZJVVxmMlCOlhfi7zv3h+0EYHHWDR8ilAy6J0a9Vm3AuJzKY/44s5kNWrZE694nWMlpl1Ns5FWJplc6dDpAA6tjDQ50BHdDi2VKWJivSNfGmTRRe++zWwwk/V7/WTirNgYlYQwbYetxxlhdV6zV5eABODqHFmITqjpqjSeNNgqBpHcXXroWnAqP8pvLSSs+s8dSYPYAEA8M2jw6994EfWP9PRtzq8hm3imc9Rm6qlouMPyWcEjLFkRsysZisyszu46VTaeNXwPJlahcPKzuGguT4OV39+54jLpu2/oADgNfPC6lklI7mLX45yzROifRhajjaoI6UGV0Yd/unl4uMDYY1p5BoDmsJK74RyJ+DvfYQZyogSgJ9mMQ2eRAKnKbMjPtzMO8EMzgCsEZjHLJvM93sBayOtOLu3UJl74FVbFeja7M7mlqKkodv5bQboB/5qh5OfxpdOGz5o/kWm+SoL4TgH+ws/FwBWKfFz0tLF6c8lQMg+SoUdIm3eh9qFRzFs0UVmx/q0njorHAtfFw3h6QXCtt9E6L0hTNy/0ubo7V5fi3Iv/oyDvog5jA2DRUK4Ak+Yie/XOrIY5szTmKodJMJtrtm3hs/F/ozqxcdVrPCoQFlG7rxOyCSwjRBQsnrcKkxvdTx0+Jxkn0Ffg4A0gufx2I7jx4lf+91qOMOJOtgBEJEXaOGKczH23Kz7ReUEWtqizfvgrTtwLRPwJt5keK7kaNT6vpHPyb/1/keWf0PvA+sqxSXkqiRqhSvm3ndgvPz574Y0voqiAIrmGZXXTjTRGXEkxjOw5Kr68GnYgiNpVh5KxpSbYQYk5rcOS6NyhyvxP+lFx7t9nMT7XdVgrpmhxm9sXcyb4pumUY99qoCyz6K0jlP59banrA6Okba/PoGDELJ9c7paVupauMoTSm+o4nv+LbsP4iuST9X+mNPjA4fFXAuWTmrXjKyu5qSjxku1IQiWAA" alt="">Loading the city&hellip;</div>
 <script type="text/rva" id="rva-app">
+// RVA Engine Live Harvested Data — generated automatically
+const RVA_LIVE_DATA = {"timestamp": 1794377199, "iso_timestamp": "2026-11-11T06:06:39Z", "transit_pulse": [], "events": [{"id": "byrd_6aecddad6cb2cab07477b3bc", "art": "\ud83c\udfac", "name": "The Byrd: STORY TIME AT THE BYRD", "meta": "Carytown \u00b7 Wed Nov 11, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1794409200, "end": 1794412800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fa1a8c0d51835c9591f3", "art": "\ud83c\udfac", "name": "The Byrd: EX MACHINA (2014)", "meta": "Carytown \u00b7 Wed Nov 11, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1794441600, "end": 1794452400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fab369f90d658b09ba20", "art": "\ud83c\udfac", "name": "The Byrd: PIRATES OF THE CARIBBEAN: DEAD MAN'S CHEST (2006)", "meta": "Carytown \u00b7 Thu Nov 12, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1794528000, "end": 1794538800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fb7a948a21b0c3a116e9", "art": "\ud83c\udfac", "name": "The Byrd: BRAZIL (1985)", "meta": "Carytown \u00b7 Fri Nov 13, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1794614400, "end": 1794625200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac821b8356c483c5a0a62cf", "art": "\ud83c\udfac", "name": "The Byrd: THE THING (1982)", "meta": "Carytown \u00b7 Fri Nov 13, 2026 \u00b7 11:00 PM \u00b7 Historic Cinema", "start": 1794628800, "end": 1794636000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8f719a83ec8d58b2fc416", "art": "\ud83c\udfac", "name": "The Byrd: ENCANTO (SENSORY FRIENDLY) (2021)", "meta": "Carytown \u00b7 Sat Nov 14, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1794668400, "end": 1794675600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ab678edaba8cb8382ca4a97", "art": "\ud83c\udfac", "name": "The Byrd: THE BIG LEBYRDSKI FEST 2026", "meta": "Carytown \u00b7 Sat Nov 14, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1794700800, "end": 1794711600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fc3e262e1e0104f038b7", "art": "\ud83c\udfac", "name": "The Byrd: YOUNG FRANKENSTEIN (1974)", "meta": "Carytown \u00b7 Sun Nov 15, 2026 \u00b7 2:00 PM \u00b7 Historic Cinema", "start": 1794769200, "end": 1794780000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fceb4a7f0946d657cb18", "art": "\ud83c\udfac", "name": "The Byrd: THE ROCKY HORROR PICTURE SHOW (1975)", "meta": "Carytown \u00b7 Sun Nov 15, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1794787200, "end": 1794798000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fd93d58d350c46b68309", "art": "\ud83c\udfac", "name": "The Byrd: HAROLD AND MAUDE (1971)", "meta": "Carytown \u00b7 Wed Nov 18, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795046400, "end": 1795057200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8fe315e9a3c4ff9eb117c", "art": "\ud83c\udfac", "name": "The Byrd: PIRATES OF THE CARIBBEAN: AT WORLD'S END (2007)", "meta": "Carytown \u00b7 Thu Nov 19, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795132800, "end": 1795143600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8ff04a8ce9b8592d5fe1a", "art": "\ud83c\udfac", "name": "The Byrd: LITTLE SHOP OF HORRORS (1986)", "meta": "Carytown \u00b7 Fri Nov 20, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795219200, "end": 1795230000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8223f0f53276e09d2488c", "art": "\ud83c\udfac", "name": "The Byrd: THE TEXAS CHAIN SAW MASSACRE (1974)", "meta": "Carytown \u00b7 Fri Nov 20, 2026 \u00b7 11:00 PM \u00b7 Historic Cinema", "start": 1795233600, "end": 1795240800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac8ffb38c0d51835c9b50a4", "art": "\ud83c\udfac", "name": "The Byrd: BEAUTY AND THE BEAST (1991)", "meta": "Carytown \u00b7 Sat Nov 21, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1795273200, "end": 1795280400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac9011f7a4990f53403eeda", "art": "\ud83c\udfac", "name": "The Byrd: A LEAGUE OF THEIR OWN (1992)", "meta": "Carytown \u00b7 Sat Nov 21, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795305600, "end": 1795316400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac905184a7f0946d65ff71c", "art": "\ud83c\udfac", "name": "The Byrd: HIGH ANXIETY (1977)", "meta": "Carytown \u00b7 Sun Nov 22, 2026 \u00b7 2:00 PM \u00b7 Historic Cinema", "start": 1795374000, "end": 1795384800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac90620af58a55232489743", "art": "\ud83c\udfac", "name": "The Byrd: HAIR (1979)", "meta": "Carytown \u00b7 Sun Nov 22, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795392000, "end": 1795402800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac906ddb324bdebe07843af", "art": "\ud83c\udfac", "name": "The Byrd: ALTERED STATES (1980)", "meta": "Carytown \u00b7 Wed Nov 25, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795651200, "end": 1795662000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac907962434c4cc32289f16", "art": "\ud83c\udfac", "name": "The Byrd: PLANES, TRAINS AND AUTOMOBILES (1987)", "meta": "Carytown \u00b7 Thu Nov 26, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795737600, "end": 1795748400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac9082d7b733f548ec41b6b", "art": "\ud83c\udfac", "name": "The Byrd: GREMLINS (1984)", "meta": "Carytown \u00b7 Fri Nov 27, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795824000, "end": 1795834800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac9003fe09bde7ab63168d4", "art": "\ud83c\udfac", "name": "The Byrd: BEAUTY AND THE BEAST (SENSORY FRIENDLY) (1991)", "meta": "Carytown \u00b7 Sat Nov 28, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1795878000, "end": 1795885200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ad65e7b8399a4d598660bc3", "art": "\ud83c\udfac", "name": "The Byrd: COOL RUNNINGS (1993)", "meta": "Carytown \u00b7 Sat Nov 28, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795910400, "end": 1795921200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ad6bf8321e3ab09aa15253d", "art": "\ud83c\udfac", "name": "The Byrd: CHRISTMAS IN CONNECTICUT (1945)", "meta": "Carytown \u00b7 Sun Nov 29, 2026 \u00b7 2:00 PM \u00b7 Historic Cinema", "start": 1795978800, "end": 1795989600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6ac908ef6844e43fe24e3d62", "art": "\ud83c\udfac", "name": "The Byrd: HOME ALONE (1990)", "meta": "Carytown \u00b7 Sun Nov 29, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1795996800, "end": 1796007600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebdcda14cc136da642c680", "art": "\ud83c\udfac", "name": "The Byrd: DIE HARD (1988)", "meta": "Carytown \u00b7 Tue Dec 1, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796169600, "end": 1796180400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebddff75b069712d776e77", "art": "\ud83c\udfac", "name": "The Byrd: NATIONAL LAMPOON'S CHRISTMAS VACATION (1989)", "meta": "Carytown \u00b7 Wed Dec 2, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796256000, "end": 1796266800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe02361e9e2275a4e0767", "art": "\ud83c\udfac", "name": "The Byrd: THE HOLDOVERS (2023)", "meta": "Carytown \u00b7 Thu Dec 3, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796342400, "end": 1796353200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe283a662de3fef006401", "art": "\ud83c\udfac", "name": "The Byrd: YOU'VE GOT MAIL (1998)", "meta": "Carytown \u00b7 Fri Dec 4, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796428800, "end": 1796439600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe366a4f1a41da9f46004", "art": "\ud83c\udfac", "name": "The Byrd: A CHRISTMAS STORY (1983)", "meta": "Carytown \u00b7 Sat Dec 5, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796515200, "end": 1796526000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe46345fb4311b3ee2db7", "art": "\ud83c\udfac", "name": "The Byrd: MIRACLE ON 34TH STREET (1947)", "meta": "Carytown \u00b7 Sun Dec 6, 2026 \u00b7 2:00 PM \u00b7 Historic Cinema", "start": 1796583600, "end": 1796594400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe58ecc02d5e18c636d50", "art": "\ud83c\udfac", "name": "The Byrd: THE MUPPET CHRISTMAS CAROL (1992)", "meta": "Carytown \u00b7 Sun Dec 6, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796601600, "end": 1796612400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe68b8620c750927f949f", "art": "\ud83c\udfac", "name": "The Byrd: HUNDREDS OF BEAVERS (2023)", "meta": "Carytown \u00b7 Tue Dec 8, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796774400, "end": 1796785200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aecde0310217b28b54f7eac", "art": "\ud83c\udfac", "name": "The Byrd: STORY TIME AT THE BYRD", "meta": "Carytown \u00b7 Wed Dec 9, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1796828400, "end": 1796832000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe71fd187409dc396fd42", "art": "\ud83c\udfac", "name": "The Byrd: ELF (2003)", "meta": "Carytown \u00b7 Wed Dec 9, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796860800, "end": 1796871600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe7fc224eb41ae0e1d52d", "art": "\ud83c\udfac", "name": "The Byrd: CHRISTMAS WITH THE KRANKS (2004)", "meta": "Carytown \u00b7 Thu Dec 10, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1796947200, "end": 1796958000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe8ac8620c7509281f31d", "art": "\ud83c\udfac", "name": "The Byrd: THE GRINCH (2018)", "meta": "Carytown \u00b7 Fri Dec 11, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797033600, "end": 1797044400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd425b0cc7764b08aa6c48", "art": "\ud83c\udfac", "name": "The Byrd: THE POLAR EXPRESS (2004) (SENSORY FRIENDLY)", "meta": "Carytown \u00b7 Sat Dec 12, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1797087600, "end": 1797094800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebea208835d7d479044b72", "art": "\ud83c\udfac", "name": "The Byrd: WHITE CHRISTMAS (1954)", "meta": "Carytown \u00b7 Sat Dec 12, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797120000, "end": 1797130800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebdf9031427bd9f91d743f", "art": "\ud83c\udfac", "name": "The Byrd: NATIONAL LAMPOON'S CHRISTMAS VACATION (1989)", "meta": "Carytown \u00b7 Sun Dec 13, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797206400, "end": 1797217200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebec9260b767e2426dfd4f", "art": "\ud83c\udfac", "name": "The Byrd: FRED CLAUS (2007)", "meta": "Carytown \u00b7 Tue Dec 15, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797379200, "end": 1797390000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebed4827b4252efe19161d", "art": "\ud83c\udfac", "name": "The Byrd: HOW THE GRINCH STOLE CHRISTMAS (2000)", "meta": "Carytown \u00b7 Wed Dec 16, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797465600, "end": 1797476400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebee544552aa46c99392b6", "art": "\ud83c\udfac", "name": "The Byrd: LOVE ACTUALLY (2003)", "meta": "Carytown \u00b7 Thu Dec 17, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797552000, "end": 1797562800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe62590ea5e4cd33593c0", "art": "\ud83c\udfac", "name": "The Byrd: THE MUPPET CHRISTMAS CAROL (1992)", "meta": "Carytown \u00b7 Fri Dec 18, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797638400, "end": 1797649200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd41be78821231fc491718", "art": "\ud83c\udfac", "name": "The Byrd: THE POLAR EXPRESS (2004)", "meta": "Carytown \u00b7 Sat Dec 19, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1797692400, "end": 1797699600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebeef075b069712d872bfa", "art": "\ud83c\udfac", "name": "The Byrd: THE SANTA CLAUSE (1994)", "meta": "Carytown \u00b7 Sat Dec 19, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797724800, "end": 1797735600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebebd173dfea167a8fda67", "art": "\ud83c\udfac", "name": "The Byrd: WHITE CHRISTMAS (1954)", "meta": "Carytown \u00b7 Sun Dec 20, 2026 \u00b7 2:00 PM \u00b7 Historic Cinema", "start": 1797793200, "end": 1797804000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebe7bb3f493c172606cf31", "art": "\ud83c\udfac", "name": "The Byrd: ELF (2003)", "meta": "Carytown \u00b7 Sun Dec 20, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797811200, "end": 1797822000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd437600082d2384e2550a", "art": "\ud83c\udfac", "name": "The Byrd: ALL ABOARD WITH SANTA AND FRIENDS 2026", "meta": "Carytown \u00b7 Tue Dec 22, 2026 \u00b7 12:45 PM \u00b7 Historic Cinema", "start": 1797961500, "end": 1797973200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebef706125519af7b3bc01", "art": "\ud83c\udfac", "name": "The Byrd: HOME ALONE (1990)", "meta": "Carytown \u00b7 Tue Dec 22, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1797984000, "end": 1797994800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd39f5a3576444772e0e6a", "art": "\ud83c\udfac", "name": "The Byrd: IT'S A WONDERFUL LIFE (1946)", "meta": "Carytown \u00b7 Wed Dec 23, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798070400, "end": 1798081200, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd3c9f053ca7b4f5b2ac9c", "art": "\ud83c\udfac", "name": "The Byrd: IT'S A WONDERFUL LIFE (1946)", "meta": "Carytown \u00b7 Thu Dec 24, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1798124400, "end": 1798131600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd3bf8441eb3f8c3ad2428", "art": "\ud83c\udfac", "name": "The Byrd: IT'S A WONDERFUL LIFE (1946)", "meta": "Carytown \u00b7 Thu Dec 24, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798156800, "end": 1798167600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6acd3c3f1d028865154d5cb1", "art": "\ud83c\udfac", "name": "The Byrd: IT'S A WONDERFUL LIFE (1946)", "meta": "Carytown \u00b7 Fri Dec 25, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798243200, "end": 1798254000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf01abcf213ca6f7c567e", "art": "\ud83c\udfac", "name": "The Byrd: FROZEN", "meta": "Carytown \u00b7 Sat Dec 26, 2026 \u00b7 10:00 AM \u00b7 Historic Cinema", "start": 1798297200, "end": 1798304400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf48f14cc136da65b75bf", "art": "\ud83c\udfac", "name": "The Byrd: EDWARD SCISSORHANDS (1990)", "meta": "Carytown \u00b7 Sat Dec 26, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798329600, "end": 1798340400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf1045365003fa5353537", "art": "\ud83c\udfac", "name": "The Byrd: MCCABE & MRS. MILLER (1971)", "meta": "Carytown \u00b7 Sun Dec 27, 2026 \u00b7 2:00 PM \u00b7 Historic Cinema", "start": 1798398000, "end": 1798408800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf1da0d1036fa12e20cb4", "art": "\ud83c\udfac", "name": "The Byrd: THE GRAND BUDAPEST HOTEL (2014)", "meta": "Carytown \u00b7 Sun Dec 27, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798416000, "end": 1798426800, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf25dd2bd71c19d038426", "art": "\ud83c\udfac", "name": "The Byrd: FARGO (1996)", "meta": "Carytown \u00b7 Tue Dec 29, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798588800, "end": 1798599600, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf39b7fbccdadd85b6f9d", "art": "\ud83c\udfac", "name": "The Byrd: EYES WIDE SHUT (1999)", "meta": "Carytown \u00b7 Wed Dec 30, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798675200, "end": 1798686000, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "byrd_6aebf40916722d60915db838", "art": "\ud83c\udfac", "name": "The Byrd: WHEN HARRY MET SALLY... (1989)", "meta": "Carytown \u00b7 Thu Dec 31, 2026 \u00b7 7:00 PM \u00b7 Historic Cinema", "start": 1798761600, "end": 1798772400, "tags": ["Film", "Classic", "Carytown", "Live"], "cat": "Arts", "area": "The Fan", "sensory": "med", "crowd": "med", "terrain": "paved", "seating": true, "live": true, "url": "https://byrdtheatre.org/buy-movie-tickets-online/"}, {"id": "altria_419", "art": "\ud83c\udfad", "name": "Altria: RESCHEDULED: Travis Tritt", "meta": "Monroe Park \u00b7 November 12, 2026 7:00 PM \u00b7 Live Stage", "start": 1794528000, "end": 1794538800, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/travis-tritt"}, {"id": "altria_438", "art": "\ud83c\udfad", "name": "Altria: The Goonies in Concert", "meta": "Monroe Park \u00b7 November 14, 2026 6:00 PM \u00b7 Live Stage", "start": 1794697200, "end": 1794708000, "tags": ["Theater", "Live", "Monroe Park", "Music"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/the-goonies-in-concert"}, {"id": "altria_442", "art": "\ud83c\udfad", "name": "Altria: A Christmas Story: The Musical", "meta": "Monroe Park \u00b7 Nov 27 - 29, 2026 7:00 PM \u00b7 Live Stage", "start": 1795824000, "end": 1796007600, "tags": ["Theater", "Live", "Monroe Park", "Broadway"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/a-christmas-story-the-musical"}, {"id": "altria_444", "art": "\ud83c\udfad", "name": "Altria: Derek Hough", "meta": "Monroe Park \u00b7 December 2, 2026 8:00 PM \u00b7 Live Stage", "start": 1796259600, "end": 1796270400, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/derek-hough"}, {"id": "altria_459", "art": "\ud83c\udfad", "name": "Altria: Mayor's Holly Ball 2026", "meta": "Monroe Park \u00b7 December 10, 2026 6:00 PM \u00b7 Live Stage", "start": 1796943600, "end": 1796954400, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/holly-ball-2026"}, {"id": "altria_443", "art": "\ud83c\udfad", "name": "Altria: Cirque Musica Holiday Wonderland", "meta": "Monroe Park \u00b7 December 16, 2026 7:30 PM \u00b7 Live Stage", "start": 1797467400, "end": 1797478200, "tags": ["Theater", "Live", "Monroe Park", "Comedy"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/cirque-musica-holiday-wonderland-26"}, {"id": "altria_455", "art": "\ud83c\udfad", "name": "Altria: JBEG MLK CLASSIC", "meta": "Monroe Park \u00b7 January 17, 2027 8:00 PM \u00b7 Live Stage", "start": 1800234000, "end": 1800244800, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/jbeg-mlk-classic"}, {"id": "altria_448", "art": "\ud83c\udfad", "name": "Altria: Jeff Dunham", "meta": "Monroe Park \u00b7 January 22, 2027 7:00 PM \u00b7 Live Stage", "start": 1800662400, "end": 1800673200, "tags": ["Theater", "Live", "Monroe Park", "Comedy"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/jeff-dunham-27"}, {"id": "altria_416", "art": "\ud83c\udfad", "name": "Altria: Harry Potter and the Deathly Hallows\u2122 Part 1 in Concert", "meta": "Monroe Park \u00b7 Feb 6, 2027 2:00 PM \u00b7 Live Stage", "start": 1801940400, "end": 1801951200, "tags": ["Theater", "Live", "Monroe Park", "Music"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/harry-potter-and-the-deathly-hallows-part-1-in-concert"}, {"id": "altria_423", "art": "\ud83c\udfad", "name": "Altria: HAMILTON", "meta": "Monroe Park \u00b7 Feb 23 - Mar 7, 2027 7:30 PM \u00b7 Live Stage", "start": 1803429000, "end": 1804476600, "tags": ["Theater", "Live", "Monroe Park", "Broadway"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/hamilton-27"}, {"id": "altria_445", "art": "\ud83c\udfad", "name": "Altria: The Rock Orchestra by Candlelight", "meta": "Monroe Park \u00b7 March 13, 2027 7:30 PM \u00b7 Live Stage", "start": 1804984200, "end": 1804995000, "tags": ["Theater", "Live", "Monroe Park", "Music"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/the-rock-orchestra-27"}, {"id": "altria_457", "art": "\ud83c\udfad", "name": "Altria: Blues is Alright Tour", "meta": "Monroe Park \u00b7 March 19, 2027 8:00 PM \u00b7 Live Stage", "start": 1805500800, "end": 1805511600, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/blues-is-alright-tour-27"}, {"id": "altria_454", "art": "\ud83c\udfad", "name": "Altria: HADESTOWN", "meta": "Monroe Park \u00b7 Mar 26 - 27, 2027 7:30 PM \u00b7 Live Stage", "start": 1806103800, "end": 1806201000, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/hadestown-27"}, {"id": "altria_451", "art": "\ud83c\udfad", "name": "Altria: April Fools Comedy Show", "meta": "Monroe Park \u00b7 April 2, 2027 8:00 PM \u00b7 Live Stage", "start": 1806710400, "end": 1806721200, "tags": ["Theater", "Live", "Monroe Park", "Comedy"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/april-fools-comedy-show"}, {"id": "altria_447", "art": "\ud83c\udfad", "name": "Altria: Taylor Tomlinson", "meta": "Monroe Park \u00b7 Apr 3 - 4, 2027 7:00 PM \u00b7 Live Stage", "start": 1806793200, "end": 1806890400, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/taylor-tomlinson-27"}, {"id": "altria_436", "art": "\ud83c\udfad", "name": "Altria: Jeff Arcuri", "meta": "Monroe Park \u00b7 April 22, 2027 7:30 PM \u00b7 Live Stage", "start": 1808436600, "end": 1808447400, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/jeff-arcuri"}, {"id": "altria_450", "art": "\ud83c\udfad", "name": "Altria: Roger Waters Presents LEGACY", "meta": "Monroe Park \u00b7 April 30, 2027 7:30 PM \u00b7 Live Stage", "start": 1809127800, "end": 1809138600, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/roger-waters-legacy"}, {"id": "altria_424", "art": "\ud83c\udfad", "name": "Altria: Hell's Kitchen", "meta": "Monroe Park \u00b7 May 4 - 9, 2027 7:30 PM \u00b7 Live Stage", "start": 1809473400, "end": 1809916200, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/hells-kitchen-27"}, {"id": "altria_456", "art": "\ud83c\udfad", "name": "Altria: BURN THE FLOOR: Maks & Peta Live!", "meta": "Monroe Park \u00b7 May 12, 2027 7:30 PM \u00b7 Live Stage", "start": 1810164600, "end": 1810175400, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/burn-the-floor"}, {"id": "altria_439", "art": "\ud83c\udfad", "name": "Altria: Star Wars: A New Hope in Concert", "meta": "Monroe Park \u00b7 June 5, 2027 2:00 PM \u00b7 Live Stage", "start": 1812218400, "end": 1812229200, "tags": ["Theater", "Live", "Monroe Park", "Music"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/star-wars-in-concert-27"}, {"id": "altria_425", "art": "\ud83c\udfad", "name": "Altria: Just in Time", "meta": "Monroe Park \u00b7 Jun 8 - 13, 2027 7:30 PM \u00b7 Live Stage", "start": 1812497400, "end": 1812940200, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/just-in-time-27"}, {"id": "altria_426", "art": "\ud83c\udfad", "name": "Altria: Buena Vista Social Club", "meta": "Monroe Park \u00b7 Jul 20 - 25, 2027 7:30 PM \u00b7 Live Stage", "start": 1816126200, "end": 1816569000, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/buena-vista-social-club-27"}, {"id": "altria_427", "art": "\ud83c\udfad", "name": "Altria: Harry Potter and the Cursed Child", "meta": "Monroe Park \u00b7 Aug 17 - 22, 2027 7:30 PM \u00b7 Live Stage", "start": 1818545400, "end": 1818988200, "tags": ["Theater", "Live", "Monroe Park"], "cat": "Arts", "area": "Downtown", "sensory": "high", "crowd": "high", "terrain": "paved", "seating": true, "live": true, "url": "https://www.altriatheater.com/events/detail/harry-potter-and-the-cursed-child-27"}]};
 /* ==========================================================
    THE RVA ENGINE v3 — single-file prototype
    Everything interactive persists per device (localStorage).
@@ -581,7 +607,7 @@ const RVA = (function(){
   const store=(()=>{try{const ls=window.localStorage,k='__rva_probe';ls.setItem(k,'1');ls.removeItem(k);return ls;}catch(e){return null;}})();
   let storeState=store?'ok':'off';   // 'ok' | 'partial' (some photos only in this session) | 'off'
   const T={busy:false, flashIdx:0, focusSector:null, resetArmed:false, spinNext:false, transitTimer:null,
-    recovered:false, storeWarned:false, unsavedPhotos:new Set(), watchType:0, deckGen:0, dragging:false, saveSeq:0};
+    recovered:false, storeWarned:false, unsavedPhotos:new Set(), watchType:0, deckGen:0, dragging:false, saveSeq:0, endedSaves:0};
   /* ---------- UTILITIES ---------- */
   function vibrate(ms=15){if(!S.settings.haptics)return;try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
   let toastTimer=null;
@@ -723,7 +749,7 @@ const RVA = (function(){
   const fmtTime=d=>d.toLocaleTimeString('en-US',{timeZone:TZ,hour:'numeric',minute:'2-digit'});
 
   /* ---------- DATA (SAMPLE unless noted) ---------- */
-  const EVENTS = [
+  const BASE_EVENTS = [
     {id:'e_7xjjy2rshl',n:1,art:'🎬',name:'Byrd Theatre — Midnight Cult Classic',meta:'Carytown · Sat 11:30 PM',tags:['Film','Cult','Late Night'],cat:'Arts',area:'The Fan',sensory:'high',crowd:'med',terrain:'paved',seating:true},
     {id:'e_3zuiz3uyz4',n:2,art:'🎭',name:'Touring Broadway at the Altria',meta:'Monroe Park · Fri 8:00 PM',tags:['Theater','Live','Dress Up'],cat:'Arts',area:'Downtown',sensory:'med',crowd:'high',terrain:'paved',seating:true},
     {id:'e_fbqcg7qmgi',n:3,art:'🍺',name:"Scott's Addition Brew Crawl",meta:"Scott's Addition · Sat 6 PM · Free entry",tags:['Beer','Social','21+'],cat:'Food',area:"Scott's Addition",sensory:'high',crowd:'high',terrain:'paved',seating:true},
@@ -741,9 +767,11 @@ const RVA = (function(){
     {id:'e_6nqk4a3ytr',n:15,art:'🍸',name:'Shockoe Bottom Night Out',meta:'Shockoe · Sat 10 PM',tags:['Nightlife','Dance','21+'],cat:'Music',area:'Shockoe Bottom',sensory:'high',crowd:'high',terrain:'paved',seating:false},
     {id:'e_smexro4suk',n:16,art:'🎾',name:'Battery Park Tennis Drop-In',meta:'Northside · Sun AM · Free',tags:['Sports','Outdoor','Casual'],cat:'Outdoors',area:'Northside',sensory:'low',crowd:'low',terrain:'paved',seating:true},
   ];
+  const LIVE_EVENTS = (typeof RVA_LIVE_DATA !== 'undefined' && Array.isArray(RVA_LIVE_DATA.events)) ? RVA_LIVE_DATA.events : [];
+  const EVENTS = (()=>{const seen=new Set(BASE_EVENTS.map(e=>e.id));return BASE_EVENTS.concat(LIVE_EVENTS.filter(e=>e&&typeof e.id==='string'&&Array.isArray(e.tags)&&!seen.has(e.id)&&seen.add(e.id)));})();
   const EV=id=>EVENTS.find(e=>e.id===id);
   /* SN4: saves made before v4 hold the old integer ids (kept on each event as n); map them to the stable ids. */
-  const EV_BY_N={};EVENTS.forEach(e=>{EV_BY_N[e.n]=e.id;});
+  const EV_BY_N={};EVENTS.forEach(e=>{if(e.n)EV_BY_N[e.n]=e.id;});
   const evId=x=>typeof x==='number'?EV_BY_N[x]:x;
   const GOLDEN={golden:true,id:'golden',name:'👑 THE RVA EDITORIAL EXCLUSIVE',sub:'THE PERFECT DATE NIGHT: UNTOLD STORIES OF THE FAN',body:'Three months trailing underground chefs, hidden courtyard gardens, and unspoken historical spots. Real culture belongs on heavyweight paper.',price:'Issue #1 · $12.99'};
 
@@ -796,12 +824,12 @@ const RVA = (function(){
   ];
   // Real venues + official sites. No invented listings.
   const VENUES_FILM=[
-    {name:'The Byrd Theatre',note:'1928 movie palace in Carytown. Classic and second-run films.',url:'https://byrdtheatre.com'},
-    {name:'Virginia Museum of Fine Arts',note:'Film series and events in the Museum District.',url:'https://vmfa.museum'},
+    {name:'The Byrd Theatre',note:'1928 movie palace in Carytown. Classic and second-run films.',url:'https://byrdtheatre.org/buy-movie-tickets-online/'},
+    {name:'Virginia Museum of Fine Arts',note:'Film series and events in the Museum District.',url:'https://www.vmfa.museum/calendar'},
   ];
   const VENUES_STAGE=[
-    {name:'Altria Theater',note:'Touring Broadway, comedy, concerts.',url:'https://www.altriatheater.com'},
-    {name:'Dominion Energy Center',note:'Symphony, opera, dance.',url:'https://www.dominionenergycenter.com'},
+    {name:'Altria Theater',note:'Touring Broadway, comedy, concerts.',url:'https://www.altriatheater.com/events'},
+    {name:'Dominion Energy Center',note:'Symphony, opera, dance.',url:'https://www.dominionenergycenter.com/events'},
     {name:'The National',note:'Standing-room concert hall on Broad St.',url:'https://www.thenationalva.com'},
   ];
   const REC=[
@@ -850,7 +878,7 @@ const RVA = (function(){
   ];
   // Simulated schedule: headway in minutes + per-stop offset.
   const TRANSIT=[
-    {route:'Pulse (Broad St BRT)',headway:15,stops:[{name:'Broad & Willow Lawn',off:0},{name:'Broad & Arthur Ashe',off:6},{name:'Broad & VCU/Laurel',off:11}]},
+    {route:'Pulse (Broad St BRT)',headway:15,stops:[{name:'Willow Lawn',off:0,e:'3025'},{name:'Science Museum',off:4,e:'3028',w:'3022'},{name:'VCU VUU',off:8,e:'3030',w:'3092'},{name:'Government Center',off:11,e:'3086',w:'3017'},{name:'Shockoe Bottom',off:14,e:'3036',w:'3014'},{name:'Rocketts Landing',off:18,w:'3012'}]},
     {route:'Local route — Main/Cary',headway:30,stops:[{name:'Main & 5th',off:2},{name:'Cary & Meadow',off:9},{name:'Cary & Thompson',off:15}]},
     {route:'Local route — Church Hill',headway:30,stops:[{name:'Main & 25th',off:4},{name:'Broad & 25th',off:11},{name:'Jefferson & Marshall',off:17}]},
   ];
@@ -867,7 +895,7 @@ const RVA = (function(){
   /* SN5: every plan stop has a stable key: an event id (SN4) or a PLAN_BASE key. Share links carry only keys. */
   function planItem(key){
     if(typeof key!=='string')return null;
-    const e=/^e_[a-z2-7]{10}$/.test(key)&&EV(key);
+    const e=(/^e_[a-z2-7]{10}$/.test(key)||/^(byrd|altria)_[A-Za-z0-9]{1,40}$/.test(key))&&EV(key);   // live harvested ids too
     if(e)return {em:e.art,name:e.name,meta:e.meta.split(' · ').slice(0,2).join(' · ')};
     const b=PLAN_BASE.find(x=>x.k===key);
     return b?{em:b.em,name:b.name,meta:b.meta}:null;
@@ -936,6 +964,8 @@ const RVA = (function(){
     let parsed;
     try{parsed=JSON.parse(raw);}catch(e){parsed=undefined;}
     if(!isObj(parsed)){backupCorrupt(raw);T.recovered=true;return sanitize(null);}
+    // D-007: sanitize drops a saved show that has left the listings; count those so boot can tell the user once
+    T.endedSaves=Array.isArray(parsed.saved)?parsed.saved.filter(x=>isObj(x)&&/^(byrd|altria)_[A-Za-z0-9]{1,40}$/.test(x.id)&&!EV(x.id)).length:0;
     return sanitize(parsed);
   }
   function backupCorrupt(raw){try{if(store&&raw)store.setItem(KEY+'-corrupt',raw);}catch(e){}}
@@ -2231,11 +2261,13 @@ const RVA = (function(){
   const FILTERS=[{id:'All',ic:'✨',label:'All'},{id:'Music',ic:'🎵',label:'Music'},{id:'Food',ic:'🍽️',label:'Food'},{id:'Arts',ic:'🎨',label:'Arts'},{id:'Outdoors',ic:'🌳',label:'Outdoors'}];
   const scoreOf=e=>e.tags.reduce((a,t)=>a+(S.tagScores[t]||0),0);   // fallback ranking when taste.js is absent
   const TS=()=>window.RVA_TASTE||null;
-  const idCmp=(a,b)=>(typeof a.n==='number'&&typeof b.n==='number')?a.n-b.n:String(a.id).localeCompare(String(b.id),undefined,{numeric:true});   // SN4: ids are hashed strings; n keeps the stable sample order
+  const idCmp=(a,b)=>(a.start||b.start)?((a.start||Infinity)-(b.start||Infinity))||String(a.id).localeCompare(String(b.id))   // D-007: dated events first, soonest first
+    :(typeof a.n==='number'&&typeof b.n==='number')?a.n-b.n:String(a.id).localeCompare(String(b.id),undefined,{numeric:true});   // SN4: ids are hashed strings; n keeps the stable sample order
+  const ended=e=>!!e.end&&e.end*1000<Date.now();   // D-007: a show that is over leaves the deck
   let QUEUE=[], swipeIdx=0;
   function buildQueue(){
     if(!FILTERS.some(f=>f.id===S.filter))S.filter='All';
-    const base=(S.filter==='All'?EVENTS:EVENTS.filter(e=>e.cat===S.filter)).slice();
+    const base=(S.filter==='All'?EVENTS:EVENTS.filter(e=>e.cat===S.filter)).filter(e=>!ended(e));
     const decided=new Set(S.saved.map(s=>s.id)), ts=TS();
     let q=null;T.explore=new Set();
     if(ts){   // SN16: undecided cards by taste score with explore slots, then already-decided ones
@@ -2323,7 +2355,7 @@ const RVA = (function(){
           <div class="ev-body">
             <div class="ev-name">${esc(item.name)}</div>
             <div class="ev-meta">${esc(item.meta)} · ${esc(item.area)}</div>
-            <div class="ev-tags">${item.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join('')}${SAMPLE}${st?`<span class="pill green">${st.type==='yes'?'Going':'Maybe'}</span>`:''}</div>
+            <div class="ev-tags">${item.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join('')}${item.live?'':SAMPLE}${st?`<span class="pill green">${st.type==='yes'?'Going':'Maybe'}</span>`:''}</div>
             ${accessBadge(item)}
           </div>`;
       }
@@ -2363,6 +2395,17 @@ const RVA = (function(){
     else card.style.transform='translate(0,-600px)';
     card.style.opacity='0';
   }
+  function setDeckButtonsBusy(busy){
+    const acts=document.querySelector('#swipe .actions');
+    if(acts){
+      acts.style.pointerEvents=busy?'none':'';
+      acts.setAttribute('aria-busy',busy?'true':'false');
+    }
+    document.querySelectorAll('#swipe .act[data-act=swipe]').forEach(b=>{
+      if(busy)b.setAttribute('aria-disabled','true');
+      else b.removeAttribute('aria-disabled');
+    });
+  }
   function finishSwipe(item,type,ms,conf){
     const gen=T.deckGen, hadFocus=!!document.activeElement&&document.activeElement.id==='deckTop';
     snap('swipe',{swipe:true,swipeIdx,deckGen:gen});   // SN1: the card comes back on top after Undo (includes S.taste, so the taste update rolls back too)
@@ -2370,6 +2413,7 @@ const RVA = (function(){
     offerUndo(item&&item.golden?(type==='yes'?'Issue #1 reserved':'Skipped'):({yes:'Saved to My RVA',maybe:'Added to Maybe',no:'Skipped'}[type]||'Done'),true);
     setTimeout(()=>{
       T.busy=false;
+      setDeckButtonsBusy(false);
       if(gen!==T.deckGen)return;          // deck was rebuilt (filter / reset) while this card flew out
       swipeIdx++;renderDeck();
       const next=QUEUE[swipeIdx], said={yes:'Saved',maybe:'Added to maybe',no:'Skipped'}[type]||'';
@@ -2418,6 +2462,7 @@ const RVA = (function(){
     const top=$('deck').lastElementChild;
     if(!top||!top.classList.contains('ev-card'))return;
     T.busy=true;vibrate(25);
+    setDeckButtonsBusy(true);
     flyOut(top,type);finishSwipe(QUEUE[swipeIdx],type);
   }
   function commitSwipe(item,type,conf){
@@ -2716,21 +2761,56 @@ const RVA = (function(){
   }
   function nextArrivals(route){
     const p=rvaParts(new Date()), mins=p.h*60+p.min;
-    return route.stops.map(s=>{const m=(route.headway-((mins-s.off)%route.headway+route.headway)%route.headway)%route.headway;return {name:s.name,min:m===0?route.headway:m};});
+    const live=pulseFresh(), now=live?pulseNow():0;
+    const due=id=>{const t=(PULSE.stops[id]||[]).find(x=>x>now-30);return t?Math.max(0,Math.round((t-now)/60)):null;};   // null: no bus predicted
+    return route.stops.map(s=>{
+      if(live&&(s.e||s.w))return {name:s.name,live:true,east:s.e?due(s.e):undefined,west:s.w?due(s.w):undefined};
+      const m=(route.headway-((mins-s.off)%route.headway+route.headway)%route.headway)%route.headway;
+      return {name:s.name,min:m===0?route.headway:m,live:false};
+    });
   }
+  /* Live Pulse arrivals (D-007), read at run time from the relay the build names in window.RVA_FEED_URL (relay/worker.js).
+     With no relay, or when it cannot be reached, PULSE is null and the labelled simulated schedule shows. Minutes are
+     counted from the relay's clock plus the time that has passed here, never from this device's clock. */
+  let PULSE=null, pulseBusy=false;
+  const feedUrl=()=>{const u=window.RVA_FEED_URL;return typeof u==='string'&&/^https:\/\/[a-z0-9.-]+$/i.test(u)?u:null;};
+  const pulseFresh=()=>!!PULSE&&performance.now()-PULSE.at<90000;
+  const pulseNow=()=>PULSE.now+(performance.now()-PULSE.at)/1000;
+  async function loadPulse(){
+    const u=feedUrl();if(!u||pulseBusy||document.hidden)return;
+    pulseBusy=true;let next=null;
+    try{
+      const r=await fetch(u+'/pulse',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'}), at=performance.now(), d=r.ok?await r.json():null;
+      if(d&&Number.isFinite(d.now)&&d.stops&&typeof d.stops==='object'){
+        const stops={};Object.keys(d.stops).forEach(k=>{if(Array.isArray(d.stops[k]))stops[k]=d.stops[k].filter(Number.isFinite);});
+        next={now:d.now,stops,at};
+      }
+    }catch(e){/* offline or blocked: the simulated schedule shows */}
+    const was=pulseFresh();
+    PULSE=next||(was?PULSE:null);pulseBusy=false;
+    if((next||was)&&S.screen==='life'&&S.lifeTab==='transit')keepFocus(()=>put('lifeContent',renderTransit()));   // nothing new and nothing shown: leave the tab alone
+  }
+  const duePill=(dir,m)=>m===undefined?'':`<span class="pill ${m===null?'dim':(m<=3?'gold':'green')}" aria-label="${dir}bound: ${m===null?'none due':(m<=1?'now':m+' minutes')}">${dir==='East'?'→':'←'} ${m===null?'none':(m<=1?'Now':m+' min')}</span>`;
   function renderTransit(){
-    return `<div class="den lead t-center">${ic('🚌')} Simulated schedule, updates every 20 s. Live GRTC arrivals need a server-side feed.</div>
-      ${TRANSIT.map(r=>`<div class="card">
-          <div class="frac">${esc(r.route)}</div>
-          <div class="den t-2xs mb-2">Every ${r.headway} min (simulated)</div>
-          ${nextArrivals(r).map(s=>`<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--choc-3)"><span class="den">${esc(s.name)}</span><span class="pill ${s.min<=3?'gold':'green'}">${s.min<=1?'Now':s.min+' min'}</span></div>`).join('')}
-        </div>`).join('')}
+    const hasLive = pulseFresh();
+    const headerMsg = hasLive
+      ? `<div class="den lead t-center">${ic('🚌')} <span class="pill gold" style="vertical-align:middle;margin-right:4px;">LIVE</span> Pulse arrivals from GRTC, refreshed every 20 s.</div>`
+      : `<div class="den lead t-center">${ic('🚌')} Simulated schedule, updates every 20 s. ${feedUrl()?'Live Pulse arrivals cannot be reached right now.':'Live GRTC arrivals need a server-side feed.'}</div>`;
+    return `${headerMsg}
+      ${TRANSIT.map(r=>{
+        const isPulse = r.route && r.route.indexOf('Pulse') !== -1;
+        return `<div class="card">
+          <div class="row between"><div class="frac">${esc(r.route)}</div>${(isPulse&&hasLive)?'<span class="pill gold">LIVE</span>':''}</div>
+          <div class="den t-2xs mb-2">${(isPulse&&hasLive)?'GRTC real-time predictions · → eastbound, ← westbound':'Every '+r.headway+' min (simulated)'}</div>
+          ${nextArrivals(r).map(s=>`<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--choc-3)"><span class="den">${esc(s.name)}</span>${s.live?`<span class="row" style="gap:6px;flex-shrink:0">${duePill('East',s.east)}${duePill('West',s.west)}</span>`:`<span class="pill ${s.min<=3?'gold':'green'}">${s.min<=1?'Now':s.min+' min'}</span>`}</div>`).join('')}
+        </div>`;
+      }).join('')}
       <div class="card"><div class="card-label">Coming later · RVA Private Rides</div><div class="den">A local driver network, planned for a later phase.</div>
         <button type="button" class="btn sm${S.waitlist?' on':' ghost'} mt-2" data-act="waitlist" aria-pressed="${S.waitlist}">${S.waitlist?'✓ Interest noted':'I\'m interested'}</button></div>`;
   }
   function manageTransitTimer(){
     const need=S.screen==='life'&&S.lifeTab==='transit';
-    if(need&&!T.transitTimer)T.transitTimer=setInterval(()=>{if(S.screen==='life'&&S.lifeTab==='transit')keepFocus(()=>put('lifeContent',renderTransit()));},20000);
+    if(need&&!T.transitTimer){loadPulse();T.transitTimer=setInterval(()=>{if(S.screen==='life'&&S.lifeTab==='transit'){keepFocus(()=>put('lifeContent',renderTransit()));loadPulse();}},20000);}
     if(!need&&T.transitTimer){clearInterval(T.transitTimer);T.transitTimer=null;}
   }
   function renderPlan(){
@@ -3250,6 +3330,7 @@ const RVA = (function(){
     }
     if(T.recovered)toast('Saved data could not be read, so the app started fresh. A backup copy was kept.',4500);
     else if(!store)storageNotice();
+    else if(T.endedSaves){toast(T.endedSaves===1?'1 saved show is no longer listed and was removed from your saves.':T.endedSaves+' saved shows are no longer listed and were removed from your saves.',4500);save();}   // D-007; save() so it is said once
     setInterval(()=>{if(S.screen==='home')renderClock();},10000);
     try{if(store&&navigator.storage&&navigator.storage.persist&&window.matchMedia&&matchMedia('(display-mode: standalone)').matches)navigator.storage.persist();}catch(e){}
   }
@@ -3331,7 +3412,7 @@ const RVA = (function(){
   }}).observe(root,{childList:true,subtree:true,characterData:true});
 })();
 </script>
-<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="7ed7734844";window.RVA_APP_URL="https://amonrayford-ai.github.io/rva-engine/app.html";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
+<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="c813a9d6ed";window.RVA_APP_URL="https://amonrayford-ai.github.io/rva-engine/app.html";window.RVA_FEED_URL="https://rva-engine-relay.rva-engine.workers.dev";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
 addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(reg){
 function offer(w){if(!w||!navigator.serviceWorker.controller)return;window.RVA_CHIP&&RVA_CHIP('A new version is ready','Update',function(){asked=true;w.postMessage('skipWaiting');});}
 offer(reg.waiting);reg.addEventListener('updatefound',function(){var w=reg.installing;w&&w.addEventListener('statechange',function(){if(w.state==='installed')offer(w);});});

@@ -45,7 +45,7 @@
         <a class="btn" href="app.html">Open the app</a>
         <a class="btn ghost" href="#install">Install on your phone</a>
       </div>
-      <p class="fine">Free, runs in your browser, works offline after the first visit. No account, no tracking: everything you save stays on your device.</p>
+      <p class="fine">Free, runs in your browser, works offline after the first visit. No account, no tracking: everything you save stays on your device. The Transit tab asks a relay for GRTC&rsquo;s public Pulse arrival times and sends nothing about you.</p>
     </div>
     <div class="hero-art">
       <canvas class="molten" width="160" height="90" aria-hidden="true"></canvas>
@@ -118,15 +118,15 @@
   <section id="windows" class="windows" aria-labelledby="win">
     <div>
       <h2 id="win">On a Windows PC</h2>
-      <p class="lede sm">The desktop app is the same RVA Engine in its own window, fully offline.</p>
-      <a class="btn" href="https://github.com/amonrayford-ai/rva-engine/releases/latest" rel="noopener">Download for Windows (GitHub Releases)</a><p class="fine">Pick <b>RVA-Engine-&lt;version&gt;-portable.exe</b> (no install needed) or the <b>-setup.exe</b> installer &middot; Windows 10/11, 64-bit<br>This page was built with RVA-Engine-1.1.0-portable.exe (92 MB), SHA-256 <code>ce92d8375bdf357407e618ef69d7e42b6f77d2e579968869f3ae65fd6feb7d9a</code></p>
+      <p class="lede sm">The desktop app is the same RVA Engine in its own window. It works offline.</p>
+      <a class="btn" href="https://github.com/amonrayford-ai/rva-engine/releases/latest" rel="noopener">Download for Windows (GitHub Releases)</a><p class="fine">Pick <b>RVA-Engine-&lt;version&gt;-portable.exe</b> (no install needed) or the <b>-setup.exe</b> installer &middot; Windows 10/11, 64-bit<br>This page was built with RVA-Engine-1.1.0-portable.exe (93 MB), SHA-256 <code>be262bbcfd90705e6ba5e8c4bfef480edf3a799cc614f63d7a05262f0c5c55f9</code></p>
       <p class="fine">The download is not code-signed yet, so Windows SmartScreen may warn the first time. Choose <b>More info</b>, then <b>Run anyway</b>. On a Mac or Chromebook, use <a href="app.html">the web app</a>.</p>
     </div>
   </section>
 </main>
 
 <footer class="foot">
-  <p><b>Sample data.</b> Events, places, feeds and transit times in this build are illustrative sample content for Richmond, not live listings. Sun and moon times are computed for Richmond. The RVA Engine is an independent project and is not affiliated with the City of Richmond.</p>
+  <p><b>What is real and what is sample.</b> Byrd Theatre and Altria Theater listings are copied from the venues&rsquo; own pages when each version is built, so check with the venue before you go. Pulse bus arrivals are GRTC&rsquo;s real-time predictions and need a connection. Other events, places, feeds, headcounts and the two local bus routes are illustrative sample content for Richmond. Sun and moon times are computed for Richmond. The RVA Engine is an independent project and is not affiliated with the City of Richmond, GRTC, the Byrd Theatre or Altria Theater.</p>
   <p class="fine">Version 1.1.0 &middot; Made in Richmond, VA &middot; Molten-bronze hero after the metaball &ldquo;bell&rdquo; experiments of Ben F. Rayfield (MIT), reimplemented.</p>
 </footer>
 <script>window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;

@@ -5,20 +5,20 @@
    install the new worker copies every file whose hash is unchanged out of the previous cache, so a deploy only
    re-downloads what changed (three.js and the images usually stay put). GitHub Pages ignores _headers, so the
    worker has to do this itself. */
-const VERSION = '1.1.0-9526f0a412';
+const VERSION = '1.1.0-2b3afc5800';
 const CACHE = 'rva-engine-' + VERSION;
 const FILES = [
  {
   "u": "./",
-  "h": "0685ba661c0c"
+  "h": "65f40afc8a87"
  },
  {
   "u": "index.html",
-  "h": "0685ba661c0c"
+  "h": "65f40afc8a87"
  },
  {
   "u": "app.html",
-  "h": "2ba9898e76f7"
+  "h": "e4a10c409f7e"
  },
  {
   "u": "site.css",
@@ -30,31 +30,31 @@ const FILES = [
  },
  {
   "u": "manifest.webmanifest",
-  "h": "82b47985dd57"
+  "h": "1ef35ed49ef7"
  },
  {
   "u": "favicon.ico",
-  "h": "79fe8bcf7482"
+  "h": "446f20b533c8"
  },
  {
   "u": "icons/icon-192.png",
-  "h": "db0bd3a3a8b0"
+  "h": "f60efb73ffe2"
  },
  {
   "u": "icons/icon-512.png",
-  "h": "495906facadf"
+  "h": "c9010e9ca9b6"
  },
  {
   "u": "icons/maskable-192.png",
-  "h": "ada80e5c8646"
+  "h": "bf9a9d51a411"
  },
  {
   "u": "icons/maskable-512.png",
-  "h": "eaa49c7d287a"
+  "h": "ee0732918b49"
  },
  {
   "u": "icons/apple-touch-icon.png",
-  "h": "72800b497c49"
+  "h": "d2c3b3f1e360"
  },
  {
   "u": "img/skyline-night-800.webp",
