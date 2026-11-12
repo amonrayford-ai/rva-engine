@@ -5,20 +5,20 @@
    install the new worker copies every file whose hash is unchanged out of the previous cache, so a deploy only
    re-downloads what changed (three.js and the images usually stay put). GitHub Pages ignores _headers, so the
    worker has to do this itself. */
-const VERSION = '1.1.0-2b3afc5800';
+const VERSION = '1.1.0-a3a91c3e35';
 const CACHE = 'rva-engine-' + VERSION;
 const FILES = [
  {
   "u": "./",
-  "h": "65f40afc8a87"
+  "h": "9f879b9ba848"
  },
  {
   "u": "index.html",
-  "h": "65f40afc8a87"
+  "h": "9f879b9ba848"
  },
  {
   "u": "app.html",
-  "h": "e4a10c409f7e"
+  "h": "33d6e6936e4a"
  },
  {
   "u": "site.css",
