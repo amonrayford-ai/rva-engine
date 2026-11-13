@@ -5,24 +5,24 @@
    install the new worker copies every file whose hash is unchanged out of the previous cache, so a deploy only
    re-downloads what changed (three.js and the images usually stay put). GitHub Pages ignores _headers, so the
    worker has to do this itself. */
-const VERSION = '1.1.0-a3a91c3e35';
+const VERSION = '1.1.0-2a8315e8c2';
 const CACHE = 'rva-engine-' + VERSION;
 const FILES = [
  {
   "u": "./",
-  "h": "9f879b9ba848"
+  "h": "108d96a45597"
  },
  {
   "u": "index.html",
-  "h": "9f879b9ba848"
+  "h": "108d96a45597"
  },
  {
   "u": "app.html",
-  "h": "33d6e6936e4a"
+  "h": "a24d34c312f5"
  },
  {
   "u": "site.css",
-  "h": "9fc8470f6e89"
+  "h": "3eca6d1c78d2"
  },
  {
   "u": "vendor/three-0.149.0.min.js",
@@ -63,6 +63,34 @@ const FILES = [
  {
   "u": "img/skyline-night-1600.webp",
   "h": "630f2d9de823"
+ },
+ {
+  "u": "img/playlist/wk-golden.jpg",
+  "h": "ef8f4be7fd50"
+ },
+ {
+  "u": "img/playlist/wk-home.jpg",
+  "h": "6d9ab2abbab3"
+ },
+ {
+  "u": "img/playlist/wk-lovely.jpg",
+  "h": "1d34d1fd8a59"
+ },
+ {
+  "u": "img/playlist/wk-recipe.jpg",
+  "h": "7ed4f88f4a6b"
+ },
+ {
+  "u": "img/playlist/wk-river.jpg",
+  "h": "557e42e01a31"
+ },
+ {
+  "u": "img/playlist/wk-september.jpg",
+  "h": "e8c7793f2f4e"
+ },
+ {
+  "u": "img/playlist/wk-sunday.jpg",
+  "h": "8b39f2fc4859"
  }
 ];
 const MANIFEST = '__rva-manifest.json';   // never requested by pages; lives only inside the caches

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-oRqAgyyqYK9wcapPVuoSAW5iJuOsBvHykL+DbvH/4fY=' 'sha256-SAhgem5a/6H6xAsuL0y7FvCe26ZTA2fUNVgf2aYl994=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://rva-engine-relay.rva-engine.workers.dev; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-qwn/57miPzh6NtSgssG4TpMr28LKmojsOzYoDL46yPk=' 'sha256-DRpyMRd0jWLGSIDHL6yNrx+GzfeOiVtJf73R3bK9eMo=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://rva-community.rva-engine.workers.dev; font-src 'self' data:; connect-src 'self' https://rva-engine-relay.rva-engine.workers.dev https://rva-community.rva-engine.workers.dev; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>The RVA Engine</title>
 <meta name="description" content="Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.">
 <meta name="theme-color" content="#0B0A0E">
@@ -20,13 +20,15 @@
 <meta property="og:site_name" content="The RVA Engine">
 <meta property="og:title" content="The RVA Engine">
 <meta property="og:description" content="Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.">
-<meta property="og:image" content="img/og-card.png">
+<meta property="og:url" content="https://rva-engine.pages.dev/">
+<link rel="canonical" href="https://rva-engine.pages.dev/">
+<meta property="og:image" content="https://rva-engine.pages.dev/img/og-card.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="A toy-3D Richmond skyline at night with The RVA Engine badge">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The RVA Engine">
 <meta name="twitter:description" content="Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.">
-<meta name="twitter:image" content="img/og-card.png">
+<meta name="twitter:image" content="https://rva-engine.pages.dev/img/og-card.png">
 </head>
 <body>
 <style>
@@ -59,13 +61,13 @@
   /* type scale (floor 11px) */
   --fs-2xs:11px;--fs-xs:12px;--fs-s:13px;--fs-m:15px;--fs-l:18px;--fs-xl:24px;--fs-display:52px;
   /* spacing, 4px grid */
-  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;
+  --sp-1:4px;--sp-2:8px;--sp-3:16px;--sp-4:24px;--sp-5:32px;--sp-6:40px;--sp-7:48px;
   --gut-l:max(16px,env(safe-area-inset-left,0px));--gut-r:max(16px,env(safe-area-inset-right,0px));
   /* 3D icon scale */
   --ic-s:18px;--ic-m:24px;--ic-l:28px;--ic-xl:40px;
   /* shape + depth */
   --r-s:8px;--r-m:12px;--r:16px;--r-l:20px;--r-pill:24px;
-  --tap:44px;
+  --tap:48px;
   --sh-sm:0 4px 14px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
@@ -240,7 +242,7 @@ textarea.field{resize:vertical;min-height:72px}
 .act:active{transform:scale(0.92);box-shadow:0 2px 8px rgba(0,0,0,0.6)}
 .act.no{background:linear-gradient(135deg,#f25241,#b52a1f);color:#fff;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 28px rgba(231,76,60,0.45), inset 0 2px 3px rgba(255,255,255,0.5)}
 .act.maybe{width:52px;height:52px;font-size:20px;background:var(--btn-gold);color:#0B0A0E;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 24px rgba(205,127,50,0.4), inset 0 2px 3px rgba(255,255,255,0.5)}
-.act.yes{background:linear-gradient(135deg,#36e27a,#1b8c47);color:#fff;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 28px rgba(46,204,113,0.45), inset 0 2px 3px rgba(255,255,255,0.5)}
+.act.yes{background:linear-gradient(135deg,#36e27a,#1b8c47);color:#07130a;border:2px solid rgba(255,255,255,0.6);box-shadow:0 8px 28px rgba(46,204,113,0.45), inset 0 2px 3px rgba(255,255,255,0.5)}
 .act:disabled{opacity:0.4;box-shadow:none}
 .act.rewind{width:44px;height:44px;font-size:20px;font-weight:900;background:rgba(36,22,15,0.75);backdrop-filter:blur(12px);color:var(--bronze-lt);border:2px solid rgba(232,169,104,0.4);box-shadow:0 6px 18px rgba(0,0,0,0.45), inset 0 1px 1px rgba(255,255,255,0.2)}
 .ev-card.gold .ev-art{background:radial-gradient(circle at 50% 50%,#5C3A1A,#261710 70%);font-size:60px}
@@ -473,6 +475,89 @@ a.btn{text-decoration:none}
 .transit-row{padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
 .sector{padding-bottom:18px}
 .sector .chars{bottom:3px;line-height:1}
+
+/* ---------- COLOR PALETTES (RVA 1.2) ---------- */
+html[data-palette="river"]{
+  --black:#071018;--choc:#0b1c26;--choc-2:#102b38;--choc-3:#17404f;--choc-4:#215466;
+  --bronze:#49c6d6;--bronze-lt:#8ae6ef;--bronze-dk:#238392;--silver:#cfe9ee;
+  --text:#edf9fb;--dim:#a9c8d0;--dim-2:#7fa3ad;--line:#5d8792;
+  --glass-bg:rgba(7,22,31,.78);--glass-card:linear-gradient(165deg,rgba(16,48,61,.86),rgba(6,18,26,.92));
+  --glass-border:rgba(138,230,239,.28);--btn-gold:linear-gradient(135deg,#9af1f7,#49c6d6 50%,#1d7180);
+}
+html[data-palette="tobacco"]{
+  --black:#120c07;--choc:#21150c;--choc-2:#352211;--choc-3:#4b3118;--choc-4:#654322;
+  --bronze:#d5a33c;--bronze-lt:#f3d27a;--bronze-dk:#996b1e;--silver:#e7ddc8;
+  --text:#fff7e8;--dim:#d2c1a4;--dim-2:#ad9876;--line:#8a704c;
+  --glass-bg:rgba(28,18,10,.8);--glass-card:linear-gradient(165deg,rgba(58,38,19,.86),rgba(20,13,7,.92));
+  --glass-border:rgba(243,210,122,.3);--btn-gold:linear-gradient(135deg,#ffe3a0,#d5a33c 50%,#91621a);
+}
+html[data-palette="neon"]{
+  --black:#080713;--choc:#12102a;--choc-2:#1d1942;--choc-3:#2b2360;--choc-4:#3a2e80;
+  --bronze:#b28cff;--bronze-lt:#e0ccff;--bronze-dk:#6c45c4;--silver:#d9d7ee;
+  --text:#f6f2ff;--dim:#c2b9db;--dim-2:#958aa9;--line:#6f5b9e;
+  --glass-bg:rgba(12,10,30,.8);--glass-card:linear-gradient(165deg,rgba(36,28,78,.86),rgba(9,7,22,.94));
+  --glass-border:rgba(224,204,255,.3);--btn-gold:linear-gradient(135deg,#f2e6ff,#b28cff 50%,#6240b0);
+}
+html[data-palette="grove"]{
+  --black:#08110b;--choc:#0e1f15;--choc-2:#16331f;--choc-3:#204a2c;--choc-4:#2c6239;
+  --bronze:#76c98b;--bronze-lt:#b9efc3;--bronze-dk:#3f8953;--silver:#d8e8d8;
+  --text:#effaf0;--dim:#b8d0b9;--dim-2:#87a68a;--line:#5c8362;
+  --glass-bg:rgba(7,20,12,.8);--glass-card:linear-gradient(165deg,rgba(23,54,32,.86),rgba(6,16,10,.94));
+  --glass-border:rgba(185,239,195,.28);--btn-gold:linear-gradient(135deg,#d3f8d8,#76c98b 50%,#397a49);
+}
+.palette-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-2)}
+.palette-swatch{display:flex;align-items:center;gap:var(--sp-2);min-height:var(--tap);padding:var(--sp-2);border:1px solid var(--glass-border);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);font-size:var(--fs-2xs);font-weight:800;text-align:left}
+.palette-swatch span:first-child{width:24px;height:24px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(255,255,255,.55)}
+.palette-swatch.active{outline:2px solid var(--bronze-lt);outline-offset:2px}
+.ps-bronze{background:linear-gradient(135deg,#e8a968,#cd7f32)}
+.ps-river{background:linear-gradient(135deg,#8ae6ef,#238392)}
+.ps-tobacco{background:linear-gradient(135deg,#f3d27a,#996b1e)}
+.ps-neon{background:linear-gradient(135deg,#e0ccff,#6c45c4)}
+.ps-grove{background:linear-gradient(135deg,#b9efc3,#3f8953)}
+/* community */
+.community-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--sp-2);margin-bottom:var(--sp-3)}
+.community-tabs .tile{padding:var(--sp-2) var(--sp-1);min-height:56px}
+.community-tabs .tile-lb{font-size:10px;letter-spacing:.2px;line-height:1.25}
+.community-photo{width:100%;max-height:320px;object-fit:cover;border-radius:14px;border:1px solid var(--glass-border);display:block;margin-top:var(--sp-2)}
+.community-card .frac{font-size:var(--fs-m)}
+.community-fact{font-size:var(--fs-s);line-height:1.55;color:var(--text)}
+.community-meta{display:flex;gap:var(--sp-2);flex-wrap:wrap;align-items:center;margin-top:var(--sp-2)}
+.community-actions{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-2)}
+.community-actions .btn{width:auto;flex:1 1 120px;margin-top:0}
+@media(max-width:380px){.community-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}}
+`n/* Keep the seven Life tabs readable on a 430px phone. */`n#lifeTabs .tile-lb{font-size:9px;letter-spacing:0}`n
+/* ---------- PLAYLIST OF THE WEEK (8pt scale) ---------- */
+.song-week{display:grid;gap:var(--sp-2);margin-bottom:var(--sp-3)}
+.song-card{position:relative;display:flex;align-items:center;gap:var(--sp-3);width:100%;min-height:64px;padding:var(--sp-2) var(--sp-3);border:1px solid color-mix(in srgb,var(--song) 55%,transparent);border-radius:16px;background:linear-gradient(120deg,color-mix(in srgb,var(--song) 34%,transparent),rgba(10,8,7,.78));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);color:var(--text);text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.14);transition:transform .12s cubic-bezier(.34,1.56,.64,1),border-color .15s;overflow:hidden}
+.song-card:hover{transform:translateY(-1px);border-color:var(--song)}
+.song-art{width:56px;height:56px;border-radius:12px;background:linear-gradient(140deg,var(--song),color-mix(in srgb,var(--song) 35%,#111));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#111;flex:0 0 auto;box-shadow:0 6px 18px color-mix(in srgb,var(--song) 35%,transparent),inset 0 1px 0 rgba(255,255,255,.4);overflow:hidden}
+.song-art img{width:100%;height:100%;object-fit:cover;display:block}
+.song-sheet-head{display:flex;gap:var(--sp-3);align-items:center;margin-bottom:var(--sp-3)}
+.song-cover{width:96px;height:96px;border-radius:16px;object-fit:cover;border:1px solid var(--glass-border);box-shadow:0 12px 28px rgba(0,0,0,.4);flex:0 0 auto}
+.song-meta{display:flex;gap:var(--sp-2);flex-wrap:wrap;margin-top:var(--sp-2)}
+.song-sheet-head h2{margin-bottom:var(--sp-1)}
+.song-copy{display:flex;flex-direction:column;gap:2px;flex:1;min-width:0}
+.song-title{font-weight:900;font-size:var(--fs-s);line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.song-artist{color:var(--dim);font-size:var(--fs-2xs);line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.song-go{color:var(--song);font-weight:900;font-size:var(--fs-s);flex:0 0 auto}
+.song-row{display:flex;gap:var(--sp-2);align-items:center;margin-bottom:var(--sp-2)}
+.song-row .song-card{flex:1}
+.song-row .x-btn{flex:0 0 auto}
+.song-color-label{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);margin-top:var(--sp-2);font-size:var(--fs-2xs);color:var(--dim);text-transform:uppercase;letter-spacing:.6px;font-weight:800}
+.song-color-label input{width:48px;height:var(--tap);padding:4px;border-radius:12px;border:1px solid var(--glass-border);background:var(--field-bg)}
+.song-links{display:grid;gap:var(--sp-2);margin-top:var(--sp-3)}
+.song-links .btn{margin-top:0;text-decoration:none}
+@media(max-width:380px){.song-card{min-height:60px;padding:var(--sp-2)}}
+
+/* Profile card — 21st.dev profile-card / item pattern, local-only. */
+.profile-card{border-color:rgba(232,169,104,.5);background:linear-gradient(155deg,rgba(74,46,21,.78),rgba(20,13,9,.9));box-shadow:0 14px 36px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+.profile-head{display:flex;align-items:center;gap:var(--sp-3)}
+.profile-avatar{width:48px;height:48px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:var(--fs-l);color:#0B0A0E;background:linear-gradient(135deg,var(--bronze-lt),var(--bronze));box-shadow:0 6px 18px rgba(205,127,50,.35),inset 0 1px 0 rgba(255,255,255,.55);flex:0 0 auto}
+.profile-name{font-weight:900;font-size:var(--fs-m);line-height:1.2}
+.profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-2);margin-top:var(--sp-3)}
+.profile-stats div{display:flex;flex-direction:column;padding:var(--sp-2);border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.profile-stats b{font-size:var(--fs-l);line-height:1;color:var(--bronze-lt)}
+.profile-stats span{font-size:var(--fs-2xs);color:var(--dim);text-transform:uppercase;letter-spacing:.6px;margin-top:4px}
 /* 3D icons (Blender renders swapped in for emoji by icons.js). Sizes come from the --ic-* scale in styles.css:
    --ic-s 18 inline in labels/pills · --ic-m 24 tiles · --ic-l 28 dock, list rows, slots · --ic-xl 40 feature heads. */
 img.i3d{width:1.3em;height:1.3em;vertical-align:-0.3em;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
@@ -598,8 +683,9 @@ const RVA = (function(){
     hallRatings:{}, dateHearts:{}, datePosts:[],
     handshakes:{}, joins:{}, interested:{},
     photos:{canvas:[],thanksgiving:[],lights:[]},
+    playlist:[],
     preorder:false, waitlist:false,
-    settings:{calm:false,haptics:true},
+    settings:{calm:false,haptics:true,palette:'bronze'},
   };
   const PHOTO_KINDS=['canvas','thanksgiving','lights'];
   const clone=o=>JSON.parse(JSON.stringify(o));
@@ -906,7 +992,7 @@ const RVA = (function(){
     const b=PLAN_BASE.find(x=>x.name===slot.name);return b?b.k:null;
   }
   function planOptions(){
-    const mine=S.saved.map(s=>EV(s.id)).filter(Boolean).map(e=>Object.assign(planItem(e.id),{mine:true}));
+    const now=Date.now();const mine=S.saved.map(s=>EV(s.id)).filter(e=>e&&(!e.end||e.end*1000>=now)).map(e=>Object.assign(planItem(e.id),{mine:true}));
     const names=new Set(mine.map(m=>m.name));
     return mine.concat(PLAN_BASE.filter(p=>!names.has(p.name)));
   }
@@ -939,6 +1025,7 @@ const RVA = (function(){
     ['screen','feedTab','lifeTab','filter'].forEach(k=>{const v=txt(raw[k],40);if(v)s[k]=v;});
     s.preorder=raw.preorder===true;s.waitlist=raw.waitlist===true;
     ['settings','access'].forEach(g=>{if(isObj(raw[g]))Object.keys(s[g]).forEach(k=>{if(typeof raw[g][k]==='boolean')s[g][k]=raw[g][k];});});
+    if(isObj(raw.settings)&&['bronze','river','tobacco','neon','grove'].includes(raw.settings.palette))s.settings.palette=raw.settings.palette;
     if(Array.isArray(raw.saved)){const seen=new Set();s.saved=raw.saved.map(x=>isObj(x)?{id:evId(x.id),type:x.type}:null).filter(x=>x&&EV(x.id)&&(x.type==='yes'||x.type==='maybe')&&!seen.has(x.id)&&seen.add(x.id));}
     if(isObj(raw.tagScores))Object.keys(raw.tagScores).forEach(k=>{const v=num(raw.tagScores[k],-999,999);if(v!==null&&k.length<40)s.tagScores[k]=v;});
     // SN16: taste weights clamped to +/-4, <=200 short keys per map; old saves are seeded from tagScores.
@@ -952,6 +1039,7 @@ const RVA = (function(){
     s.datePosts=posts(raw.datePosts,p=>txt(p.title,60)&&{id:p.id,em:'💌',title:txt(p.title,60),vibe:txt(p.vibe,80)||'',highlight:txt(p.highlight,80)||''});
     if(isObj(raw.hallRatings))Object.keys(raw.hallRatings).forEach(k=>{const r=raw.hallRatings[k];if(HALLOWEEN[k]&&Number.isInteger(r)&&r>=1&&r<=10)s.hallRatings[k]=r;});
     ['dateHearts','handshakes','joins','interested'].forEach(k=>s[k]=boolMap(raw[k]));
+    if(Array.isArray(raw.playlist))s.playlist=raw.playlist.filter(p=>isObj(p)&&txt(p.title,80)&&txt(p.artist,80)&&/^#[0-9a-f]{6}$/i.test(String(p.color||''))).slice(0,100).map(p=>({id:/^[a-z0-9-]{1,40}$/i.test(p.id||'')?p.id:'s'+Math.random().toString(36).slice(2,8),title:txt(p.title,80),artist:txt(p.artist,80),color:p.color,art:/^img\/playlist\/[a-z0-9-]+\.jpg$/i.test(p.art||'')?p.art:'',album:txt(p.album,120)||'',year:txt(p.year,4)||'',genre:txt(p.genre,40)||''}));
     if(isObj(raw.photos))PHOTO_KINDS.forEach(k=>{const a=raw.photos[k];if(Array.isArray(a))s.photos[k]=a.filter(p=>isObj(p)&&(typeof p.src==='string'&&PHOTO_RE.test(p.src)||typeof p.id==='string'&&PHOTO_ID_RE.test(p.id))).slice(0,6)
       .map(p=>Object.assign(typeof p.src==='string'&&PHOTO_RE.test(p.src)?{src:p.src}:{id:p.id},{day:txt(p.day,20)||'',t:num(p.t,0,9e15)||0}));});
     return s;
@@ -1179,7 +1267,8 @@ const RVA = (function(){
         if(src&&PHOTO_RE.test(src))st.photos[k].push({src,day:p.day,t:p.t});
       }
     }
-    return JSON.stringify({app:'rva-engine',schema:SCHEMA,exported:new Date().toISOString(),state:st});
+    let community=null;try{community=store?JSON.parse(store.getItem('rva-community-v1')||'null'):null;}catch(e){}
+    return JSON.stringify({app:'rva-engine',schema:SCHEMA,exported:new Date().toISOString(),state:st,community});
   }
   /* Returns 'ok' | 'format' (not an RVA backup) | 'quota' (did not fit: the previous state was put back). */
   async function restoreState(parsed){
@@ -1196,6 +1285,7 @@ const RVA = (function(){
       if(UNDO[UNDO.length-1]===before){UNDO.pop();undoChanged();}
       assignState(before.s);save();return 'quota';
     }
+    if(parsed.community&&typeof parsed.community==='object'){try{if(store)store.setItem('rva-community-v1',JSON.stringify(parsed.community));}catch(e){}}
     loadPhotoURLs();gcPhotosSoon();
     return 'ok';
   }
@@ -2121,7 +2211,7 @@ const RVA = (function(){
 
   /* My RVA saved list, filtered by the My RVA search box (SN13). */
   function myListHTML(){
-    const q=T.q.mine, rows=S.saved.map(s=>({s,e:EV(s.id)})).filter(o=>o.e&&(!q||searchMatch(q,eventHay(o.e))));
+    const q=T.q.mine, rows=S.saved.map(s=>({s,e:EV(s.id)})).filter(o=>o.e&&!ended(o.e)&&(!q||searchMatch(q,eventHay(o.e))));
     const head=q?`<div class="den t-2xs search-count" aria-hidden="true">${rows.length} of ${S.saved.length} saved match</div>`:'';
     if(q&&!rows.length)return head+`<div class="empty">No saved events match "${esc(q)}".</div>`;
     return head+rows.map(({s,e})=>`
@@ -2129,6 +2219,8 @@ const RVA = (function(){
         <div class="em" aria-hidden="true">${ic(e.art)}</div>
         <div class="grow"><div class="t">${esc(e.name)}</div><div class="m">${esc(e.meta)}</div></div>
         <span class="pill ${s.type==='yes'?'green':''}">${s.type==='yes'?'♥ Going':'? Maybe'}</span>
+        <button type="button" class="x-btn" data-act="locateEvent" data-arg="${esc(e.id)}" aria-label="Location for ${esc(e.name)}">${ic('📍')}</button>
+        <button type="button" class="x-btn" data-act="shareEvent" data-arg="${esc(e.id)}" aria-label="Share ${esc(e.name)}">${ic('🔗')}</button>
         <button type="button" class="x-btn" data-act="planEvent" data-arg="${esc(e.id)}" aria-label="Add ${esc(e.name)} to plan">${ic('🧩')}</button>
         <button type="button" class="x-btn" data-act="unsave" data-arg="${esc(e.id)}" aria-label="Remove ${esc(e.name)}">✕</button>
       </div>`).join('');
@@ -2165,8 +2257,8 @@ const RVA = (function(){
   function feedItems(){
     const it=[];
     const add=(tab,em,title,meta,extra,btn)=>it.push({tab,em,title,meta,hay:fold([title,meta,extra].join(' ')),btn:btn||''});
-    EVENTS.forEach(e=>{const st=S.saved.some(x=>x.id===e.id);add('',e.art,e.name,e.meta+' · '+e.area,[e.cat,e.tags.join(' '),e.area].join(' '),
-      `<button type="button" class="btn sm${st?' on':' ghost'}" data-act="toggleSave" data-arg="${esc(e.id)}" aria-pressed="${st}" aria-label="${st?'Saved':'Save'}: ${esc(e.name)}">${st?'Saved':'Save'}</button>`);});
+    EVENTS.filter(e=>!ended(e)).forEach(e=>{const st=S.saved.some(x=>x.id===e.id);add('',e.art,e.name,e.meta+' · '+e.area,[e.cat,e.tags.join(' '),e.area].join(' '),
+      `<button type="button" class="btn sm ghost" data-act="locateEvent" data-arg="${esc(e.id)}" aria-label="Location for ${esc(e.name)}">${ic('📍')}</button><button type="button" class="btn sm${st?' on':' ghost'}" data-act="toggleSave" data-arg="${esc(e.id)}" aria-pressed="${st}" aria-label="${st?'Saved':'Save'}: ${esc(e.name)}">${st?'Saved':'Save'}</button><button type="button" class="btn sm ghost" data-act="shareEvent" data-arg="${esc(e.id)}" aria-label="Share ${esc(e.name)}">${ic('🔗')}</button>`);});
     FOOD.forEach(f=>add('food',f.emoji,f.name,f.meta,f.tip));
     CANVAS.forEach(c=>add('canvas',c.em,c.handle,c.desc,'photo canvas'));
     banterAll().forEach(b=>add('banter',b.em,b.text.length>70?b.text.slice(0,68)+'…':b.text,'Banter',b.text));
@@ -2357,6 +2449,7 @@ const RVA = (function(){
             <div class="ev-meta">${esc(item.meta)} · ${esc(item.area)}</div>
             <div class="ev-tags">${item.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join('')}${item.live?'':SAMPLE}${st?`<span class="pill green">${st.type==='yes'?'Going':'Maybe'}</span>`:''}</div>
             ${accessBadge(item)}
+            <div class="row mt-2"><button type="button" class="btn sm ghost" data-act="locateEvent" data-arg="${esc(item.id)}" aria-label="Location for ${esc(item.name)}">${ic('📍')} Locate</button><button type="button" class="btn sm ghost" data-act="shareEvent" data-arg="${esc(item.id)}" aria-label="Share ${esc(item.name)}">${ic('🔗')} Share</button></div>
           </div>`;
       }
       if(stackIdx===0)attachDrag(card,item);
@@ -2485,7 +2578,7 @@ const RVA = (function(){
   }
 
   /* ---------- MAP ---------- */
-  function eventsIn(name){return name==='RVA'?EVENTS:EVENTS.filter(e=>e.area===name);}
+  function eventsIn(name){return (name==='RVA'?EVENTS:EVENTS.filter(e=>e.area===name)).filter(e=>!ended(e));}
   /* hood tile data (lane A): short visible name, full name kept for screen readers, event count badge */
   const HOOD_SHORT={'Museum District':'Museum',"Scott's Addition":"Scott's",'Shockoe Bottom':'Shockoe'};
   let HOOD_CACHE=null;
@@ -2527,6 +2620,8 @@ const RVA = (function(){
         <div class="list-item">
           <div class="em" aria-hidden="true">${ic(e.art)}</div>
           <div class="grow"><div class="t">${esc(e.name)}</div><div class="m">${esc(e.meta)}${w.length?` · <span class="t-warn">${ic('⚠️')} ${esc(w.join(', '))}</span>`:''}</div></div>
+          <button type="button" class="x-btn" data-act="locateEvent" data-arg="${esc(e.id)}" aria-label="Location for ${esc(e.name)}">${ic('📍')}</button>
+          <button type="button" class="x-btn" data-act="shareEvent" data-arg="${esc(e.id)}" aria-label="Share ${esc(e.name)}">${ic('🔗')}</button>
           <button type="button" class="btn sm${st?' on':' ghost'}" data-act="toggleSave" data-arg="${esc(e.id)}" aria-pressed="${!!st}" aria-label="${st?'Saved':'Save'}: ${esc(e.name)}">${st?'Saved':'Save'}</button>
         </div>`;}).join(''):'<div class="empty">No events seeded here yet.</div>'}
       <button type="button" class="btn ghost" data-act="clearFocus">Close</button>
@@ -2657,10 +2752,11 @@ const RVA = (function(){
   const LIFE_TABS=[
     {id:'watch',ic:'🚨',label:'Watch'},{id:'holidays',ic:'🎃',label:'Holidays'},{id:'date',ic:'💕',label:'Date'},
     {id:'access',ic:'♿',label:'Access'},{id:'transit',ic:'🚌',label:'Transit'},{id:'plan',ic:'🧩',label:'Plan Day'},
+    {id:'playlist',ic:'🎧',label:'Playlist'},{id:'community',ic:'🏙️',label:'Community'},
   ];
   function renderLife(){
     tileRow('lifeTabs',LIFE_TABS,S.lifeTab,'life',{tabs:true,cls:'subtab',panel:'lifeContent',mini:'lifeMini'});
-    const f={watch:renderWatch,holidays:renderHolidays,date:renderDate,access:renderAccess,transit:renderTransit,plan:renderPlan}[S.lifeTab]||renderWatch;
+    const f={watch:renderWatch,holidays:renderHolidays,date:renderDate,access:renderAccess,transit:renderTransit,plan:renderPlan,playlist:renderPlaylist,community:renderCommunity}[S.lifeTab]||renderWatch;
     put('lifeContent',f());
     const sl=$('slots');
     if(T.spinNext&&sl){T.spinNext=false;sl.classList.add('spin');}   // JS-11: only spend the flag when the slots are on screen
@@ -3056,7 +3152,7 @@ const RVA = (function(){
       restoreState(parsed).then(res=>{
         if(res==='format'){backupNote('That file is not an RVA backup. Nothing changed.');return;}
         if(res==='quota'){backupNote('Not enough device storage to restore this backup. Nothing changed.');return;}
-        closeSettings();histUp();applySettings();T.focusSector=null;buildQueue();go(S.screen,true);
+        C=communityLoad();closeSettings();histUp();applySettings();T.focusSector=null;buildQueue();go(S.screen,true);
         offerUndo('Backup restored');
       },()=>backupNote('The backup could not be restored. Nothing changed.'));
     };
@@ -3084,6 +3180,20 @@ const RVA = (function(){
     put('sheetRoot',`<div class="sheet-bg" data-act="closeSettings"></div>
       <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
         <h2 id="setTitle">Settings</h2>
+        <div class="card profile-card">
+          <div class="profile-head"><div class="profile-avatar" aria-hidden="true">R</div><div class="grow"><div class="profile-name">Your RVA</div><div class="den t-2xs">Local profile · no account</div></div><span class="pill green">On device</span></div>
+          <div class="profile-stats"><div><b>${S.saved.length}</b><span>saved</span></div><div><b>${S.plan.filter(Boolean).length}/4</b><span>plan</span></div><div><b>${(S.playlist||[]).length}</b><span>songs</span></div></div>
+          <div class="den t-2xs mt-2">Nothing here is uploaded. Your profile lives in this browser until you erase it.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Color palette</div>
+          <div class="palette-grid" role="radiogroup" aria-label="Color palette">${[['bronze','Bronze'],['river','James River'],['tobacco','Tobacco'],['neon','Neon'],['grove','Grove']].map(([id,label])=>`<button type="button" class="palette-swatch ${S.settings.palette===id?'active':''}" data-act="palette" data-arg="${id}" role="radio" aria-checked="${S.settings.palette===id}" aria-label="${label} palette"><span class="ps-${id}" aria-hidden="true"></span><span>${label}</span></button>`).join('')}</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Community moderation</div>
+          <div class="den">${communityApi()?'Enter the moderator token to review pending community submissions. The token stays in this tab only.':'Community service is not configured in this build. Set RVA_COMMUNITY_URL when building to enable the review queue.'}</div>
+          ${communityApi()?`<input class="field" id="modToken" type="password" autocomplete="off" placeholder="Moderator token" aria-label="Moderator token"><button type="button" class="btn mt-2" data-act="openMod">Open review queue</button>`:''}
+        </div>
         <div class="card">
           <div class="toggle-row"><div><div class="toggle-label" id="lbl_calm">Calm mode</div><div class="toggle-sub" id="sub_calm">Turns off floating clouds, spins and card animations</div></div><button type="button" class="sw" role="switch" aria-checked="${!!S.settings.calm}" aria-labelledby="lbl_calm" aria-describedby="sub_calm" data-act="setting" data-arg="calm"></button></div>
           <div class="toggle-row"><div><div class="toggle-label" id="lbl_hap">Haptics</div><div class="toggle-sub" id="sub_hap">Vibration on taps (Android; iOS browsers ignore it)</div></div><button type="button" class="sw" role="switch" aria-checked="${!!S.settings.haptics}" aria-labelledby="lbl_hap" aria-describedby="sub_hap" data-act="setting" data-arg="haptics"></button></div>
@@ -3132,7 +3242,7 @@ const RVA = (function(){
     else if(e.shiftKey&&a===first){e.preventDefault();last.focus();}
     else if(!e.shiftKey&&a===last){e.preventDefault();first.focus();}
   }
-  function applySettings(){document.body.classList.toggle('calm',!!S.settings.calm);if(typeof W3!=='undefined'&&W3.ok){W3.kick();W3.sky.setActive(S.screen==='home');}}
+  function applySettings(){document.documentElement.dataset.palette=S.settings.palette||'bronze';document.body.classList.toggle('calm',!!S.settings.calm);if(typeof W3!=='undefined'&&W3.ok){W3.kick();W3.sky.setActive(S.screen==='home');}}
 
   /* ---------- RERENDER + FOCUS (DES-3 / WCAG 2.4.3) ----------
      Renders replace innerHTML, which destroys the focused control. keepFocus() remembers the focused control's
@@ -3196,6 +3306,272 @@ const RVA = (function(){
     b.setAttribute('aria-label',top&&top.meta&&top.meta.swipe?'Undo last swipe':'Undo last change');
   }
   T.onUndo=syncRewind;
+
+
+  /* ---------- PLAYLIST OF THE WEEK (RVA 1.2) ---------- */
+  const PLAYLIST_SEED=[
+    {id:'wk-lovely',title:'Lovely Day',artist:'Bill Withers',album:'The Best Of Bill Withers: Lean On Me',year:'1977',genre:'R&B/Soul',color:'#F2C14E',art:'img/playlist/wk-lovely.jpg'},
+    {id:'wk-river',title:'River',artist:'Leon Bridges',album:'Coming Home (Deluxe)',year:'2015',genre:'R&B/Soul',color:'#4A90A4',art:'img/playlist/wk-river.jpg'},
+    {id:'wk-sunday',title:'Sunday Morning',artist:'Maroon 5',album:'Songs About Jane',year:'2002',genre:'Pop',color:'#D9A066',art:'img/playlist/wk-sunday.jpg'},
+    {id:'wk-golden',title:'Golden',artist:'Jill Scott',album:'Beautifully Human: Words and Sounds, Vol. 2',year:'2004',genre:'R&B/Soul',color:'#C97B2D',art:'img/playlist/wk-golden.jpg'},
+    {id:'wk-home',title:'Home',artist:'Edward Sharpe & The Magnetic Zeros',album:"What to Expect When You're Expecting (Music from the Motion Picture)",year:'2009',genre:'Pop',color:'#6D8B74',art:'img/playlist/wk-home.jpg'},
+    {id:'wk-september',title:'September',artist:'Earth, Wind & Fire',album:'The Best Of Earth, Wind & Fire Vol. 1',year:'1978',genre:'R&B/Soul',color:'#B8860B',art:'img/playlist/wk-september.jpg'},
+    {id:'wk-recipe',title:'Money Trees',artist:'Kendrick Lamar',album:'good kid, m.A.A.d city (Deluxe Version)',year:'2012',genre:'Hip-Hop/Rap',color:'#8B5E3C',art:'img/playlist/wk-recipe.jpg'},
+  ];
+  function songLinks(song){
+    const q=encodeURIComponent(song.title+' '+song.artist);
+    return [
+      {id:'spotify',label:'Spotify',url:'https://open.spotify.com/search/'+q},
+      {id:'apple',label:'Apple Music',url:'https://music.apple.com/us/search?term='+q},
+      {id:'youtube',label:'YouTube Music',url:'https://music.youtube.com/search?q='+q},
+    ];
+  }
+  function allSongs(){return PLAYLIST_SEED.concat(S.playlist||[]);}
+  function songById(id){return allSongs().find(s=>s.id===id);}
+  function renderSongCard(song,weekly){
+    return `<button type="button" class="song-card" style="--song:${esc(song.color)}" data-act="openSong" data-arg="${esc(song.id)}" aria-label="Open ${esc(song.title)} by ${esc(song.artist)} links">
+      <span class="song-art">${song.art?`<img src="${esc(song.art)}" alt="${esc(song.title)} album artwork" loading="lazy">`:`<span aria-hidden="true">${esc(song.title.slice(0,2).toUpperCase())}</span>`}</span>
+      <span class="song-copy"><span class="song-title">${esc(song.title)}</span><span class="song-artist">${esc(song.artist)}</span></span>
+      <span class="song-go" aria-hidden="true">↗</span>
+    </button>`;
+  }
+  function renderPlaylist(){
+    const mine=S.playlist||[];
+    return `<div class="card accent"><div class="card-label">🎧 Playlist of the Week</div><div class="den">Seven songs for the week. Tap a card for Spotify, Apple Music or YouTube Music.</div></div>
+      <div class="song-week">${PLAYLIST_SEED.map(s=>renderSongCard(s,true)).join('')}</div>
+      <div class="card"><div class="card-label">Add a song to your playlist</div>
+        <input class="field" id="songTitle" maxlength="80" placeholder="Song title" aria-label="Song title">
+        <input class="field" id="songArtist" maxlength="80" placeholder="Artist" aria-label="Artist">
+        <label class="song-color-label" for="songColor">Card color <input id="songColor" type="color" value="#CD7F32" aria-label="Card color"></label>
+        <button type="button" class="btn mt-2" data-act="addSong">Add to my playlist</button>
+        <div class="den t-2xs mt-1">Added songs are saved on this device. Links use each service’s search, so they work in your installed app or the web player.</div>
+      </div>
+      <div class="card"><div class="card-label">My playlist · ${mine.length}</div>${mine.length?mine.map(s=>`<div class="song-row">${renderSongCard(s,false)}<button type="button" class="x-btn" data-act="removeSong" data-arg="${esc(s.id)}" aria-label="Remove ${esc(s.title)}">✕</button></div>`).join(''):'<div class="empty">No added songs yet. Add one above.</div>'}</div>`;
+  }
+  function openSong(id){
+    const song=songById(id);if(!song)return;
+    T.songFocusId=id;T.sheetKind='song';
+    const links=songLinks(song);
+    put('sheetRoot',`<div class="sheet-bg" data-act="closeSong"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="songSheetTitle">
+      <div class="song-sheet-head">${song.art?`<img class="song-cover" src="${esc(song.art)}" alt="${esc(song.title)} album artwork">`:''}<div><h2 id="songSheetTitle">${esc(song.title)}</h2><div class="den">${esc(song.artist)}${song.album?' · '+esc(song.album):''}</div><div class="song-meta">${song.year?`<span class="pill dim">${esc(song.year)}</span>`:''}${song.genre?`<span class="pill">${esc(song.genre)}</span>`:''}</div></div></div>
+      <div class="song-links">${links.map(l=>`<a class="btn ghost" href="${esc(l.url)}" target="_blank" rel="noopener" aria-label="Open ${esc(song.title)} in ${esc(l.label)}">${esc(l.label)}</a>`).join('')}</div>
+      <button type="button" class="btn mt-2" data-act="addWeeklySong" data-arg="${esc(song.id)}">Add to my playlist</button>
+      <button type="button" class="btn ghost" data-act="closeSong">Done</button></div>`);
+    document.querySelectorAll(BG_SEL).forEach(n=>{n.setAttribute('inert','');n.setAttribute('aria-hidden','true');});
+    const b=document.querySelector('#sheetRoot a');if(b)b.focus();
+  }
+  function closeSong(){T.sheetKind=null;$('sheetRoot').innerHTML='';document.querySelectorAll(BG_SEL).forEach(n=>{n.removeAttribute('inert');n.removeAttribute('aria-hidden');});const target=T.songFocusId?document.querySelector(`[data-act=openSong][data-arg="${CSS.escape(T.songFocusId)}"]`):null;T.songFocusId=null;if(target)target.focus({preventScroll:true});}
+  function addSong(){
+    const ti=$('songTitle'),ar=$('songArtist'),co=$('songColor');
+    const title=ti&&ti.value.trim(),artist=ar&&ar.value.trim();
+    if(title.length<1||artist.length<1){toast('Add a song title and artist');if(ti&&!title)ti.focus();else if(ar)ar.focus();return;}
+    const color=co&&/^#[0-9a-f]{6}$/i.test(co.value)?co.value:'#CD7F32';
+    S.playlist.unshift({id:'s'+Date.now().toString(36),title:title.slice(0,80),artist:artist.slice(0,80),color});
+    if(S.playlist.length>100)S.playlist.length=100;save();toast('Added to your playlist');renderLife();
+  }
+  function addWeeklySong(id){
+    const song=songById(id);if(!song)return;
+    if((S.playlist||[]).some(s=>s.title===song.title&&s.artist===song.artist)){toast('Already in your playlist');return;}
+    S.playlist.unshift({id:'s'+Date.now().toString(36),title:song.title,artist:song.artist,color:song.color,art:song.art||'',album:song.album||'',year:song.year||'',genre:song.genre||''});save();toast('Added to your playlist');closeSong();renderLife();
+  }
+  function removeSong(id){S.playlist=(S.playlist||[]).filter(s=>s.id!==id);save();toast('Removed');renderLife();}
+  /* ---------- COMMUNITY / WHAT'S GOING ON RICHMOND (RVA 1.2) ----------
+     Local-first submissions and Support counts. A review queue is intentional:
+     nothing a visitor posts is shown publicly until it is approved. */
+  const COMMUNITY_KEY='rva-community-v1';
+  const COMMUNITY_TABS=[
+    {id:'whats',ic:'📣',label:"What's On"},{id:'artist',ic:'🎨',label:'Artist'},{id:'outfit',ic:'👕',label:'Outfit'},
+    {id:'fact',ic:'🏛️',label:'Fact'},{id:'plate',ic:'🍽️',label:'Plate'},
+  ];
+  const COMMUNITY_SEED=[
+    {id:'seed-art-1',kind:'artist',title:'James River at dusk',author:'Nia · Church Hill',body:'Acrylic on board. The river goes copper for about nine minutes.',em:'🎨',supports:18},
+    {id:'seed-art-2',kind:'artist',title:'Pocket-sized Richmond',author:'Dre · The Fan',body:'A three-song EP built from field recordings around the city.',em:'🎧',supports:11},
+    {id:'seed-outfit-1',kind:'outfit',title:'Sunday on Grace',author:'Maya · VCU',body:'Vintage denim, local tee, shoes that survived the cobblestones.',em:'👕',supports:9},
+    {id:'seed-plate-1',kind:'plate',title:'The Saturday plate',author:'Marcus · Manchester',body:'Eggs, grits, greens, and too much coffee.',em:'🍳',supports:14},
+    {id:'seed-fact-1',kind:'fact',title:'Richmond became Virginia’s capital in 1780',author:'RVA history',body:'The capital moved from Williamsburg to Richmond in 1780, while the Revolutionary War was still being fought.',source:'https://www.virginia.gov/about-virginia/history/',em:'🏛️',supports:21},
+    {id:'seed-fact-2',kind:'fact',title:'The James River falls through the city',author:'RVA history',body:'The fall line at Richmond is why the city grew here: water power, river travel, and a natural boundary all met at one spot.',source:'https://www.jamesriverpark.org/',em:'🌊',supports:16},
+    {id:'seed-fact-3',kind:'fact',title:'Belle Isle has been many things',author:'RVA history',body:'The island in the James has served as a fishing ground, a prison site, and today a park and trail loop.',source:'https://www.jamesriverpark.org/',em:'🏞️',supports:12},
+  ];
+  function communityLoad(){
+    try{if(store){const raw=store.getItem(COMMUNITY_KEY);if(raw){const x=JSON.parse(raw);if(x&&typeof x==='object'){const s=x.supports&&typeof x.supports==='object'?Object.fromEntries(Object.entries(x.supports).filter(([k,v])=>typeof k==='string'&&k.length<100&&v===true)):{};return {posts:Array.isArray(x.posts)?x.posts.filter(p=>p&&typeof p==='object'&&typeof p.id==='string').slice(0,100):[],submissions:Array.isArray(x.submissions)?x.submissions.filter(p=>p&&typeof p==='object'&&typeof p.id==='string').slice(0,100):[],supports:s};}}}}catch(e){}
+    return {posts:[],submissions:[],supports:{}};
+  }
+  let C=communityLoad();
+  function communitySave(){try{if(store)store.setItem(COMMUNITY_KEY,JSON.stringify(C));}catch(e){toast('Storage is full; this post stays for this session.');}}
+  const communityApi=()=>{const u=window.RVA_COMMUNITY_URL;return typeof u==='string'&&/^https:\/\/[^\s]+$/.test(u)?u:null;};
+  async function communityPull(){
+    const api=communityApi();if(!api)return;
+    try{const r=await fetch(api+'/community/feed',{headers:{Accept:'application/json'}});if(!r.ok)return;const j=await r.json();if(Array.isArray(j.items)){C.posts=j.items.map(x=>({id:x.id,kind:x.kind,title:x.title,body:x.body,author:x.author,source:x.source||'',image_url:x.image_url?(x.image_url.startsWith('/')?api+x.image_url:x.image_url):'',em:{event:'📣',artist:'🎨',outfit:'👕',fact:'🏛️',plate:'🍽️'}[x.kind]||'✨',supports:Number(x.supports||0),status:'approved'}));communitySave();if(S.lifeTab==='community')renderLife();}}catch(e){}
+  }
+  async function uploadCommunityPhoto(){
+    const api=communityApi();if(!api||!T.communityPhoto)return '';
+    try{const m=/^data:([^;,]+);base64,(.*)$/.exec(T.communityPhoto);if(!m)return '';const bin=atob(m[2]);const bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);const blob=new Blob([bytes],{type:m[1]});const r=await fetch(api+'/community/image',{method:'POST',headers:{'Content-Type':blob.type},body:blob});if(!r.ok)return '';const j=await r.json();return j.key||'';}catch(e){return '';}
+  }
+  async function communitySubmit(payload){
+    const api=communityApi();if(!api)return null;
+    try{const r=await fetch(api+'/community/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});if(!r.ok)return null;return await r.json();}catch(e){return null;}
+  }
+  const communitySupported=key=>!!C.supports[key];
+  const communityCount=(post)=>Number(post.supports||0)+(communitySupported(post.kind+':'+post.id)?1:0);
+  function communityAll(kind){return COMMUNITY_SEED.filter(p=>p.kind===kind).concat(C.posts.filter(p=>p.kind===kind&&p.status==='approved'));}
+  function communityTabs(){return `<div class="community-tabs" role="tablist" aria-label="Community sections">${COMMUNITY_TABS.map(t=>`<button type="button" class="tile${T.communityTab===t.id?' active':''}" role="tab" aria-selected="${T.communityTab===t.id}" data-act="communityTab" data-arg="${t.id}"><span class="tile-ic" aria-hidden="true">${ic(t.ic)}</span><span class="tile-lb">${t.label}</span></button>`).join('')}</div>`;}
+  function communityPhotoHTML(){return T.communityPhoto?`<img class="community-photo" src="${T.communityPhoto}" alt="Selected photo preview">`:'';}
+  function communityCards(kind){
+    const list=communityAll(kind);
+    if(!list.length)return '<div class="empty">Nothing shared here yet. Be the first.</div>';
+    return list.map(p=>{const key=p.kind+':'+p.id,on=communitySupported(key),n=communityCount(p);return `<div class="card community-card">
+      <div class="row between"><span class="pill">${ic(p.em||'✨')} ${esc(p.kind)}</span>${SAMPLE}</div>
+      <div class="frac mt-1">${esc(p.title)}</div>
+      <div class="den">${esc(p.body)}</div>
+      ${p.source?`<div class="den t-2xs mt-1"><a href="${esc(p.source)}" target="_blank" rel="noopener noreferrer">Source</a></div>`:''}
+      <div class="community-meta"><span class="pill dim">${esc(p.author||'Richmond')}</span><span class="pill${on?' green':''}">${n} support${n===1?'':'s'}</span></div>
+      <div class="community-actions">
+        <button type="button" class="btn sm${on?' on':' ghost'}" data-act="support" data-arg="${esc(key)}" aria-pressed="${on}" aria-label="${on?'Remove support':'Support'}: ${esc(p.title)}">${on?'✓ Supported':'Support'}</button>
+        <button type="button" class="btn sm ghost" data-act="sharePost" data-arg="${esc(key)}">Share</button>
+      </div></div>`;}).join('');
+  }
+  function pendingHTML(){
+    if(!C.submissions.length)return '';
+    return `<div class="card"><div class="card-label">Your submissions</div>${C.submissions.slice(0,8).map(s=>`<div class="list-item"><div class="em" aria-hidden="true">${ic(s.em||'⏳')}</div><div class="grow"><div class="t">${esc(s.title)}</div><div class="m">${esc(s.kind)} · ${esc(s.status||'pending review')}</div></div></div>`).join('')}</div>`;
+  }
+  function renderCommunity(){
+    const tab=T.communityTab||'whats';
+    const body={
+      whats:renderCommunityWhats,artist:()=>renderCommunityKind('artist','Artist of the Day','Share a game, a song, a painting, a build. Support the work; no dislike count.'),
+      outfit:()=>renderCommunityKind('outfit','Outfit of the Day','Post today’s fit. One photo, one caption, no ratings.'),
+      fact:()=>renderCommunityKind('fact','Fact of the Day','A small, checkable piece of Richmond history. Support the ones worth keeping.'),
+      plate:()=>renderCommunityKind('plate','Plate of the Day','What is on the table today? Support the plate you would order.'),
+    }[tab]||renderCommunityWhats;
+    return `${communityTabs()}${body()}${pendingHTML()}`;
+  }
+  function renderCommunityWhats(){
+    return `<div class="card accent"><div class="card-label">📣 What's Going On Richmond</div><div class="den">Found something? Add it. Flyers and events go to a review queue before they appear publicly.</div></div>
+      <div class="card"><div class="card-label">Submit an event or flyer</div>
+        <input class="field" id="cEventTitle" maxlength="80" placeholder="Event name" aria-label="Event name">
+        <input class="field" id="cEventWhen" type="datetime-local" aria-label="Event date and time">
+        <input class="field" id="cEventVenue" maxlength="80" placeholder="Venue or neighborhood" aria-label="Venue or neighborhood">
+        <textarea class="field" id="cEventDesc" maxlength="400" placeholder="What is happening? Keep it short." aria-label="Event description"></textarea>
+        <input class="field" id="cEventContact" maxlength="80" placeholder="Contact or link (optional)" aria-label="Contact or link">
+        <label class="btn ghost sm mt-2" for="cEventFlyer">Attach flyer</label>
+        <input type="file" id="cEventFlyer" class="vh" accept="image/*" data-change="communityPhoto" data-arg="flyer">
+        ${T.communityPhoto?`<button type="button" class="btn ghost sm mt-2" data-act="clearCommunityPhoto">Remove flyer</button>`:''}
+        ${communityPhotoHTML()}
+        <div class="den t-2xs mt-1">Public flyer upload requires Cloudflare R2. Until it is enabled, this preview stays on your device and the event is submitted as text.</div><button type="button" class="btn mt-2" data-act="postCommunity" data-arg="event">Submit for review</button>
+      </div>
+      <div class="card"><div class="card-label">On the radar</div>
+        ${EVENTS.filter(e=>!ended(e)).slice(0,5).map(e=>`<div class="list-item"><div class="em" aria-hidden="true">${ic(e.art)}</div><div class="grow"><div class="t">${esc(e.name)}</div><div class="m">${esc(e.meta)} · ${esc(e.area)}</div></div><button type="button" class="x-btn" data-act="locateEvent" data-arg="${esc(e.id)}" aria-label="Location for ${esc(e.name)}">${ic('📍')}</button><button type="button" class="x-btn" data-act="shareEvent" data-arg="${esc(e.id)}" aria-label="Share ${esc(e.name)}">${ic('🔗')}</button></div>`).join('')}
+      </div>`;
+  }
+  function renderCommunityKind(kind,title,lead){
+    const form={
+      artist:`<div class="card"><div class="card-label">Submit your work</div><input class="field" id="cTitle" maxlength="80" placeholder="Title" aria-label="Title"><input class="field" id="cAuthor" maxlength="50" placeholder="Name or handle" aria-label="Name or handle"><textarea class="field" id="cBody" maxlength="300" placeholder="One sentence about it" aria-label="Description"></textarea><label class="btn ghost sm mt-2" for="cArtPhoto">Add a photo (optional)</label><input type="file" id="cArtPhoto" class="vh" accept="image/*" data-change="communityPhoto" data-arg="artist">${communityPhotoHTML()}<button type="button" class="btn mt-2" data-act="postCommunity" data-arg="artist">Submit for review</button></div>`,
+      outfit:`<div class="card"><div class="card-label">Post today’s outfit</div><input class="field" id="cTitle" maxlength="80" placeholder="Caption" aria-label="Caption"><input class="field" id="cAuthor" maxlength="50" placeholder="Name or handle" aria-label="Name or handle"><label class="btn ghost sm mt-2" for="cFitPhoto">Add outfit photo</label><input type="file" id="cFitPhoto" class="vh" accept="image/*" data-change="communityPhoto" data-arg="outfit">${communityPhotoHTML()}<button type="button" class="btn mt-2" data-act="postCommunity" data-arg="outfit">Submit for review</button></div>`,
+      fact:`<div class="card"><div class="card-label">Add a Richmond fact</div><textarea class="field" id="cFact" maxlength="240" placeholder="One checkable fact" aria-label="Richmond fact"></textarea><input class="field" id="cFactSource" maxlength="200" placeholder="Source URL (required for review)" aria-label="Source URL"><button type="button" class="btn mt-2" data-act="postCommunity" data-arg="fact">Submit for review</button></div>`,
+      plate:`<div class="card"><div class="card-label">Post your plate</div><input class="field" id="cTitle" maxlength="80" placeholder="What is on the plate?" aria-label="What is on the plate"><input class="field" id="cAuthor" maxlength="50" placeholder="Place or neighborhood" aria-label="Place or neighborhood"><label class="btn ghost sm mt-2" for="cPlatePhoto">Add plate photo</label><input type="file" id="cPlatePhoto" class="vh" accept="image/*" data-change="communityPhoto" data-arg="plate">${communityPhotoHTML()}<button type="button" class="btn mt-2" data-act="postCommunity" data-arg="plate">Submit for review</button></div>`,
+    }[kind];
+    return `<div class="card"><div class="card-label">${title}</div><div class="den">${lead}</div></div>${communityCards(kind)}${form}`;
+  }
+  function readCommunityPhoto(el,arg){
+    const f=el.files&&el.files[0];if(!f)return;
+    if(!/^image\//.test(f.type)){toast('Choose an image file');return;}
+    if(f.size>15*1024*1024){toast('Photo too large; choose one under 15 MB');return;}
+    const url=URL.createObjectURL(f);const img=new Image();
+    img.onload=()=>{
+      try{
+        const max=1600,scale=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+        const w=Math.max(1,Math.round(img.naturalWidth*scale)),h=Math.max(1,Math.round(img.naturalHeight*scale));
+        const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+        c.toBlob(blob=>{
+          URL.revokeObjectURL(url);
+          if(!blob||blob.size>1800000){toast('Photo could not be compressed under 1.8 MB');return;}
+          const r=new FileReader();r.onload=()=>{T.communityPhoto=r.result;T.communityPhotoArg=arg;renderLife();};r.onerror=()=>toast('Could not read that photo');r.readAsDataURL(blob);
+        },'image/jpeg',0.82);
+      }catch(e){URL.revokeObjectURL(url);toast('Could not process that photo');}
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);toast('Could not read that photo');};
+    img.src=url;
+  }
+  async function postCommunity(kind){
+    const val=id=>{const n=$(id);return n?n.value.trim():'';};
+    let title='',body='',author='',em='✨';
+    if(kind==='event'){
+      title=val('cEventTitle');const when=val('cEventWhen'),venue=val('cEventVenue'),desc=val('cEventDesc'),contact=val('cEventContact');
+      if(title.length<3||!venue||!desc){toast('Add a name, venue and description');return;}
+      body=[when,venue,desc].filter(Boolean).join(' · ');em='📣';
+    } else if(kind==='fact'){
+      body=val('cFact');const source=val('cFactSource');if(body.length<10){toast('Add a little more detail');return;}if(!/^https?:\/\/[^\s]+$/i.test(source)){toast('Add a source URL for a fact');return;}title=body;author='Community submission';em='🏛️';
+    } else {
+      title=val('cTitle');author=val('cAuthor');body=val('cBody')||title;
+      if(kind==='outfit'&&!title){toast('Add a caption');return;}
+      if(kind==='plate'&&!title){toast('Say what is on the plate');return;}
+      if(!body){toast('Add a short description');return;}
+      em={artist:'🎨',outfit:'👕',plate:'🍽️'}[kind]||'✨';
+    }
+    const extras=kind==='fact'?{source:val('cFactSource')}:{};const local={id:'u'+uid(),kind,title:title.slice(0,100),body:body.slice(0,400),author:author.slice(0,60),em,photo:T.communityPhoto||null,status:'pending review',t:Date.now()};Object.assign(local,extras);
+    if(communityApi()){const imageKey=await uploadCommunityPhoto();await communitySubmit({kind,title:local.title,body:local.body,author:local.author,contact:kind==='event'?val('cEventContact'):'',event_at:kind==='event'?val('cEventWhen'):'',venue:kind==='event'?val('cEventVenue'):'',source:/^https?:\/\/[^\s]+$/i.test(local.source||'')?local.source:'',image_key:imageKey});}
+    C.submissions.unshift(local);
+    T.communityPhoto=null;T.communityPhotoArg=null;communitySave();toast('Submitted for review');renderLife();const tab=document.querySelector('.community-tabs .tile.active');if(tab)tab.focus({preventScroll:true});
+  }
+  function support(key){
+    if(!/^[a-z]+:u[^:]{1,40}$/i.test(key)&&!/^[a-z]+:seed-[a-z0-9-]{1,40}$/i.test(key))return;
+    C.supports[key]=!C.supports[key];if(!C.supports[key])delete C.supports[key];communitySave();vibrate();renderLife();
+  }
+  function shareCommunity(kind,id){
+    const p=COMMUNITY_SEED.concat(C.posts).find(x=>x.kind+':'+x.id===kind+':'+id);if(!p)return;
+    const text=`${p.title} — ${p.body} (Richmond community)`;
+    if(navigator.share){navigator.share({title:p.title,text}).catch(()=>{});return;}
+    try{navigator.clipboard.writeText(text).then(()=>toast('Copied to share'),()=>toast('Share text ready'));}catch(e){toast('Share not available');}
+  }
+  function eventMapUrl(e){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([e.name,e.area,'Richmond VA'].filter(Boolean).join(' '));}
+  function shareEvent(id){const e=EV(id);if(!e)return;const text=`${e.name} — ${e.meta} · ${e.area}`;if(navigator.share){navigator.share({title:e.name,text}).catch(()=>{});return;}try{navigator.clipboard.writeText(text).then(()=>toast('Event copied'));}catch(err){toast('Share not available');}}
+  function openLocate(id){
+    const e=EV(id);if(!e)return;
+    put('sheetRoot',`<div class="sheet-bg" data-act="closeLoc"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="locTitle">
+      <h2 id="locTitle">${esc(e.name)}</h2>
+      <div class="card"><div class="card-label">Your location</div><div class="den" id="locStatus">Tap below to ask this device for GPS. Nothing is uploaded.</div><button type="button" class="btn" data-act="locateHere">Use my GPS</button></div>
+      <div class="card"><div class="card-label">Open directions</div><div class="den">${esc(e.meta)} · ${esc(e.area)}</div><a class="btn ghost" style="text-decoration:none" href="${esc(eventMapUrl(e))}" target="_blank" rel="noopener noreferrer">Open in Maps</a><div class="den t-2xs mt-1">Search uses the event name and neighborhood; the event has no exact pin in the local data.</div></div>
+      <button type="button" class="btn ghost" data-act="closeLoc">Done</button></div>`);
+    document.querySelectorAll(BG_SEL).forEach(n=>{n.setAttribute('inert','');n.setAttribute('aria-hidden','true');});
+    const b=document.querySelector('#sheetRoot [data-act=locateHere]');if(b)b.focus();
+  }
+  function locateHere(){
+    const s=$('locStatus');if(!s)return;
+    if(!navigator.geolocation){s.textContent='This browser has no GPS support.';return;}
+    s.textContent='Waiting for your location…';
+    navigator.geolocation.getCurrentPosition(p=>{s.textContent=`Lat ${p.coords.latitude.toFixed(5)}, Lng ${p.coords.longitude.toFixed(5)} · accuracy ±${Math.round(p.coords.accuracy)} m. Nothing was sent.`;},err=>{s.textContent=err.code===1?'Location permission was denied. You can still open directions.':'Could not get a location.';},{enableHighAccuracy:true,timeout:10000,maximumAge:60000});
+  }
+  function closeLocate(){if(!$('sheetRoot').firstElementChild)return;$('sheetRoot').innerHTML='';document.querySelectorAll(BG_SEL).forEach(n=>{n.removeAttribute('inert');n.removeAttribute('aria-hidden');});const b=document.querySelector('[data-act=locateEvent]');if(b)b.focus({preventScroll:true});}
+
+
+  /* Moderator review queue. The token is only held in sessionStorage for
+     this tab; it is never saved into the app state or a backup. */
+  async function openMod(){
+    const api=communityApi();if(!api){toast('Community service is not configured');return;}
+    const el=$('modToken');const token=(el&&el.value.trim())||sessionStorage.getItem('rva-mod-token')||'';
+    if(!token){toast('Enter the moderator token');if(el)el.focus();return;}
+    sessionStorage.setItem('rva-mod-token',token);
+    try{
+      const r=await fetch(api+'/community/pending',{headers:{Authorization:'Bearer '+token}});
+      if(!r.ok){toast(r.status===401?'Moderator token was rejected':'Could not load review queue');return;}
+      const j=await r.json();const items=Array.isArray(j.items)?j.items:[];
+      put('sheetRoot',`<div class="sheet-bg" data-act="closeMod"></div><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modTitle">
+        <h2 id="modTitle">Community review</h2>
+        <div class="den mb-2">${items.length} pending submission${items.length===1?'':'s'}. Approving publishes it to the public community feed.</div>
+        ${items.length?items.map(x=>`<div class="card"><div class="row between"><span class="pill">${esc(x.kind)}</span><span class="pill dim">#${esc(x.id)}</span></div><div class="frac mt-1">${esc(x.title)}</div><div class="den">${esc(x.body)}</div><div class="community-actions"><button type="button" class="btn sm on" data-act="modApprove" data-arg="${esc(x.id)}">Approve</button><button type="button" class="btn sm ghost" data-act="modReject" data-arg="${esc(x.id)}">Reject</button></div></div>`).join(''):'<div class="card"><div class="empty">Queue is clear.</div></div>'}
+        <button type="button" class="btn ghost" data-act="closeMod">Done</button></div>`);
+      document.querySelectorAll(BG_SEL).forEach(n=>{n.setAttribute('inert','');n.setAttribute('aria-hidden','true');});
+      const b=document.querySelector('#sheetRoot [data-act=modApprove]')||document.querySelector('#sheetRoot [data-act=closeMod]');if(b)b.focus();
+    }catch(e){toast('Review queue could not be reached');}
+  }
+  async function modAct(id,status){
+    const api=communityApi();if(!api)return;
+    const token=sessionStorage.getItem('rva-mod-token')||'';if(!token){toast('Moderator token missing');return;}
+    try{const r=await fetch(api+'/community/approve',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:JSON.stringify({id,status})});
+      if(!r.ok){toast('Review action failed');return;}
+      toast(status==='approved'?'Approved and published':'Rejected');await communityPull();await openMod();
+    }catch(e){toast('Review action failed');}
+  }
+  function closeMod(){closeLocate();}
   const ACT={
     rewind:(a,t)=>{doUndo();setTimeout(()=>{const f=document.activeElement;if(t&&t.disabled&&!(f&&f.closest&&f.closest('#deck'))){const n=$('deckTop')||document.querySelector('#deck [data-act=resetDeck]');if(n)n.focus({preventScroll:true});}},0);},
     go:a=>{go(a);histSync(true);},
@@ -3213,11 +3589,31 @@ const RVA = (function(){
       if(a==='mine'&&S.saved.length<=1){renderHome();const n=document.querySelector('#myList button');if(n)n.focus();return;}   // the box only stayed for the query
       const f=$(a==='feeds'?'feedQ':'myQ');if(f)f.value='';runSearch(a);if(f)f.focus();},
     sharePlan, takePlan:()=>{takeSharedPlan();renderLife();}, dismissPlan:()=>{T.sharedPlan=null;renderLife();},
-    setting:(a,t)=>{if(!(a in S.settings))return;S.settings[a]=!S.settings[a];save();applySettings();if(t)t.setAttribute('aria-checked',S.settings[a]);},
+    openSong:a=>openSong(a),
+    closeSong:()=>closeSong(),
+    addSong:()=>addSong(),
+    addWeeklySong:a=>addWeeklySong(a),
+    removeSong:a=>removeSong(a),
+    openMod:()=>openMod(),
+    closeMod:()=>closeMod(),
+    modApprove:a=>modAct(a,'approved'),
+    modReject:a=>modAct(a,'rejected'),
+    communityTab:a=>{if(!COMMUNITY_TABS.some(t=>t.id===a))return;T.communityTab=a;renderLife();const focusTab=()=>{const n=document.querySelector(`.community-tabs [data-act=communityTab][data-arg="${CSS.escape(a)}"]`);if(n)n.focus({preventScroll:true});};focusTab();setTimeout(focusTab,0);setTimeout(focusTab,30);},
+    postCommunity:a=>postCommunity(a),
+    support:a=>support(a),
+    sharePost:a=>{const [kind,id]=String(a).split(':');shareCommunity(kind,id);},
+    shareEvent:a=>{const f=document.activeElement;shareEvent(a);if(f&&f.focus)f.focus({preventScroll:true});},
+    locateEvent:a=>openLocate(a),
+    locateHere:()=>locateHere(),
+    closeLoc:()=>closeLocate(),
+    clearCommunityPhoto:()=>{T.communityPhoto=null;T.communityPhotoArg=null;renderLife();},
+    setting:(a,t)=>{if(!(a in S.settings)||a==='palette')return;S.settings[a]=!S.settings[a];save();applySettings();if(t)t.setAttribute('aria-checked',S.settings[a]);},
+    palette:a=>{if(!['bronze','river','tobacco','neon','grove'].includes(a))return;S.settings.palette=a;save();applySettings();openSettings();toast('Palette: '+a[0].toUpperCase()+a.slice(1));},
     resetAll:()=>{
       if(!T.resetArmed){T.resetArmed=true;const b=$('resetBtn');if(b)b.textContent='Tap again to erase everything';return;}
       snap('erase',{rebuild:true,focus:'.topbar [data-act=openSettings]'});
-      try{if(store)store.removeItem(KEY);}catch(e){}
+      try{if(store){store.removeItem(KEY);store.removeItem(COMMUNITY_KEY);}}catch(e){}
+      C={posts:[],submissions:[],supports:{}};
       Object.keys(DEFAULTS).forEach(k=>S[k]=clone(DEFAULTS[k]));
       T.lastFocus=null;applySettings();closeSettings();buildQueue();T.focusSector=null;go('home',true);histSync(false);offerUndo('Data erased');
       const g=document.querySelector('.topbar [data-act=openSettings]');if(g)g.focus({preventScroll:true});
@@ -3264,6 +3660,7 @@ const RVA = (function(){
   const CHANGE={
     count:(el,a)=>{const c=$(a);if(c)c.textContent=`${el.value.length} / ${el.maxLength}`;},
     photo:(el,a)=>{if(PHOTO_KINDS.includes(a))handlePhoto(el,a);},
+    communityPhoto:(el,a)=>readCommunityPhoto(el,a),
     restore:el=>pickRestore(el),
   };
 
@@ -3280,7 +3677,7 @@ const RVA = (function(){
   document.addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.change&&t.dataset.change!=='count'){const f=CHANGE[t.dataset.change];if(f)keepFocus(()=>f(t,t.dataset.arg));}});
   document.addEventListener('keydown',e=>{
     if(sheetOpen()){
-      if(e.key==='Escape'){e.preventDefault();closeSettings();histUp();}
+      if(e.key==='Escape'){e.preventDefault();if(T.sheetKind==='song')closeSong();else{closeSettings();histUp();}}
       else if(e.key==='Tab')trapTab(e);
       return;
     }
@@ -3320,6 +3717,7 @@ const RVA = (function(){
   }
   function startApp(){
     applySettings();
+    communityPull();
     setupSwipeA11y();
     buildQueue();
     if(readSharedPlan())S.screen='life';
@@ -3429,7 +3827,7 @@ const RVA = (function(){
   }}).observe(root,{childList:true,subtree:true,characterData:true});
 })();
 </script>
-<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="5fb9363586";window.RVA_APP_URL="https://amonrayford-ai.github.io/rva-engine/app.html";window.RVA_FEED_URL="https://rva-engine-relay.rva-engine.workers.dev";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
+<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="9b16b5f1a9";window.RVA_APP_URL="https://rva-engine.pages.dev/app.html";window.RVA_FEED_URL="https://rva-engine-relay.rva-engine.workers.dev";window.RVA_COMMUNITY_URL="https://rva-community.rva-engine.workers.dev";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
 addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(reg){
 function offer(w){if(!w||!navigator.serviceWorker.controller)return;window.RVA_CHIP&&RVA_CHIP('A new version is ready','Update',function(){asked=true;w.postMessage('skipWaiting');});}
 offer(reg.waiting);reg.addEventListener('updatefound',function(){var w=reg.installing;w&&w.addEventListener('statechange',function(){if(w.state==='installed')offer(w);});});
