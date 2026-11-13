@@ -5,7 +5,7 @@
    install the new worker copies every file whose hash is unchanged out of the previous cache, so a deploy only
    re-downloads what changed (three.js and the images usually stay put). GitHub Pages ignores _headers, so the
    worker has to do this itself. */
-const VERSION = '1.1.0-2a8315e8c2';
+const VERSION = '1.1.0-74537c8284';
 const CACHE = 'rva-engine-' + VERSION;
 const FILES = [
  {
@@ -18,7 +18,7 @@ const FILES = [
  },
  {
   "u": "app.html",
-  "h": "a24d34c312f5"
+  "h": "53c778960af8"
  },
  {
   "u": "site.css",
@@ -91,6 +91,58 @@ const FILES = [
  {
   "u": "img/playlist/wk-sunday.jpg",
   "h": "8b39f2fc4859"
+ },
+ {
+  "u": "img/ic-feeds.webp",
+  "h": "fad1d86f8c6e"
+ },
+ {
+  "u": "img/ic-life.webp",
+  "h": "6d73b57ea54e"
+ },
+ {
+  "u": "img/ic-map.webp",
+  "h": "cd9910b873fd"
+ },
+ {
+  "u": "img/ic-sky.webp",
+  "h": "af8df3ec465b"
+ },
+ {
+  "u": "img/ic-swipe.webp",
+  "h": "e3d2cfb249ce"
+ },
+ {
+  "u": "img/og-card.png",
+  "h": "d047a26144db"
+ },
+ {
+  "u": "img/shot-feeds.webp",
+  "h": "8ee3dff5e571"
+ },
+ {
+  "u": "img/shot-home.webp",
+  "h": "fdbc429cc4a2"
+ },
+ {
+  "u": "img/shot-life.webp",
+  "h": "41667b852438"
+ },
+ {
+  "u": "img/shot-map.webp",
+  "h": "e83001735b97"
+ },
+ {
+  "u": "img/shot-swipe.webp",
+  "h": "925520b7d12e"
+ },
+ {
+  "u": "img/skyline-day-1600.webp",
+  "h": "9a8d5862925b"
+ },
+ {
+  "u": "img/skyline-day-800.webp",
+  "h": "131747a6d8e7"
  }
 ];
 const MANIFEST = '__rva-manifest.json';   // never requested by pages; lives only inside the caches

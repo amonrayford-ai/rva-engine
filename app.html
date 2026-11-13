@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-qwn/57miPzh6NtSgssG4TpMr28LKmojsOzYoDL46yPk=' 'sha256-DRpyMRd0jWLGSIDHL6yNrx+GzfeOiVtJf73R3bK9eMo=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://rva-community.rva-engine.workers.dev; font-src 'self' data:; connect-src 'self' https://rva-engine-relay.rva-engine.workers.dev https://rva-community.rva-engine.workers.dev; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-YOABm4mATPbPdIMyGWIn7otOjByyfICx6eBVv4h7H2c=' 'sha256-259HKXMjtayCsgVNG7GOIu16gSkHPPFWYGnNZ+MzaTo=' 'sha256-aNFCJTbjaToMnBmxj/1RbPJHKX+N3EIzcaO6Muy484o='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://rva-community.rva-engine.workers.dev; font-src 'self' data:; connect-src 'self' https://rva-engine-relay.rva-engine.workers.dev https://rva-community.rva-engine.workers.dev; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <title>The RVA Engine</title>
 <meta name="description" content="Richmond, VA in one pocket app: a live sun-and-moon city sky, a swipe deck of things to do tonight, a 3D board of eight neighborhoods, local feeds and everyday life tools.">
 <meta name="theme-color" content="#0B0A0E">
@@ -3435,6 +3435,7 @@ const RVA = (function(){
     return `<div class="card"><div class="card-label">Your submissions</div>${C.submissions.slice(0,8).map(s=>`<div class="list-item"><div class="em" aria-hidden="true">${ic(s.em||'⏳')}</div><div class="grow"><div class="t">${esc(s.title)}</div><div class="m">${esc(s.kind)} · ${esc(s.status||'pending review')}</div></div></div>`).join('')}</div>`;
   }
   function renderCommunity(){
+    if(communityApi()&&!T.communityFetched){T.communityFetched=true;communityPull();}
     const tab=T.communityTab||'whats';
     const body={
       whats:renderCommunityWhats,artist:()=>renderCommunityKind('artist','Artist of the Day','Share a game, a song, a painting, a build. Support the work; no dislike count.'),
@@ -3717,7 +3718,6 @@ const RVA = (function(){
   }
   function startApp(){
     applySettings();
-    communityPull();
     setupSwipeA11y();
     buildQueue();
     if(readSharedPlan())S.screen='life';
@@ -3827,7 +3827,7 @@ const RVA = (function(){
   }}).observe(root,{childList:true,subtree:true,characterData:true});
 })();
 </script>
-<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="9b16b5f1a9";window.RVA_APP_URL="https://rva-engine.pages.dev/app.html";window.RVA_FEED_URL="https://rva-engine-relay.rva-engine.workers.dev";window.RVA_COMMUNITY_URL="https://rva-community.rva-engine.workers.dev";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
+<script>window.RVA_VERSION="1.1.0";window.RVA_BUILD="20d49b1b3b";window.RVA_APP_URL="https://rva-engine.pages.dev/app.html";window.RVA_FEED_URL="https://rva-engine-relay.rva-engine.workers.dev";window.RVA_COMMUNITY_URL="https://rva-community.rva-engine.workers.dev";window.RVA_CHIP=function(msg,label,fn){var o=document.querySelector('.rva-chip');if(o)o.remove();var c=document.createElement('div');c.className='rva-chip';c.setAttribute('role','status');var t=document.createElement('span');t.textContent=msg;var b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=fn;var x=document.createElement('button');x.type='button';x.className='x';x.setAttribute('aria-label','Dismiss');x.textContent='✕';x.onclick=function(){c.remove();};c.appendChild(t);c.appendChild(b);c.appendChild(x);document.body.appendChild(c);};(function(){if(!('serviceWorker' in navigator)||!/^https?:$/.test(location.protocol))return;var asked=false;
 addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(reg){
 function offer(w){if(!w||!navigator.serviceWorker.controller)return;window.RVA_CHIP&&RVA_CHIP('A new version is ready','Update',function(){asked=true;w.postMessage('skipWaiting');});}
 offer(reg.waiting);reg.addEventListener('updatefound',function(){var w=reg.installing;w&&w.addEventListener('statechange',function(){if(w.state==='installed')offer(w);});});
